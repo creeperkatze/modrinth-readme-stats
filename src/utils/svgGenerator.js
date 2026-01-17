@@ -172,7 +172,7 @@ export function generateUserCard(data, theme = 'dark')
     <rect x="15" y="${yPos - 18}" width="420" height="40" fill="none" stroke="${borderColor}" stroke-width="1" rx="6" vector-effect="non-scaling-stroke"/>
 
     <!-- Relative downloads bar -->
-    <rect x="15" y="${yPos - 18}" width="${barWidth}" height="4" fill="${accentColor}" clip-path="url(#project-clip-${index})"/>
+    <rect x="15" y="${yPos - 18}" width="${barWidth}" height="3" fill="${accentColor}" clip-path="url(#project-clip-${index})"/>
 
     <text x="20" y="${yPos - 2}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="13" font-weight="600" fill="${textColor}">
       ${projectName}
