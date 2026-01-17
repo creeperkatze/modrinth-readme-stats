@@ -129,7 +129,8 @@ export function generateUserCard(data, theme = 'dark')
     const avgDownloads = formatNumber(stats.avgDownloads);
 
     const topProjects = stats.topProjects.slice(0, 5);
-    const height = 150 + (topProjects.length * 50);
+    const hasProjects = topProjects.length > 0;
+    const height = hasProjects ? 150 + (topProjects.length * 50) : 110;
 
     // Generate top projects list
     let projectsHtml = '';
@@ -236,7 +237,7 @@ export function generateUserCard(data, theme = 'dark')
     </text>
   </g>
 
-  <!-- Divider -->
+  ${hasProjects ? `<!-- Divider -->
   <line x1="15" y1="110" x2="435" y2="110" stroke="${borderColor}" stroke-width="1" vector-effect="non-scaling-stroke"/>
 
   <!-- Top Projects Header -->
@@ -244,7 +245,7 @@ export function generateUserCard(data, theme = 'dark')
     Top Projects
   </text>
 
-  ${projectsHtml}
+  ${projectsHtml}` : ''}
   </g>
 </svg>`.trim();
 }

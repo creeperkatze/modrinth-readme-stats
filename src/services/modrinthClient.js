@@ -16,9 +16,11 @@ export class ModrinthClient {
 
     if (!response.ok) {
       if (response.status === 404) {
-        logger.warn('User not found');
+        throw new Error('User not found');
+      } else {
+        logger.warn(`API error ${response.status}: ${url}`);
+        throw new Error(`Modrinth API error: ${response.status}`);
       }
-      logger.warn(`Modrinth API error: ${response.status}`);
     }
 
     return response.json();

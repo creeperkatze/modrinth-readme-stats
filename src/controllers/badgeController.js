@@ -1,6 +1,7 @@
 import modrinthClient from '../services/modrinthClient.js';
 import cache from '../utils/cache.js';
 import { generateBadge, formatNumber } from '../utils/svgGenerator.js';
+import logger from '../utils/logger.js';
 
 const MAX_AGE = Math.floor(cache.ttl / 1000);
 
@@ -12,6 +13,7 @@ const handleBadgeRequest = async (req, res, next, badgeType, getValue) => {
 
     const cached = cache.get(cacheKey);
     if (cached) {
+      logger.info(`Showing ${badgeType} badge for "${username}" (cached)`);
       res.setHeader('Content-Type', 'image/svg+xml');
       res.setHeader('Cache-Control', `public, max-age=${MAX_AGE}`);
       return res.send(cached);
@@ -22,11 +24,13 @@ const handleBadgeRequest = async (req, res, next, badgeType, getValue) => {
     const svg = generateBadge(badgeType, value, color);
 
     cache.set(cacheKey, svg);
+    logger.info(`Showing ${badgeType} badge for "${username}"`);
 
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', `public, max-age=${MAX_AGE}`);
     res.send(svg);
   } catch (err) {
+    logger.error(`Error showing ${badgeType} badge for "${req.params.username}": ${err.message}`);
     next(err);
   }
 };
