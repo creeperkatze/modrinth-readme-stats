@@ -1,6 +1,6 @@
 import modrinthClient from '../services/modrinthClient.js';
 import cache from '../utils/cache.js';
-import { generateUserSummaryCard as generateUserCard, generateProjectsCard } from '../utils/svgGenerator.js';
+import { generateUserCard } from '../utils/svgGenerator.js';
 
 const MAX_AGE = Math.floor(cache.ttl / 1000);
 
