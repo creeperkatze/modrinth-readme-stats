@@ -1,6 +1,6 @@
-import modrinthClient from '../src/services/modrinthClient.js';
-import cache from '../src/utils/cache.js';
-import { generateBadge, formatNumber } from '../src/utils/svgGenerator.js';
+import modrinthClient from '../services/modrinthClient.js';
+import cache from '../utils/cache.js';
+import { generateBadge, formatNumber } from '../utils/svgGenerator.js';
 
 export const getDownloads = async (req, res, next) => {
   try {

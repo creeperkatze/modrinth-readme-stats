@@ -1,9 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import logger from "./src/utils/logger.js";
+import logger from "./utils/logger.js";
 import cardRoutes from './routes/cardRoutes.js';
 import badgeRoutes from './routes/badgeRoutes.js';
-import { errorHandler } from './src/middleware/errorHandler.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config({ quiet: true });
 

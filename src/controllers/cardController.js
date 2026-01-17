@@ -1,6 +1,6 @@
-import modrinthClient from '../src/services/modrinthClient.js';
-import cache from '../src/utils/cache.js';
-import { generateUserSummaryCard, generateTopProjectsCard } from '../src/utils/svgGenerator.js';
+import modrinthClient from '../services/modrinthClient.js';
+import cache from '../utils/cache.js';
+import { generateUserSummaryCard, generateTopProjectsCard } from '../utils/svgGenerator.js';
 
 export const getSummary = async (req, res, next) => {
   try {
