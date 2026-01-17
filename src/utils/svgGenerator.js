@@ -83,6 +83,39 @@ const ICONS = {
     `,
     vanilla: (color = 'currentColor') => `
         <path fill="${color}" fill-rule="evenodd" d="M9.504 1.132a1 1 0 01.992 0l1.75 1a1 1 0 11-.992 1.736L10 3.152l-1.254.716a1 1 0 11-.992-1.736l1.75-1zM5.618 4.504a1 1 0 01-.372 1.364L5.016 6l.23.132a1 1 0 11-.992 1.736L4 7.723V8a1 1 0 01-2 0V6a.996.996 0 01.52-.878l1.734-.99a1 1 0 011.364.372zm8.764 0a1 1 0 011.364-.372l1.733.99A1.002 1.002 0 0118 6v2a1 1 0 11-2 0v-.277l-.254.145a1 1 0 11-.992-1.736l.23-.132-.23-.132a1 1 0 01-.372-1.364zm-7 4a1 1 0 011.364-.372L10 8.848l1.254-.716a1 1 0 11.992 1.736L11 10.58V12a1 1 0 11-2 0v-1.42l-1.246-.712a1 1 0 01-.372-1.364zM3 11a1 1 0 011 1v1.42l1.246.712a1 1 0 11-.992 1.736l-1.75-1A1 1 0 012 14v-2a1 1 0 011-1zm14 0a1 1 0 011 1v2a1 1 0 01-.504.868l-1.75 1a1 1 0 11-.992-1.736L16 13.42V12a1 1 0 011-1zm-9.618 5.504a1 1 0 011.364-.372l.254.145V16a1 1 0 112 0v.277l.254-.145a1 1 0 11.992 1.736l-1.735.992a.995.995 0 01-1.022 0l-1.735-.992a1 1 0 01-.372-1.364z" clip-rule="evenodd"/>
+    `,
+    box: (color = 'currentColor') => `
+        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m3.3 7 8.7 5 8.7-5" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 22V12" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    'package-open': (color = 'currentColor') => `
+        <path d="M12 22v-9" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    paintbrush: (color = 'currentColor') => `
+        <path d="m14.622 17.897-10.68-2.913" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    plug: (color = 'currentColor') => `
+        <path d="M12 22v-5" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 8V2" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 8V2" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    braces: (color = 'currentColor') => `
+        <path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    glasses: (color = 'currentColor') => `
+        <circle cx="6" cy="15" r="4" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="18" cy="15" r="4" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     `
 };
 
@@ -109,6 +142,19 @@ function getLoaderColor(loader) {
         minecraft: '#62C940'
     };
     return colors[loader.toLowerCase()] || '#8b949e';
+}
+
+function getProjectTypeIcon(projectType) {
+    const iconMap = {
+        mod: 'box',
+        modpack: 'package-open',
+        resourcepack: 'paintbrush',
+        shader: 'glasses',
+        plugin: 'plug',
+        datapack: 'braces',
+        project: 'box'
+    };
+    return iconMap[projectType?.toLowerCase()] || 'box';
 }
 
 export function generateUserCard(data, theme = 'dark')
@@ -146,6 +192,10 @@ export function generateUserCard(data, theme = 'dark')
         // Calculate relative bar width (max 420px width - 10px padding on each side)
         const barWidth = (project.downloads / maxDownloads) * 400;
 
+        // Get project type icon
+        const projectTypeIconName = getProjectTypeIcon(project.project_type);
+        const projectTypeIcon = ICONS[projectTypeIconName];
+
         // Get loaders for this project
         const loaders = project.loaders || [];
         let loaderIconsHtml = '';
@@ -155,11 +205,13 @@ export function generateUserCard(data, theme = 'dark')
             const loaderColor = getLoaderColor(loaderName);
             if (iconFunc) {
                 loaderIconsHtml += `
-    <svg x="${20 + (loaderIndex * 18)}" y="${yPos + 2}" width="16" height="16" viewBox="0 0 24 24">
+    <svg x="${54 + (loaderIndex * 18)}" y="${yPos + 2}" width="16" height="16" viewBox="0 0 24 24">
       ${iconFunc(loaderColor)}
     </svg>`;
             }
         });
+
+        const projectIconUrl = project.icon_url || '';
 
         projectsHtml += `
   <!-- Project ${index + 1} -->
@@ -168,13 +220,19 @@ export function generateUserCard(data, theme = 'dark')
       <clipPath id="project-clip-${index}">
         <rect x="15" y="${yPos - 18}" width="420" height="40" rx="6"/>
       </clipPath>
+      <clipPath id="project-icon-clip-${index}">
+        <rect x="20" y="${yPos - 12}" width="28" height="28" rx="4"/>
+      </clipPath>
     </defs>
     <rect x="15" y="${yPos - 18}" width="420" height="40" fill="none" stroke="${borderColor}" stroke-width="1" rx="6" vector-effect="non-scaling-stroke"/>
 
     <!-- Relative downloads bar -->
     <rect x="15" y="${yPos - 18}" width="${barWidth}" height="3" fill="${accentColor}" clip-path="url(#project-clip-${index})"/>
 
-    <text x="20" y="${yPos - 2}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="13" font-weight="600" fill="${textColor}">
+    <!-- Project image -->
+    ${projectIconUrl ? `<image x="20" y="${yPos - 12}" width="28" height="28" href="${escapeXml(projectIconUrl)}" clip-path="url(#project-icon-clip-${index})"/>` : `<rect x="20" y="${yPos - 12}" width="28" height="28" fill="${borderColor}" rx="4"/>`}
+
+    <text x="54" y="${yPos - 2}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="13" font-weight="600" fill="${textColor}">
       ${projectName}
     </text>
 
@@ -182,19 +240,24 @@ export function generateUserCard(data, theme = 'dark')
     ${loaderIconsHtml}
 
     <!-- Downloads -->
-    <text x="410" y="${yPos}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${secondaryTextColor}" text-anchor="end">
+    <text x="380" y="${yPos}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${secondaryTextColor}" text-anchor="end">
       ${downloads}
     </text>
-    <svg x="415" y="${yPos - 12}" width="14" height="14" viewBox="0 0 24 24">
+    <svg x="385" y="${yPos - 12}" width="14" height="14" viewBox="0 0 24 24">
       ${ICONS.download(secondaryTextColor)}
     </svg>
 
     <!-- Follows -->
-    <text x="410" y="${yPos + 18}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${secondaryTextColor}" text-anchor="end">
+    <text x="380" y="${yPos + 18}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${secondaryTextColor}" text-anchor="end">
       ${followers}
     </text>
-    <svg x="415" y="${yPos + 6}" width="14" height="14" viewBox="0 0 24 24">
+    <svg x="385" y="${yPos + 6}" width="14" height="14" viewBox="0 0 24 24">
       ${ICONS.heart(secondaryTextColor)}
+    </svg>
+
+    <!-- Project type icon (far right, same size as image) -->
+    <svg x="405" y="${yPos - 10}" width="24" height="24" viewBox="0 0 24 24">
+      ${projectTypeIcon(textColor)}
     </svg>
   </g>`;
     });
