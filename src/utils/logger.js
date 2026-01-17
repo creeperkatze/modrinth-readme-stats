@@ -2,6 +2,7 @@ import { format, createLogger, transports } from "winston";
 import path from "path";
 
 const LOG_DIRECTORY = process.env.LOG_DIRECTORY || "./logs";
+const isVercel = process.env.VERCEL === '1';
 
 const consoleFormat = format.combine(
   format.colorize(),
@@ -14,12 +15,13 @@ const fileFormat = format.combine(
   format.printf(({ timestamp, level, message }) => `${timestamp} [${level}]: ${message}`)
 );
 
-const logger = createLogger({
-  level: "info",
-  format: format.errors({ stack: true }),
-  defaultMeta: { service: "superslide-backend" },
-  transports: [
-    new transports.Console({ format: consoleFormat }),
+const loggerTransports = [
+  new transports.Console({ format: consoleFormat })
+];
+
+// Only add file transports when not running on Vercel
+if (!isVercel) {
+  loggerTransports.push(
     new transports.File({
       filename: path.join(LOG_DIRECTORY, "error.log"),
       level: "error",
@@ -38,11 +40,19 @@ const logger = createLogger({
       maxsize: 5000000000, // 5 GB
       format: fileFormat,
     }),
-    new transports.File({ 
-        filename: path.join(LOG_DIRECTORY, "main.log"), 
-        maxsize: 5000000000, // 5 GB
-        format: fileFormat }),
-  ],
+    new transports.File({
+      filename: path.join(LOG_DIRECTORY, "main.log"),
+      maxsize: 5000000000, // 5 GB
+      format: fileFormat
+    })
+  );
+}
+
+const logger = createLogger({
+  level: "info",
+  format: format.errors({ stack: true }),
+  defaultMeta: { service: "superslide-backend" },
+  transports: loggerTransports,
 });
 
 export default logger;
