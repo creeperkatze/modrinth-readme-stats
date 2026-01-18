@@ -37,6 +37,11 @@ function generateErrorCard(message, detailText = "")
     ${detailText ? `<text x="225" y="75" text-anchor="middle" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${detailTextColor}">
       ${truncatedDetail}
     </text>` : ""}
+
+    <!-- Bottom right attribution -->
+    <text x="445" y="115" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${detailTextColor}" text-anchor="end" opacity="0.6">
+    modrinth-embeds.creeperkatze.de
+    </text>
   </g>
 </svg>`.trim();
 }
