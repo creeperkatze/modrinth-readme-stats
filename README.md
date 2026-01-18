@@ -6,3 +6,4 @@
 ## Examples
 <img src="https://modrinth-embeds.creeperkatze.de/user/prospector" />
 <img src="https://modrinth-embeds.creeperkatze.de/project/modmenu" />
+<img src="https://modrinth-embeds.creeperkatze.de/user/prospector/downloads" />
