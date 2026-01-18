@@ -220,19 +220,27 @@
                     url = `${window.location.origin}/${type}/${identifierValue}/${metric}`;
                 }
 
-                previewImg.src = url + "?t=" + Date.now();
-                let displayName = identifierValue;
-                try {
-                    const res = await fetch(`/meta/${type}/${encodeURIComponent(identifierValue)}`);
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data && data.name) displayName = data.name;
-                    }
-                } catch (_) {
-                    // ignore and fallback to identifier
-                }
-                markdownOutput.textContent = `[![${displayName}](${url})](https://modrinth.com/${type}/${identifierValue})`;
+                // Show preview immediately with placeholder markdown
+                markdownOutput.textContent = `[![${identifierValue}](${url})](https://modrinth.com/${type}/${identifierValue})`;
                 preview.classList.add("active");
+
+                // Load the image first
+                previewImg.src = url + "?t=" + Date.now();
+
+                // Wait for image to load, then fetch metadata
+                previewImg.onload = async () => {
+                    let displayName = identifierValue;
+                    try {
+                        const res = await fetch(`/meta/${type}/${encodeURIComponent(identifierValue)}`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data && data.name) displayName = data.name;
+                        }
+                    } catch (_) {
+                        // ignore and fallback to identifier
+                    }
+                    markdownOutput.textContent = `[![${displayName}](${url})](https://modrinth.com/${type}/${identifierValue})`;
+                };
             }
 
             embedType.addEventListener("change", updateUI);
