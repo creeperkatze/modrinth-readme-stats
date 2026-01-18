@@ -19,7 +19,13 @@
             }
 
             body {
-                font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, sans-serif;
+                font-family:
+                    Inter,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Ubuntu,
+                    sans-serif;
                 background: #06060d;
                 color: #b0bac5;
                 min-height: 100vh;
@@ -83,7 +89,9 @@
                 margin-bottom: 0.5rem;
             }
 
-            .generation-icon, .generation-time, .loader-icon {
+            .generation-icon,
+            .generation-time,
+            .loader-icon {
                 color: #fbbf24;
             }
 
@@ -92,8 +100,12 @@
             }
 
             @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
+                from {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
             }
 
             input,
@@ -183,7 +195,7 @@
             }
 
             .divider::after {
-                content: 'OR';
+                content: "OR";
                 position: absolute;
                 top: -0.625rem;
                 left: 50%;
@@ -206,10 +218,12 @@
         <div class="card">
             <div class="card-content">
                 <div class="left-panel">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
-                        <img src="/favicon.svg" alt="Modrinth Logo" style="width: 2rem; height: 2rem; margin-top: 0.125rem;" />
-                        <h1 style="margin-bottom: 0;">Modrinth Embeds</h1>
-                    </div>
+                    <a href="/" style="display: inline-block; text-decoration: none">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem">
+                            <img src="/favicon.svg" alt="Modrinth Logo" style="width: 2rem; height: 2rem; margin-top: 0.125rem" />
+                            <h1 style="margin-bottom: 0">Modrinth Embeds</h1>
+                        </div>
+                    </a>
                     <p class="subtitle">Generate embeddable cards and badges for Modrinth projects, users, organizations, and collections</p>
 
                     <div class="section">
@@ -253,11 +267,13 @@
 
                 <div class="right-panel">
                     <div>
-                        <h2 style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="display: flex; justify-content: space-between; align-items: center">
                             <span>Preview</span>
-                            <span style="display: flex; align-items: center; gap: 0.25rem;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="generation-icon" id="generationIcon" style="display: none;"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="loader-icon" id="loaderIcon" style="display: none;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                            <span style="display: flex; align-items: center; gap: 0.25rem">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="generation-icon" id="generationIcon" style="display: none">
+                                    <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="loader-icon" id="loaderIcon" style="display: none"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
                                 <span id="generationTime" class="generation-time"></span>
                             </span>
                         </h2>
@@ -283,7 +299,7 @@
                         </div>
                     </div>
 
-                    <div style="display: flex; gap: 0.5rem;">
+                    <div style="display: flex; gap: 0.5rem">
                         <button class="copy-btn" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>Copy Markdown</button>
                         <button class="copy-btn" onclick="copyHtml()" id="copyHtmlBtn" disabled>Copy HTML</button>
                     </div>
@@ -313,10 +329,10 @@
             function getUrlParams() {
                 const params = new URLSearchParams(window.location.search);
                 return {
-                    type: params.get('type') || 'card',
-                    target: params.get('target') || 'user',
-                    metric: params.get('metric') || 'downloads',
-                    value: params.get('value') || ''
+                    type: params.get("type") || "card",
+                    target: params.get("target") || "user",
+                    metric: params.get("metric") || "downloads",
+                    value: params.get("value") || "",
                 };
             }
 
@@ -327,13 +343,13 @@
                 const metric = badgeMetric.value;
                 const value = identifier.value.trim();
 
-                if (type !== 'card') params.set('type', type);
-                if (target !== 'user') params.set('target', target);
-                if (metric !== 'downloads') params.set('metric', metric);
-                if (value) params.set('value', value);
+                if (type !== "card") params.set("type", type);
+                if (target !== "user") params.set("target", target);
+                if (metric !== "downloads") params.set("metric", metric);
+                if (value) params.set("value", value);
 
                 const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
-                window.history.replaceState(null, '', newUrl);
+                window.history.replaceState(null, "", newUrl);
             }
 
             function loadFromUrl() {
@@ -347,9 +363,9 @@
             function parseModrinthUrl(url) {
                 try {
                     const urlObj = new URL(url);
-                    if (!urlObj.hostname.includes('modrinth.com')) return null;
+                    if (!urlObj.hostname.includes("modrinth.com")) return null;
 
-                    const pathParts = urlObj.pathname.split('/').filter(p => p);
+                    const pathParts = urlObj.pathname.split("/").filter((p) => p);
                     if (pathParts.length < 2) return null;
 
                     const type = pathParts[0];
@@ -357,16 +373,16 @@
 
                     // Map URL types to our target types
                     const typeMap = {
-                        "project": "project",
-                        "mod": "project",
-                        "modpack": "project",
-                        "shader": "project",
-                        "resourcepack": "project",
-                        "datapack": "project",
-                        "plugin": "project",
-                        "user": "user",
-                        "organization": "organization",
-                        "collection": "collection"
+                        project: "project",
+                        mod: "project",
+                        modpack: "project",
+                        shader: "project",
+                        resourcepack: "project",
+                        datapack: "project",
+                        plugin: "project",
+                        user: "user",
+                        organization: "organization",
+                        collection: "collection",
                     };
 
                     const mappedType = typeMap[type];
@@ -378,7 +394,7 @@
                 }
             }
 
-            modrinthUrl.addEventListener('input', () => {
+            modrinthUrl.addEventListener("input", () => {
                 const parsed = parseModrinthUrl(modrinthUrl.value.trim());
                 if (parsed) {
                     targetType.value = parsed.type;
@@ -390,9 +406,7 @@
 
             function updateBadgeOptions() {
                 const isUserOrgOrCollection = ["user", "organization", "collection"].includes(targetType.value);
-                badgeMetric.innerHTML = isUserOrgOrCollection
-                    ? '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="projects">Projects</option>'
-                    : '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="versions">Versions</option>';
+                badgeMetric.innerHTML = isUserOrgOrCollection ? '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="projects">Projects</option>' : '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="versions">Versions</option>';
             }
 
             function updateUI() {
@@ -400,7 +414,7 @@
                     user: "Enter username or id",
                     project: "Enter project slug or id",
                     organization: "Enter organization slug or id",
-                    collection: "Enter collection id"
+                    collection: "Enter collection id",
                 };
                 identifier.placeholder = placeholders[targetType.value] || "";
                 badgeSection.style.display = embedType.value === "badge" ? "block" : "none";
@@ -423,20 +437,18 @@
                     htmlOutput.innerHTML = '<span id="htmlPlaceholder">Your HTML code will appear here</span>';
                     copyMarkdownBtn.disabled = true;
                     copyHtmlBtn.disabled = true;
-                    document.getElementById('generationTime').textContent = '';
-                    document.getElementById('generationIcon').style.display = 'none';
-                    document.getElementById('loaderIcon').style.display = 'none';
+                    document.getElementById("generationTime").textContent = "";
+                    document.getElementById("generationIcon").style.display = "none";
+                    document.getElementById("loaderIcon").style.display = "none";
                     return;
                 }
 
                 // Show loader while fetching
-                document.getElementById('loaderIcon').style.display = 'inline';
-                document.getElementById('generationIcon').style.display = 'none';
-                document.getElementById('generationTime').textContent = '';
+                document.getElementById("loaderIcon").style.display = "inline";
+                document.getElementById("generationIcon").style.display = "none";
+                document.getElementById("generationTime").textContent = "";
 
-                const url = embedType.value === "card"
-                    ? `${window.location.origin}/${type}/${identifierValue}`
-                    : `${window.location.origin}/${type}/${identifierValue}/${badgeMetric.value}`;
+                const url = embedType.value === "card" ? `${window.location.origin}/${type}/${identifierValue}` : `${window.location.origin}/${type}/${identifierValue}/${badgeMetric.value}`;
                 const modrinthUrl = `https://modrinth.com/${type}/${identifierValue}`;
 
                 markdownOutput.classList.remove("empty");
@@ -456,9 +468,9 @@
                 previewImg.onload = async () => {
                     const endTime = performance.now();
                     const generationTime = Math.round(endTime - startTime);
-                    document.getElementById('generationTime').textContent = `${generationTime}ms`;
-                    document.getElementById('generationIcon').style.display = 'inline';
-                    document.getElementById('loaderIcon').style.display = 'none';
+                    document.getElementById("generationTime").textContent = `${generationTime}ms`;
+                    document.getElementById("generationIcon").style.display = "inline";
+                    document.getElementById("loaderIcon").style.display = "none";
 
                     try {
                         const res = await fetch(`/meta/${type}/${encodeURIComponent(identifierValue)}`);
@@ -473,16 +485,28 @@
                 };
 
                 previewImg.onerror = () => {
-                    document.getElementById('loaderIcon').style.display = 'none';
-                    document.getElementById('generationIcon').style.display = 'none';
-                    document.getElementById('generationTime').textContent = '';
+                    document.getElementById("loaderIcon").style.display = "none";
+                    document.getElementById("generationIcon").style.display = "none";
+                    document.getElementById("generationTime").textContent = "";
                 };
             }
 
-            embedType.addEventListener("change", () => { updateUI(); updateUrl(); });
-            targetType.addEventListener("change", () => { updateUI(); updateUrl(); });
-            badgeMetric.addEventListener("change", () => { generate(); updateUrl(); });
-            identifier.addEventListener("input", () => { generate(); updateUrl(); });
+            embedType.addEventListener("change", () => {
+                updateUI();
+                updateUrl();
+            });
+            targetType.addEventListener("change", () => {
+                updateUI();
+                updateUrl();
+            });
+            badgeMetric.addEventListener("change", () => {
+                generate();
+                updateUrl();
+            });
+            identifier.addEventListener("input", () => {
+                generate();
+                updateUrl();
+            });
 
             function copyMarkdown() {
                 const text = markdownOutput.textContent.trim();
@@ -514,8 +538,8 @@
             updateUI();
         </script>
 
-        <footer style="text-align: center; padding: 2rem 1.25rem 1rem; font-size: 1rem; color: #929aa3;">
-            Made with &hearts; by <a href="https://github.com/creeperkatze" target="_blank" style="color: #1bd96a; text-decoration: none;">Creeperkatze</a> · View <a href="https://github.com/creeperkatze/modrinth-embeds" target="_blank" style="color: #1bd96a; text-decoration: none;">Source</a> · Not affiliated with Modrinth
+        <footer style="text-align: center; padding: 2rem 1.25rem 1rem; font-size: 1rem; color: #929aa3">
+            Made with &hearts; by <a href="https://github.com/creeperkatze" target="_blank" style="color: #1bd96a; text-decoration: none">Creeperkatze</a> · View <a href="https://github.com/creeperkatze/modrinth-embeds" target="_blank" style="color: #1bd96a; text-decoration: none">Source</a> · Not affiliated with Modrinth
         </footer>
     </body>
 </html>
