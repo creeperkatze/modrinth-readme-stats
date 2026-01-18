@@ -10,7 +10,6 @@ export function generateCollectionCard(data, theme = "dark")
     const bgColor = "transparent";
     const textColor = isDark ? "#c9d1d9" : "#1e1e2e";
     const accentColor = isDark ? "#1bd96a" : "#1bd96a";
-    const secondaryTextColor = isDark ? "#8b949e" : "#4c4f69";
     const borderColor = "#E4E2E2";
 
     const name = escapeXml(truncateText(collection.name, 22));
@@ -101,7 +100,7 @@ export function generateCollectionCard(data, theme = "dark")
 
     <!-- Project type icon (far right, same size as image) -->
     <svg x="405" y="${yPos - 10}" width="24" height="24" viewBox="0 0 24 24">
-      ${projectTypeIcon(secondaryTextColor)}
+      ${projectTypeIcon(textColor)}
     </svg>
   </g>`;
     });
@@ -123,7 +122,7 @@ export function generateCollectionCard(data, theme = "dark")
 
   <!-- Chevron -->
   <svg x="41" y="15" width="16" height="24" viewBox="0 0 24 24">
-    ${ICONS.chevronRight(secondaryTextColor)}
+    ${ICONS.chevronRight(textColor)}
   </svg>
 
   <!-- Collection Icon -->
@@ -150,7 +149,7 @@ export function generateCollectionCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${totalDownloads}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Total Downloads
     </text>
   </g>
@@ -160,7 +159,7 @@ export function generateCollectionCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${totalFollowers}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Followers
     </text>
   </g>
@@ -170,7 +169,7 @@ export function generateCollectionCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${projectCount}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Projects
     </text>
   </g>
@@ -186,7 +185,7 @@ export function generateCollectionCard(data, theme = "dark")
   ${projectsHtml}` : ""}
 
   <!-- Bottom right attribution -->
-  <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${secondaryTextColor}" text-anchor="end" opacity="0.6">
+  <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${textColor}" text-anchor="end" opacity="0.6">
     modrinth-embeds.creeperkatze.de
   </text>
   </g>

@@ -1,4 +1,4 @@
-import { formatNumber, escapeXml, truncateText } from "../utils/formatters.js";
+import { formatNumber, escapeXml, truncateText, generateSparkline } from "../utils/formatters.js";
 import { ICONS } from "../constants/icons.js";
 import { getLoaderColor, getProjectTypeIcon } from "../constants/loaderConfig.js";
 
@@ -10,7 +10,6 @@ export function generateUserCard(data, theme = "dark")
     const bgColor = "transparent";
     const textColor = isDark ? "#c9d1d9" : "#1e1e2e";
     const accentColor = isDark ? "#1bd96a" : "#1bd96a";
-    const secondaryTextColor = isDark ? "#8b949e" : "#4c4f69";
     const borderColor = "#E4E2E2";
 
     const username = escapeXml(truncateText(user.username, 22));
@@ -24,6 +23,10 @@ export function generateUserCard(data, theme = "dark")
 
     // Calculate max downloads for relative bar sizing
     const maxDownloads = hasProjects ? Math.max(...topProjects.map(p => p.downloads)) : 0;
+
+    // Generate activity sparkline from all version dates across all projects
+    const allVersionDates = stats.allVersionDates || [];
+    const { path: sparklinePath, fillPath: sparklineFillPath } = generateSparkline(allVersionDates);
 
     // Generate top projects list
     let projectsHtml = "";
@@ -101,7 +104,7 @@ export function generateUserCard(data, theme = "dark")
 
     <!-- Project type icon (far right, same size as image) -->
     <svg x="405" y="${yPos - 10}" width="24" height="24" viewBox="0 0 24 24">
-      ${projectTypeIcon(secondaryTextColor)}
+      ${projectTypeIcon(textColor)}
     </svg>
   </g>`;
     });
@@ -116,6 +119,24 @@ export function generateUserCard(data, theme = "dark")
   <g clip-path="url(#outer_rectangle_summary)">
     <rect stroke="${borderColor}" fill="${bgColor}" rx="4.5" x="0.5" y="0.5" width="449" height="${height - 1}" vector-effect="non-scaling-stroke"/>
 
+  <!-- Activity Sparkline (background) -->
+  <g transform="translate(15, 0)">
+    <path
+      d="${sparklinePath}"
+      fill="none"
+      stroke="${accentColor}"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      opacity="0.3"
+    />
+    <path
+      d="${sparklineFillPath}"
+      fill="${accentColor}"
+      opacity="0.05"
+    />
+  </g>
+
   <!-- Modrinth Icon -->
   <svg x="15" y="15" width="24" height="24" viewBox="0 0 512 514">
     ${ICONS.modrinth(accentColor)}
@@ -123,7 +144,7 @@ export function generateUserCard(data, theme = "dark")
 
   <!-- Chevron -->
   <svg x="41" y="15" width="16" height="24" viewBox="0 0 24 24">
-    ${ICONS.chevronRight(secondaryTextColor)}
+    ${ICONS.chevronRight(textColor)}
   </svg>
 
   <!-- User Icon -->
@@ -150,7 +171,7 @@ export function generateUserCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${totalDownloads}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Total Downloads
     </text>
   </g>
@@ -160,7 +181,7 @@ export function generateUserCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${totalFollowers}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Followers
     </text>
   </g>
@@ -170,7 +191,7 @@ export function generateUserCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${projectCount}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Projects
     </text>
   </g>
@@ -186,7 +207,7 @@ export function generateUserCard(data, theme = "dark")
   ${projectsHtml}` : ""}
 
   <!-- Bottom right attribution -->
-  <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${secondaryTextColor}" text-anchor="end" opacity="0.6">
+  <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${textColor}" text-anchor="end" opacity="0.6">
     modrinth-embeds.creeperkatze.de
   </text>
   </g>

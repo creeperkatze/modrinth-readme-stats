@@ -1,4 +1,4 @@
-import { formatNumber, escapeXml, truncateText } from "../utils/formatters.js";
+import { formatNumber, escapeXml, truncateText, generateSparkline } from "../utils/formatters.js";
 import { ICONS } from "../constants/icons.js";
 import { getLoaderColor, getProjectTypeIcon } from "../constants/loaderConfig.js";
 
@@ -10,7 +10,6 @@ export function generateProjectCard(data, theme = "dark")
     const bgColor = "transparent";
     const textColor = isDark ? "#c9d1d9" : "#1e1e2e";
     const accentColor = isDark ? "#1bd96a" : "#1bd96a";
-    const secondaryTextColor = isDark ? "#8b949e" : "#4c4f69";
     const borderColor = "#E4E2E2";
 
     const projectName = escapeXml(truncateText(project.title, 22));
@@ -25,6 +24,10 @@ export function generateProjectCard(data, theme = "dark")
     const latestVersions = versions.slice(0, 5);
     const hasVersions = latestVersions.length > 0;
     const height = hasVersions ? 150 + (latestVersions.length * 50) : 110;
+
+    // Generate activity sparkline from version release dates (last 30 days)
+    const versionDates = versions.map(v => v.date_published);
+    const { path: sparklinePath, fillPath: sparklineFillPath } = generateSparkline(versionDates);
 
     // Generate latest versions list
     let versionsHtml = "";
@@ -83,7 +86,7 @@ export function generateProjectCard(data, theme = "dark")
     ${loaderIconsHtml}
 
     <!-- Game versions (next to loaders at bottom) -->
-    <text x="${gameVersionsX}" y="${yPos + 15}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text x="${gameVersionsX}" y="${yPos + 15}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       ${escapeXml(gameVersionsText)}
     </text>
 
@@ -115,6 +118,24 @@ export function generateProjectCard(data, theme = "dark")
   <g clip-path="url(#outer_rectangle_summary)">
     <rect stroke="${borderColor}" fill="${bgColor}" rx="4.5" x="0.5" y="0.5" width="449" height="${height - 1}" vector-effect="non-scaling-stroke"/>
 
+  <!-- Activity Sparkline (background) -->
+  <g transform="translate(15, 0)">
+    <path
+      d="${sparklinePath}"
+      fill="none"
+      stroke="${accentColor}"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      opacity="0.3"
+    />
+    <path
+      d="${sparklineFillPath}"
+      fill="${accentColor}"
+      opacity="0.05"
+    />
+  </g>
+
   <!-- Modrinth Icon -->
   <svg x="15" y="15" width="24" height="24" viewBox="0 0 512 514">
     ${ICONS.modrinth(accentColor)}
@@ -122,7 +143,7 @@ export function generateProjectCard(data, theme = "dark")
 
   <!-- Chevron -->
   <svg x="41" y="15" width="16" height="24" viewBox="0 0 24 24">
-    ${ICONS.chevronRight(secondaryTextColor)}
+    ${ICONS.chevronRight(textColor)}
   </svg>
 
   <!-- Project Type Icon -->
@@ -149,7 +170,7 @@ export function generateProjectCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${downloads}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Downloads
     </text>
   </g>
@@ -159,7 +180,7 @@ export function generateProjectCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${followers}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Followers
     </text>
   </g>
@@ -169,7 +190,7 @@ export function generateProjectCard(data, theme = "dark")
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
       ${versionCount}
     </text>
-    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+    <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${textColor}">
       Versions
     </text>
   </g>
@@ -185,7 +206,7 @@ export function generateProjectCard(data, theme = "dark")
   ${versionsHtml}` : ""}
 
   <!-- Bottom right attribution -->
-  <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${secondaryTextColor}" text-anchor="end" opacity="0.6">
+  <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${textColor}" text-anchor="end" opacity="0.6">
     modrinth-embeds.creeperkatze.de
   </text>
   </g>

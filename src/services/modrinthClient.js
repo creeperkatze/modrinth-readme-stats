@@ -112,6 +112,20 @@ export class ModrinthClient
             this.getUserProjects(username)
         ]);
 
+        // Fetch all versions for all projects to get version dates
+        const allVersions = [];
+        await Promise.all(
+            projects.map(async (project) =>
+            {
+                try {
+                    const versions = await this.getProjectVersions(project.id || project.slug);
+                    allVersions.push(...versions.map(v => v.date_published));
+                } catch (error) {
+                    // Silently ignore version fetch errors for individual projects
+                }
+            })
+        );
+
         // Fetch user avatar as base64
         if (user.avatar_url)
         {
@@ -223,7 +237,8 @@ export class ModrinthClient
                 topGameVersions,
                 loaders,
                 topCategories,
-                recentProject
+                recentProject,
+                allVersionDates: allVersions
             }
         };
     }
@@ -263,6 +278,20 @@ export class ModrinthClient
             this.getOrganization(id),
             this.getOrganizationProjects(id)
         ]);
+
+        // Fetch all versions for all projects to get version dates
+        const allVersions = [];
+        await Promise.all(
+            projects.map(async (project) =>
+            {
+                try {
+                    const versions = await this.getProjectVersions(project.id || project.slug);
+                    allVersions.push(...versions.map(v => v.date_published));
+                } catch (error) {
+                    // Silently ignore version fetch errors for individual projects
+                }
+            })
+        );
 
         // Fetch organization icon as base64
         if (organization.icon_url)
@@ -384,7 +413,8 @@ export class ModrinthClient
                 topGameVersions,
                 loaders,
                 topCategories,
-                recentProject
+                recentProject,
+                allVersionDates: allVersions
             }
         };
     }
