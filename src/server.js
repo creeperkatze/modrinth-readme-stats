@@ -14,7 +14,7 @@ app.use('/', cardRoutes, badgeRoutes);
 
 app.get('/', (req, res) =>
 {
-    res.redirect(301, 'https://github.com/creeperkatze/modrinth-readme-stats');
+    res.redirect(301, 'https://github.com/creeperkatze/modrinth-embeds');
 });
 
 app.use(errorHandler);

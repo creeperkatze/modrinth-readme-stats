@@ -1,5 +1,5 @@
 {
-  "name": "modrinth-readme-stats",
+  "name": "modrinth-embeds",
   "version": "1.0.0",
   "type": "module",
   "main": "src/server.js",
