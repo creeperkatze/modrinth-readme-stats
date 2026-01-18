@@ -10,8 +10,7 @@ dotenv.config({ quiet: true });
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use('/card', cardRoutes);
-app.use('/badge', badgeRoutes);
+app.use('/', cardRoutes, badgeRoutes);
 
 app.get('/', (req, res) =>
 {

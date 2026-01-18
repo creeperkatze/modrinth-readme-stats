@@ -2,9 +2,9 @@ import { formatNumber, escapeXml } from '../utils/formatters.js';
 import { ICONS } from '../constants/icons.js';
 import { getLoaderColor, getProjectTypeIcon } from '../constants/loaderConfig.js';
 
-export function generateUserCard(data, theme = 'dark')
+export function generateProjectCard(data, theme = 'dark')
 {
-    const { user, stats } = data;
+    const { project, versions, stats } = data;
     const isDark = theme === 'dark';
 
     const bgColor = 'transparent';
@@ -13,36 +13,36 @@ export function generateUserCard(data, theme = 'dark')
     const secondaryTextColor = isDark ? '#8b949e' : '#4c4f69';
     const borderColor = '#E4E2E2';
 
-    const username = escapeXml(user.username);
-    const totalDownloads = formatNumber(stats.totalDownloads);
-    const projectCount = stats.projectCount;
-    const totalFollowers = formatNumber(stats.totalFollowers);
-    const avgDownloads = formatNumber(stats.avgDownloads);
+    const projectName = escapeXml(project.title);
+    const downloads = formatNumber(stats.downloads);
+    const followers = formatNumber(stats.followers);
+    const versionCount = stats.versionCount;
 
-    const topProjects = stats.topProjects.slice(0, 5);
-    const hasProjects = topProjects.length > 0;
-    const height = hasProjects ? 150 + (topProjects.length * 50) : 120;
+    // Get project type icon
+    const projectTypeIconName = getProjectTypeIcon(project.project_type);
+    const projectTypeIcon = ICONS[projectTypeIconName];
 
-    // Calculate max downloads for relative bar sizing
-    const maxDownloads = hasProjects ? Math.max(...topProjects.map(p => p.downloads)) : 0;
+    const latestVersions = versions.slice(0, 5);
+    const hasVersions = latestVersions.length > 0;
+    const height = hasVersions ? 150 + (latestVersions.length * 50) : 110;
 
-    // Generate top projects list
-    let projectsHtml = '';
-    topProjects.forEach((project, index) => {
+    // Generate latest versions list
+    let versionsHtml = '';
+    latestVersions.forEach((version, index) => {
         const yPos = 160 + (index * 50);
-        const projectName = escapeXml(project.title);
-        const downloads = formatNumber(project.downloads);
-        const followers = formatNumber(project.followers || 0);
+        const versionName = escapeXml(version.name);
+        const versionNumber = escapeXml(version.version_number);
 
-        // Calculate relative bar width (max 420px width - 10px padding on each side)
-        const barWidth = (project.downloads / maxDownloads) * 400;
+        // Format date
+        const publishedDate = new Date(version.date_published);
+        const dateStr = publishedDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
 
-        // Get project type icon
-        const projectTypeIconName = getProjectTypeIcon(project.project_type);
-        const projectTypeIcon = ICONS[projectTypeIconName];
-
-        // Get loaders for this project
-        const loaders = project.loaders || [];
+        // Get loaders for this version
+        const loaders = version.loaders || [];
         let loaderIconsHtml = '';
         loaders.forEach((loader, loaderIndex) => {
             const loaderName = loader.toLowerCase();
@@ -50,59 +50,58 @@ export function generateUserCard(data, theme = 'dark')
             const loaderColor = getLoaderColor(loaderName);
             if (iconFunc) {
                 loaderIconsHtml += `
-    <svg x="${54 + (loaderIndex * 18)}" y="${yPos + 2}" width="16" height="16" viewBox="0 0 24 24">
+    <svg x="${20 + (loaderIndex * 18)}" y="${yPos + 2}" width="16" height="16" viewBox="0 0 24 24">
       ${iconFunc(loaderColor)}
     </svg>`;
             }
         });
 
-        const projectIconUrl = project.icon_url_base64 || project.icon_url || '';
+        // Get game versions (show first 3)
+        const gameVersions = version.game_versions || [];
+        const gameVersionsText = gameVersions.slice(0, 3).join(', ') + (gameVersions.length > 3 ? '...' : '');
 
-        projectsHtml += `
-  <!-- Project ${index + 1} -->
+        // Calculate position for game versions (after loaders with padding)
+        const gameVersionsX = 20 + (loaders.length * 18) + 2; // 2px padding after loaders
+
+        // Format downloads for this version
+        const versionDownloads = formatNumber(version.downloads || 0);
+
+        versionsHtml += `
+  <!-- Version ${index + 1} -->
   <g>
     <defs>
-      <clipPath id="project-clip-${index}">
+      <clipPath id="version-clip-${index}">
         <rect x="15" y="${yPos - 18}" width="420" height="40" rx="6"/>
-      </clipPath>
-      <clipPath id="project-icon-clip-${index}">
-        <rect x="20" y="${yPos - 12}" width="28" height="28" rx="4"/>
       </clipPath>
     </defs>
     <rect x="15" y="${yPos - 18}" width="420" height="40" fill="none" stroke="${borderColor}" stroke-width="1" rx="6" vector-effect="non-scaling-stroke"/>
 
-    <!-- Relative downloads bar -->
-    <rect x="15" y="${yPos - 18}" width="${barWidth}" height="3" fill="${accentColor}" clip-path="url(#project-clip-${index})"/>
-
-    <!-- Project image -->
-    ${projectIconUrl ? `<image x="20" y="${yPos - 12}" width="28" height="28" href="${projectIconUrl}" clip-path="url(#project-icon-clip-${index})"/>` : `<rect x="20" y="${yPos - 12}" width="28" height="28" fill="${borderColor}" rx="4"/>`}
-
-    <text x="54" y="${yPos - 2}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="13" font-weight="600" fill="${textColor}">
-      ${projectName}
+    <text x="20" y="${yPos - 2}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="13" font-weight="600" fill="${textColor}">
+      ${versionNumber}
     </text>
 
-    <!-- Loaders -->
+    <!-- Loaders (beneath version name) -->
     ${loaderIconsHtml}
 
-    <!-- Downloads -->
-    <text x="380" y="${yPos}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${textColor}" text-anchor="end">
-      ${downloads}
+    <!-- Game versions (next to loaders at bottom) -->
+    <text x="${gameVersionsX}" y="${yPos + 15}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
+      ${escapeXml(gameVersionsText)}
     </text>
-    <svg x="385" y="${yPos - 12}" width="14" height="14" viewBox="0 0 24 24">
-      ${ICONS.download(textColor)}
+
+    <!-- Date -->
+    <text x="410" y="${yPos}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${secondaryTextColor}" text-anchor="end">
+      ${dateStr}
+    </text>
+    <svg x="415" y="${yPos - 12}" width="14" height="14" viewBox="0 0 24 24">
+      ${ICONS.calendar(secondaryTextColor)}
     </svg>
 
-    <!-- Follows -->
-    <text x="380" y="${yPos + 18}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${textColor}" text-anchor="end">
-      ${followers}
+    <!-- Downloads (below date) -->
+    <text x="410" y="${yPos + 18}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" fill="${secondaryTextColor}" text-anchor="end">
+      ${versionDownloads}
     </text>
-    <svg x="385" y="${yPos + 6}" width="14" height="14" viewBox="0 0 24 24">
-      ${ICONS.heart(textColor)}
-    </svg>
-
-    <!-- Project type icon (far right, same size as image) -->
-    <svg x="405" y="${yPos - 10}" width="24" height="24" viewBox="0 0 24 24">
-      ${projectTypeIcon(secondaryTextColor)}
+    <svg x="415" y="${yPos + 6}" width="14" height="14" viewBox="0 0 24 24">
+      ${ICONS.download(secondaryTextColor)}
     </svg>
   </g>`;
     });
@@ -128,64 +127,64 @@ export function generateUserCard(data, theme = 'dark')
     ${ICONS.chevronRight(secondaryTextColor)}
   </svg>
 
-  <!-- User Icon -->
+  <!-- Project Type Icon -->
   <svg x="58" y="15" width="24" height="24" viewBox="0 0 24 24">
-    ${ICONS.user(textColor)}
+    ${projectTypeIcon(textColor)}
   </svg>
 
   <!-- Title -->
   <text x="87" y="35" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="20" font-weight="bold" fill="${textColor}">
-    ${username}
+    ${projectName}
   </text>
 
-  <!-- Profile Picture (upper right) -->
+  <!-- Project Image (upper right) -->
   <defs>
-    <clipPath id="profile-clip">
-      <circle cx="395" cy="60" r="40"/>
+    <clipPath id="project-image-clip">
+      <rect x="355" y="20" width="80" height="80" rx="16"/>
     </clipPath>
   </defs>
-  ${user.avatar_url_base64 || user.avatar_url ? `<image x="355" y="20" width="80" height="80" href="${user.avatar_url_base64 || user.avatar_url}" clip-path="url(#profile-clip)"/>` : `<circle cx="405" cy="60" r="40" fill="${borderColor}"/>`}
+  ${project.icon_url_base64 || project.icon_url ? `<image x="355" y="20" width="80" height="80" href="${project.icon_url_base64 || project.icon_url}" clip-path="url(#project-image-clip)"/>` : `<rect x="355" y="20" width="80" height="80" rx="16" fill="${borderColor}"/>`}
 
   <!-- Stats Grid Row 1 -->
   <!-- Total Downloads -->
   <g transform="translate(15, 70)">
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
-      ${totalDownloads}
+      ${downloads}
     </text>
     <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
-      Total Downloads
+      Downloads
     </text>
   </g>
 
   <!-- Followers -->
   <g transform="translate(155, 70)">
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
-      ${totalFollowers}
+      ${followers}
     </text>
     <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
       Followers
     </text>
   </g>
 
-  <!-- Projects -->
+  <!-- Versions -->
   <g transform="translate(270, 70)">
     <text font-family="'Segoe UI', Ubuntu, sans-serif" font-size="26" font-weight="bold" fill="${accentColor}">
-      ${projectCount}
+      ${versionCount}
     </text>
     <text y="20" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="12" fill="${secondaryTextColor}">
-      Projects
+      Versions
     </text>
   </g>
 
-  ${hasProjects ? `<!-- Divider -->
+  ${hasVersions ? `<!-- Divider -->
   <line x1="15" y1="110" x2="435" y2="110" stroke="${borderColor}" stroke-width="1" vector-effect="non-scaling-stroke"/>
 
-  <!-- Top Projects Header -->
+  <!-- Latest Versions Header -->
   <text x="15" y="130" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="14" font-weight="600" fill="${secondaryTextColor}">
-    Top Projects
+    Latest Versions
   </text>
 
-  ${projectsHtml}` : ''}
+  ${versionsHtml}` : ''}
 
   <!-- Bottom right attribution -->
   <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${secondaryTextColor}" text-anchor="end" opacity="0.6">

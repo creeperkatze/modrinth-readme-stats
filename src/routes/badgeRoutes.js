@@ -3,9 +3,9 @@ import * as badgeController from '../controllers/badgeController.js';
 
 const router = express.Router();
 
-router.get('/downloads/:username', badgeController.getDownloads);
-router.get('/projects/:username', badgeController.getProjects);
-router.get('/followers/:username', badgeController.getFollowers);
+router.get('/user/:username/downloads', badgeController.getDownloads);
+router.get('/user/:username/projects', badgeController.getProjects);
+router.get('/user/:username/followers', badgeController.getFollowers);
 
 export default router;
     

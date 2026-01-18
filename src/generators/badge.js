@@ -8,8 +8,8 @@ export function generateBadge(label, value, color = '#1bd96a')
     const height = 20;
 
     const bgColor = 'transparent';
-    const labelBgColor = '#8b949e';
-    const textColor = '#ffffff';
+    const labelTextColor = '#8b949e';
+    const valueTextColor = '#ffffff';
     const borderColor = '#E4E2E2';
 
     return `
@@ -21,13 +21,13 @@ export function generateBadge(label, value, color = '#1bd96a')
   </defs>
   <g clip-path="url(#badge_clip)">
     <rect stroke="${borderColor}" fill="${bgColor}" rx="4.5" x="0.5" y="0.5" width="${totalWidth - 1}" height="${height - 1}" vector-effect="non-scaling-stroke"/>
-    <path d="M 5 1H ${labelWidth}V ${height - 1} H 5A 4 4 0 0 1 1 ${height - 5} V 5A 4 4 0 0 1 5 1Z" fill="${labelBgColor}"/>
-    <path d="M ${labelWidth - 1} 1 H ${labelWidth + valueWidth - 5} A 4 4 0 0 1 ${labelWidth + valueWidth - 1} 5 V ${height - 5} A 4 4 0 0 1 ${labelWidth + valueWidth - 5} ${height - 1} H ${labelWidth - 1} Z" fill="${color}"/>
+    <path d="M ${labelWidth} 1 H ${labelWidth + valueWidth - 5} A 4 4 0 0 1 ${labelWidth + valueWidth - 1} 5 V ${height - 5} A 4 4 0 0 1 ${labelWidth + valueWidth - 5} ${height - 1} H ${labelWidth} Z" fill="${color}"/>
+    <line x1="${labelWidth}" y1="1" x2="${labelWidth}" y2="${height - 1}" stroke="${borderColor}" stroke-width="1" vector-effect="non-scaling-stroke"/>
   </g>
 
-  <g fill="${textColor}" text-anchor="middle" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" font-weight="500">
-    <text x="${labelWidth / 2}" y="14.5">${escapeXml(label)}</text>
-    <text x="${labelWidth + (valueWidth / 2)}" y="14.5">${escapeXml(value)}</text>
+  <g text-anchor="middle" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="11" font-weight="500">
+    <text x="${labelWidth / 2}" y="14.5" fill="${labelTextColor}">${escapeXml(label)}</text>
+    <text x="${labelWidth + (valueWidth / 2)}" y="14.5" fill="${valueTextColor}">${escapeXml(value)}</text>
   </g>
 </svg>`.trim();
 }

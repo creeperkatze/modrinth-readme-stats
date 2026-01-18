@@ -39,7 +39,9 @@ export function errorHandler(err, req, res, next) {
 
   if (err.message.includes('not found')) {
     statusCode = 404;
-    message = 'User not found';
+    // Determine if this is a project or user request
+    const isProjectRequest = req.path.includes('/project/');
+    message = isProjectRequest ? 'Project not found' : 'User not found';
   } else if (err.message.includes('Modrinth API')) {
     statusCode = 502;
     message = 'Modrinth API unavailable';

@@ -8,6 +8,24 @@ export const ICONS = {
     heart: (color = 'currentColor') => `
         <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
     `,
+    calendar: (color = 'currentColor') => `
+        <path d="M8 2v4" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M16 2v4" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <rect width="18" height="18" x="3" y="4" rx="2" stroke="${color}" stroke-width="2" fill="none"/>
+        <path d="M3 10h18" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    `,
+    user: (color = 'currentColor') => `
+        <circle cx="12" cy="12" r="10" stroke="${color}" stroke-width="2" fill="none"/>
+        <circle cx="12" cy="10" r="3" stroke="${color}" stroke-width="2" fill="none"/>
+        <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    `,
+    compass: (color = 'currentColor') => `
+        <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="12" cy="12" r="10" stroke="${color}" stroke-width="2" fill="none"/>
+    `,
+    chevronRight: (color = 'currentColor') => `
+        <path d="m9 18 6-6-6-6" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    `,
     fabric: (color = 'currentColor') => `
         <path fill="none" stroke="${color}" stroke-width="23" d="m820 761-85.6-87.6c-4.6-4.7-10.4-9.6-25.9 1-19.9 13.6-8.4 21.9-5.2 25.4 8.2 9 84.1 89 97.2 104 2.5 2.8-20.3-22.5-6.5-39.7 5.4-7 18-12 26-3 6.5 7.3 10.7 18-3.4 29.7-24.7 20.4-102 82.4-127 103-12.5 10.3-28.5 2.3-35.8-6-7.5-8.9-30.6-34.6-51.3-58.2-5.5-6.3-4.1-19.6 2.3-25 35-30.3 91.9-73.8 111.9-90.8" transform="matrix(.08671 0 0 .0867 -49.8 -56)"/>
     `,

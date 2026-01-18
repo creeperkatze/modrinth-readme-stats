@@ -16,7 +16,7 @@ export class ModrinthClient {
 
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error('User not found');
+        throw new Error('Resource not found');
       } else {
         logger.warn(`API error ${response.status}: ${url}`);
         throw new Error(`Modrinth API error: ${response.status}`);
@@ -32,6 +32,14 @@ export class ModrinthClient {
 
   async getUserProjects(username) {
     return this.fetch(`${MODRINTH_API}/user/${username}/projects`);
+  }
+
+  async getProject(slug) {
+    return this.fetch(`${MODRINTH_API}/project/${slug}`);
+  }
+
+  async getProjectVersions(slug) {
+    return this.fetch(`${MODRINTH_API}/project/${slug}/version`);
   }
 
   async fetchImageAsBase64(url) {
@@ -60,6 +68,11 @@ export class ModrinthClient {
       this.getUser(username),
       this.getUserProjects(username)
     ]);
+
+    // Fetch user avatar as base64
+    if (user.avatar_url) {
+      user.avatar_url_base64 = await this.fetchImageAsBase64(user.avatar_url);
+    }
 
     // Fetch project icons as base64
     await Promise.all(
@@ -155,6 +168,33 @@ export class ModrinthClient {
         loaders,
         topCategories,
         recentProject
+      }
+    };
+  }
+
+  async getProjectStats(slug) {
+    const [project, versions] = await Promise.all([
+      this.getProject(slug),
+      this.getProjectVersions(slug)
+    ]);
+
+    // Fetch project icon as base64
+    if (project.icon_url) {
+      project.icon_url_base64 = await this.fetchImageAsBase64(project.icon_url);
+    }
+
+    // Sort versions by date (newest first) and take top 5
+    const latestVersions = [...versions]
+      .sort((a, b) => new Date(b.date_published) - new Date(a.date_published))
+      .slice(0, 5);
+
+    return {
+      project,
+      versions: latestVersions,
+      stats: {
+        downloads: project.downloads || 0,
+        followers: project.followers || 0,
+        versionCount: versions.length
       }
     };
   }
