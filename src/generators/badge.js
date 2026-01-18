@@ -34,7 +34,7 @@ export function generateBadge(label, value, color = '#1bd96a')
 
   <g text-anchor="middle" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="14" font-weight="500">
     <text x="${iconWidth + (labelWidth / 2)}" y="20 " fill="${labelTextColor}">${escapeXml(label)}</text>
-    <text x="${iconWidth + labelWidth + (valueWidth / 2)}" y="21" font-size="16" font-weight="800" letter-spacing="-1" fill="${valueTextColor}">${escapeXml(value)}</text>
+    <text x="${iconWidth + labelWidth + (valueWidth / 2)}" y="21" font-size="16" font-weight="700" letter-spacing="-1" fill="${valueTextColor}">${escapeXml(value)}</text>
   </g>
 </svg>`.trim();
 }
