@@ -11,13 +11,15 @@ import {
     generateAttribution
 } from "./svgComponents.js";
 
+const TOP_VERSIONS_COUNT = 5;
+
 export function generateProjectCard(data, theme = "dark")
 {
     const { project, versions, stats } = data;
     const colors = getThemeColors(theme);
 
     const projectTypeIconName = getProjectTypeIcon(project.project_type);
-    const latestVersions = versions.slice(0, 5);
+    const latestVersions = versions.slice(0, TOP_VERSIONS_COUNT);
     const hasVersions = latestVersions.length > 0;
     const height = hasVersions ? 150 + (latestVersions.length * 50) : 110;
 

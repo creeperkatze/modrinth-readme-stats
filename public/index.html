@@ -443,10 +443,13 @@
                     return;
                 }
 
-                // Show loader while fetching
+                // Show loader and placeholder while fetching
                 document.getElementById("loaderIcon").style.display = "inline";
                 document.getElementById("generationIcon").style.display = "none";
                 document.getElementById("generationTime").textContent = "";
+                previewContainer.classList.add("empty");
+                previewPlaceholder.style.display = "inline";
+                previewLink.style.display = "none";
 
                 const url = embedType.value === "card" ? `${window.location.origin}/${type}/${identifierValue}` : `${window.location.origin}/${type}/${identifierValue}/${badgeMetric.value}`;
                 const modrinthUrl = `https://modrinth.com/${type}/${identifierValue}`;
@@ -457,10 +460,6 @@
                 htmlOutput.classList.remove("empty");
                 htmlOutput.textContent = `<a href="${modrinthUrl}"><img src="${url}" alt="${identifierValue}" /></a>`;
 
-                previewLink.href = modrinthUrl;
-                previewContainer.classList.remove("empty");
-                previewPlaceholder.style.display = "none";
-                previewLink.style.display = "block";
                 copyMarkdownBtn.disabled = false;
                 copyHtmlBtn.disabled = false;
 
@@ -471,6 +470,12 @@
                     document.getElementById("generationTime").textContent = `${generationTime}ms`;
                     document.getElementById("generationIcon").style.display = "inline";
                     document.getElementById("loaderIcon").style.display = "none";
+
+                    // Show image after load
+                    previewLink.href = modrinthUrl;
+                    previewContainer.classList.remove("empty");
+                    previewPlaceholder.style.display = "none";
+                    previewLink.style.display = "block";
 
                     try {
                         const res = await fetch(`/meta/${type}/${encodeURIComponent(identifierValue)}`);
@@ -488,6 +493,9 @@
                     document.getElementById("loaderIcon").style.display = "none";
                     document.getElementById("generationIcon").style.display = "none";
                     document.getElementById("generationTime").textContent = "";
+                    previewContainer.classList.add("empty");
+                    previewPlaceholder.style.display = "inline";
+                    previewLink.style.display = "none";
                 };
             }
 

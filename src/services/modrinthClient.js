@@ -1,21 +1,16 @@
 import dotenv from "dotenv";
 import logger from "../utils/logger.js";
 import { fetchImageAsBase64, fetchImagesForProjects, fetchVersionDatesForProjects } from "../utils/imageFetcher.js";
-import {
-    aggregateProjectStats,
-    aggregateProjectTypes,
-    aggregateGameVersions,
-    aggregateLoaders,
-    aggregateCategories,
-    findRecentProject,
-    normalizeV3ProjectFields
-} from "../utils/statsAggregator.js";
+import { aggregateAllStats, normalizeV3ProjectFields, aggregateProjectStats } from "../utils/statsAggregator.js";
 
 dotenv.config({ quiet: true });
 
 const MODRINTH_API_URL = process.env.MODRINTH_API_URL;
 const MODRINTH_API_V3_URL = process.env.MODRINTH_API_V3_URL;
 const USER_AGENT = process.env.USER_AGENT;
+
+// Number of top projects to display (configurable)
+const TOP_PROJECTS_COUNT = 5;
 
 export class ModrinthClient
 {
@@ -96,27 +91,24 @@ export class ModrinthClient
             this.getUserProjects(username)
         ]);
 
-        const allVersionDates = await fetchVersionDatesForProjects(projects, this.getProjectVersions.bind(this));
+        // Use combined aggregation for single-pass efficiency
+        const stats = aggregateAllStats(projects, TOP_PROJECTS_COUNT);
+        const topProjects = stats.topProjects;
 
-        if (user.avatar_url)
-        {
-            user.avatar_url_base64 = await fetchImageAsBase64(user.avatar_url);
-        }
-
-        await fetchImagesForProjects(projects);
-
-        const stats = aggregateProjectStats(projects);
+        // Parallelize all async operations - only fetch data for top N projects
+        const [allVersionDates] = await Promise.all([
+            fetchVersionDatesForProjects(topProjects, this.getProjectVersions.bind(this)),
+            fetchImagesForProjects(topProjects),
+            user.avatar_url ? fetchImageAsBase64(user.avatar_url).then(base64 => {
+                user.avatar_url_base64 = base64;
+            }) : Promise.resolve()
+        ]);
 
         return {
             user,
             projects,
             stats: {
                 ...stats,
-                projectTypes: aggregateProjectTypes(projects),
-                topGameVersions: aggregateGameVersions(projects),
-                loaders: aggregateLoaders(projects),
-                topCategories: aggregateCategories(projects),
-                recentProject: findRecentProject(projects),
                 allVersionDates
             }
         };
@@ -157,27 +149,25 @@ export class ModrinthClient
         ]);
 
         const projects = normalizeV3ProjectFields(rawProjects);
-        const allVersionDates = await fetchVersionDatesForProjects(projects, this.getProjectVersions.bind(this));
 
-        if (organization.icon_url)
-        {
-            organization.icon_url_base64 = await fetchImageAsBase64(organization.icon_url);
-        }
+        // Use combined aggregation for single-pass efficiency
+        const stats = aggregateAllStats(projects, TOP_PROJECTS_COUNT);
+        const topProjects = stats.topProjects;
 
-        await fetchImagesForProjects(projects);
-
-        const stats = aggregateProjectStats(projects);
+        // Parallelize all async operations - only fetch data for top N projects
+        const [allVersionDates] = await Promise.all([
+            fetchVersionDatesForProjects(topProjects, this.getProjectVersions.bind(this)),
+            fetchImagesForProjects(topProjects),
+            organization.icon_url ? fetchImageAsBase64(organization.icon_url).then(base64 => {
+                organization.icon_url_base64 = base64;
+            }) : Promise.resolve()
+        ]);
 
         return {
             organization,
             projects,
             stats: {
                 ...stats,
-                projectTypes: aggregateProjectTypes(projects),
-                topGameVersions: aggregateGameVersions(projects),
-                loaders: aggregateLoaders(projects),
-                topCategories: aggregateCategories(projects),
-                recentProject: findRecentProject(projects),
                 allVersionDates
             }
         };
@@ -191,16 +181,17 @@ export class ModrinthClient
             ? await this.getProjects(collection.projects)
             : [];
 
-        const allVersionDates = await fetchVersionDatesForProjects(projects, this.getProjectVersions.bind(this));
+        // Use optimized aggregation - only basic stats needed for collections
+        const { totalDownloads, totalFollowers, projectCount, topProjects } = aggregateProjectStats(projects, TOP_PROJECTS_COUNT);
 
-        if (collection.icon_url)
-        {
-            collection.icon_url_base64 = await fetchImageAsBase64(collection.icon_url);
-        }
-
-        await fetchImagesForProjects(projects);
-
-        const { totalDownloads, totalFollowers, projectCount, topProjects } = aggregateProjectStats(projects);
+        // Parallelize all async operations - only fetch data for top N projects
+        const [allVersionDates] = await Promise.all([
+            fetchVersionDatesForProjects(topProjects, this.getProjectVersions.bind(this)),
+            fetchImagesForProjects(topProjects),
+            collection.icon_url ? fetchImageAsBase64(collection.icon_url).then(base64 => {
+                collection.icon_url_base64 = base64;
+            }) : Promise.resolve()
+        ]);
 
         return {
             collection,

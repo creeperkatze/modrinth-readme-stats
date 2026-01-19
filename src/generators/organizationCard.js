@@ -10,12 +10,14 @@ import {
     generateAttribution
 } from "./svgComponents.js";
 
+const TOP_PROJECTS_COUNT = 5;
+
 export function generateOrganizationCard(data, theme = "dark")
 {
     const { organization, stats } = data;
     const colors = getThemeColors(theme);
 
-    const topProjects = stats.topProjects.slice(0, 5);
+    const topProjects = stats.topProjects.slice(0, TOP_PROJECTS_COUNT);
     const hasProjects = topProjects.length > 0;
     const height = hasProjects ? 150 + (topProjects.length * 50) : 120;
 
