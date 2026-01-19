@@ -39,6 +39,7 @@ export function generateSparkline(dates, width = 420, maxHeight = 56.25)
     const now = Date.now();
     const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
     const oneDayMs = 24 * 60 * 60 * 1000;
+    const baselineY = 108.5;
 
     // Create array for last 30 days (0 = 30 days ago, 29 = today)
     const dailyCounts = new Array(30).fill(0);
@@ -61,12 +62,12 @@ export function generateSparkline(dates, width = 420, maxHeight = 56.25)
     dailyCounts.forEach((count, index) => {
         const x = (index + 1) * (width / 31);
         const normalizedValue = count / maxDailyCount;
-        const y = 110 - (normalizedValue * maxHeight);
+        const y = baselineY - (normalizedValue * maxHeight);
         points.push({ x, y });
     });
 
     // Generate smooth curve using cubic bezier curves
-    let sparklinePath = `M 0,110 L ${points[0].x},${points[0].y}`;
+    let sparklinePath = `M 0,${baselineY} L ${points[0].x},${points[0].y}`;
     for (let i = 1; i < points.length; i++) {
         const prev = points[i - 1];
         const curr = points[i];
@@ -80,7 +81,7 @@ export function generateSparkline(dates, width = 420, maxHeight = 56.25)
 
         sparklinePath += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${curr.x},${curr.y}`;
     }
-    sparklinePath += ` L ${width},110`;
+    sparklinePath += ` L ${width},${baselineY}`;
 
     const sparklineFillPath = sparklinePath + " Z";
 

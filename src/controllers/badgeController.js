@@ -6,72 +6,84 @@ import logger from "../utils/logger.js";
 
 const MAX_AGE = Math.floor(cache.ttl / 1000);
 
-const handleBadgeRequest = async (req, res, next, badgeType, getValue, getDataFunc) => {
+const BADGE_CONFIGS = {
+    user: {
+        downloads: { label: "Downloads", getValue: stats => formatNumber(stats.totalDownloads) },
+        projects: { label: "Projects", getValue: stats => stats.projectCount.toString() },
+        followers: { label: "Followers", getValue: stats => formatNumber(stats.totalFollowers) }
+    },
+    project: {
+        downloads: { label: "Downloads", getValue: stats => formatNumber(stats.downloads) },
+        followers: { label: "Followers", getValue: stats => formatNumber(stats.followers) },
+        versions: { label: "Versions", getValue: stats => stats.versionCount.toString() }
+    },
+    organization: {
+        downloads: { label: "Downloads", getValue: stats => formatNumber(stats.totalDownloads) },
+        projects: { label: "Projects", getValue: stats => stats.projectCount.toString() },
+        followers: { label: "Followers", getValue: stats => formatNumber(stats.totalFollowers) }
+    },
+    collection: {
+        downloads: { label: "Downloads", getValue: stats => formatNumber(stats.totalDownloads) },
+        projects: { label: "Projects", getValue: stats => stats.projectCount.toString() },
+        followers: { label: "Followers", getValue: stats => formatNumber(stats.totalFollowers) }
+    }
+};
+
+const DATA_FETCHERS = {
+    user: modrinthClient.getUserStats.bind(modrinthClient),
+    project: modrinthClient.getProjectStats.bind(modrinthClient),
+    organization: modrinthClient.getOrganizationStats.bind(modrinthClient),
+    collection: modrinthClient.getCollectionStats.bind(modrinthClient)
+};
+
+const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
     try {
         const identifier = req.params.username || req.params.slug || req.params.id;
         const color = req.query.color || "#1bd96a";
-        const cacheKey = `badge:${badgeType}:${identifier}`;
+        const config = BADGE_CONFIGS[entityType][badgeType];
+        const cacheKey = `badge:${config.label}:${identifier}`;
 
         const cached = cache.get(cacheKey);
         if (cached) {
-            logger.info(`Showing ${badgeType} badge for "${identifier}" (cached)`);
+            logger.info(`Showing ${config.label} badge for "${identifier}" (cached)`);
             res.setHeader("Content-Type", "image/svg+xml");
             res.setHeader("Cache-Control", `public, max-age=${MAX_AGE}`);
             return res.send(cached);
         }
 
-        const data = await getDataFunc(identifier);
-        const value = getValue(data.stats);
-        const svg = generateBadge(badgeType, value, color);
+        const data = await DATA_FETCHERS[entityType](identifier);
+        const value = config.getValue(data.stats);
+        const svg = generateBadge(config.label, value, color);
 
         cache.set(cacheKey, svg);
-        logger.info(`Showing ${badgeType} badge for "${identifier}"`);
+        logger.info(`Showing ${config.label} badge for "${identifier}"`);
 
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${MAX_AGE}`);
         res.send(svg);
     } catch (err) {
-        logger.warn(`Error showing ${badgeType} badge for "${req.params.username || req.params.slug || req.params.id}": ${err.message}`);
+        const identifier = req.params.username || req.params.slug || req.params.id;
+        logger.warn(`Error showing ${badgeType} badge for "${identifier}": ${err.message}`);
         next(err);
     }
 };
 
 // User badges
-export const getUserDownloads = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Downloads", stats => formatNumber(stats.totalDownloads), modrinthClient.getUserStats.bind(modrinthClient));
-
-export const getUserProjects = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Projects", stats => stats.projectCount.toString(), modrinthClient.getUserStats.bind(modrinthClient));
-
-export const getUserFollowers = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Followers", stats => formatNumber(stats.totalFollowers), modrinthClient.getUserStats.bind(modrinthClient));
+export const getUserDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "user", "downloads");
+export const getUserProjects = (req, res, next) => handleBadgeRequest(req, res, next, "user", "projects");
+export const getUserFollowers = (req, res, next) => handleBadgeRequest(req, res, next, "user", "followers");
 
 // Project badges
-export const getProjectDownloads = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Downloads", stats => formatNumber(stats.downloads), modrinthClient.getProjectStats.bind(modrinthClient));
-
-export const getProjectFollowers = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Followers", stats => formatNumber(stats.followers), modrinthClient.getProjectStats.bind(modrinthClient));
-
-export const getProjectVersions = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Versions", stats => stats.versionCount.toString(), modrinthClient.getProjectStats.bind(modrinthClient));
+export const getProjectDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "project", "downloads");
+export const getProjectFollowers = (req, res, next) => handleBadgeRequest(req, res, next, "project", "followers");
+export const getProjectVersions = (req, res, next) => handleBadgeRequest(req, res, next, "project", "versions");
 
 // Organization badges
-export const getOrganizationDownloads = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Downloads", stats => formatNumber(stats.totalDownloads), modrinthClient.getOrganizationStats.bind(modrinthClient));
-
-export const getOrganizationProjects = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Projects", stats => stats.projectCount.toString(), modrinthClient.getOrganizationStats.bind(modrinthClient));
-
-export const getOrganizationFollowers = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Followers", stats => formatNumber(stats.totalFollowers), modrinthClient.getOrganizationStats.bind(modrinthClient));
+export const getOrganizationDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "organization", "downloads");
+export const getOrganizationProjects = (req, res, next) => handleBadgeRequest(req, res, next, "organization", "projects");
+export const getOrganizationFollowers = (req, res, next) => handleBadgeRequest(req, res, next, "organization", "followers");
 
 // Collection badges
-export const getCollectionDownloads = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Downloads", stats => formatNumber(stats.totalDownloads), modrinthClient.getCollectionStats.bind(modrinthClient));
-
-export const getCollectionProjects = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Projects", stats => stats.projectCount.toString(), modrinthClient.getCollectionStats.bind(modrinthClient));
-
-export const getCollectionFollowers = (req, res, next) =>
-    handleBadgeRequest(req, res, next, "Followers", stats => formatNumber(stats.totalFollowers), modrinthClient.getCollectionStats.bind(modrinthClient));
+export const getCollectionDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "collection", "downloads");
+export const getCollectionProjects = (req, res, next) => handleBadgeRequest(req, res, next, "collection", "projects");
+export const getCollectionFollowers = (req, res, next) => handleBadgeRequest(req, res, next, "collection", "followers");
