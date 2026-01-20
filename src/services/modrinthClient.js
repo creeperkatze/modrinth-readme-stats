@@ -5,6 +5,9 @@ import { aggregateAllStats, normalizeV3ProjectFields, aggregateProjectStats } fr
 
 dotenv.config({ quiet: true });
 
+import packageJson from "../../package.json" with { type: "json" };
+const VERSION = packageJson.version;
+
 const MODRINTH_API_URL = process.env.MODRINTH_API_URL;
 const MODRINTH_API_V3_URL = process.env.MODRINTH_API_V3_URL;
 const USER_AGENT = process.env.USER_AGENT;
@@ -17,8 +20,10 @@ export class ModrinthClient
     async fetch(url)
     {
         const response = await fetch(url, {
-            headers: { "User-Agent": USER_AGENT }
+            headers: { "User-Agent": USER_AGENT.replace("${version}", VERSION) }
         });
+
+        logger.warn(USER_AGENT.replace("${version}", VERSION));
 
         if (!response.ok)
         {

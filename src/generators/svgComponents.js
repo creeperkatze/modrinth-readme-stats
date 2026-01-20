@@ -3,7 +3,6 @@ import { ICONS } from "../constants/icons.js";
 import { getLoaderColor, getProjectTypeIcon } from "../constants/loaderConfig.js";
 
 import packageJson from "../../package.json" with { type: "json" };
-
 const VERSION = packageJson.version;
 
 export function getThemeColors(theme = "dark", customColor = null)
