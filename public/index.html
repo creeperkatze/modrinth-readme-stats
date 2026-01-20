@@ -94,14 +94,14 @@
 
                         <div id="basicContent">
                             <div class="mb-2">
-                                <h3 class="text-text-secondary text-base font-semibold mt-2 mb-2">Modrinth URL</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mt-2 mb-1">Modrinth URL</h3>
                                 <input type="text" id="modrinthUrl" placeholder="https://modrinth.com/mod/fabric-api" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
                             </div>
 
                             <hr class="my-4 border-0 border-t border-border-dark relative divider" />
 
                             <div class="mb-2">
-                                <h3 class="text-text-secondary text-base font-semibold mb-2">Type</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mb-1">Type</h3>
                                 <select id="embedType" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green">
                                     <option value="card">Card</option>
                                     <option value="badge">Badge</option>
@@ -109,7 +109,7 @@
                             </div>
 
                             <div class="mb-2">
-                                <h3 class="text-text-secondary text-base font-semibold mb-2">Target</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mb-1">Target</h3>
                                 <select id="targetType" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green">
                                     <option value="user">User</option>
                                     <option value="project">Project</option>
@@ -119,7 +119,7 @@
                             </div>
 
                             <div class="mb-2 hidden" id="badgeSection">
-                                <h3 class="text-text-secondary text-base font-semibold mb-2">Badge Metric</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mb-1">Badge Metric</h3>
                                 <select id="badgeMetric" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green">
                                     <option value="downloads">Downloads</option>
                                     <option value="followers">Followers</option>
@@ -127,7 +127,7 @@
                             </div>
 
                             <div class="mb-2">
-                                <h3 class="text-text-secondary text-base font-semibold mb-2">Value</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mb-1">Value</h3>
                                 <input type="text" id="identifier" placeholder="Enter username or project slug" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
                             </div>
                         </div>
@@ -178,7 +178,7 @@
 
                 <div class="flex flex-col gap-4">
                     <div>
-                        <h2 class="flex justify-between items-center text-text-secondary text-lg font-semibold mb-2">
+                        <h2 class="flex justify-between items-center text-text-secondary text-lg font-semibold">
                             <span>Preview</span>
                             <span class="flex items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow hidden" id="generationIcon">
@@ -197,14 +197,14 @@
                     </div>
 
                     <div>
-                        <h2 class="text-text-secondary text-lg font-semibold mb-2">Markdown</h2>
+                        <h2 class="text-text-secondary text-lg font-semibold">Markdown</h2>
                         <div class="bg-section-bg border border-border-dark rounded-xl p-3 flex items-center font-mono text-xs break-all text-text-muted" id="markdownOutput">
                             <span id="markdownPlaceholder">Your markdown code will appear here</span>
                         </div>
                     </div>
 
                     <div>
-                        <h2 class="text-text-secondary text-lg font-semibold mb-2">HTML</h2>
+                        <h2 class="text-text-secondary text-lg font-semibold">HTML</h2>
                         <div class="bg-section-bg border border-border-dark rounded-xl p-3 flex items-center font-mono text-xs break-all text-text-muted" id="htmlOutput">
                             <span id="htmlPlaceholder">Your HTML code will appear here</span>
                         </div>
