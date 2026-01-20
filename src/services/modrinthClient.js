@@ -20,10 +20,8 @@ export class ModrinthClient
     async fetch(url)
     {
         const response = await fetch(url, {
-            headers: { "User-Agent": USER_AGENT.replace("${version}", VERSION) }
+            headers: { "User-Agent": USER_AGENT.replace("{version}", VERSION) }
         });
-
-        logger.warn(USER_AGENT.replace("${version}", VERSION));
 
         if (!response.ok)
         {
