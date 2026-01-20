@@ -537,7 +537,7 @@
                         urlParams.set("showVersions", "false");
                     }
                     if (maxVersions.value !== "5" && type === "project") {
-                        urlParams.set("maxVersions", "false");
+                        urlParams.set("maxVersions", maxVersions.value);
                     }
                     if (selectedColor !== "1bd96a") {
                         urlParams.set("color", selectedColor);
