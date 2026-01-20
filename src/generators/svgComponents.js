@@ -336,7 +336,7 @@ export function generateAttribution(height, colors)
 {
     return `
   <!-- Bottom right attribution -->
-  <text x="445" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${colors.textColor}" text-anchor="end" opacity="0.6">
+  <text x="435" y="${height - 5}" font-family="'Segoe UI', Ubuntu, sans-serif" font-size="10" fill="${colors.textColor}" text-anchor="end" opacity="0.6">
     modrinth-embeds.creeperkatze.de
   </text>`;
 }
@@ -354,7 +354,7 @@ export function generateInfo(height, colors)
 
     return `
   <!-- Bottom left version + date -->
-  <text x="5" y="${height - 5}"
+  <text x="15" y="${height - 5}"
         font-family="'Segoe UI', Ubuntu, sans-serif"
         font-size="10"
         fill="${colors.textColor}"
