@@ -11,145 +11,40 @@
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <title>Modrinth Embeds</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'modrinth-green': '#1bd96a',
+                            'bg-dark': '#06060d',
+                            'card-bg': '#101014',
+                            'section-bg': '#1a1a1e',
+                            'input-bg': '#3c3c40',
+                            'border-dark': '#3a3a4a',
+                            'text-primary': '#b0bac5',
+                            'text-secondary': '#c4cfdd',
+                            'text-muted': '#929aa3',
+                            'text-bright': '#ecf9fb',
+                            'yellow': '#fbbf24'
+                        }
+                    }
+                }
+            }
+        </script>
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
             body {
-                font-family:
-                    Inter,
-                    -apple-system,
-                    BlinkMacSystemFont,
-                    "Segoe UI",
-                    Ubuntu,
-                    sans-serif;
-                background: #06060d;
-                color: #b0bac5;
-                min-height: 100vh;
-                padding: 2.5rem 1.25rem 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                font-weight: 500;
-                overflow-y: scroll;
+                background: #06060d url('/images/landing.webp');
+                font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, sans-serif;
             }
-
-            .card {
-                background: #101014;
-                border-radius: 1rem;
-                padding: 2.5rem;
-                max-width: 1200px;
-                width: 100%;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
             }
-
-            .card-content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 2.5rem;
-            }
-
-            h1 {
-                color: #1bd96a;
-                margin-bottom: 0.5rem;
-                font-size: 2rem;
-                font-weight: 800;
-            }
-
-            .subtitle {
-                margin-bottom: 2rem;
-                font-size: 0.875rem;
-                opacity: 0.8;
-            }
-
-            .section {
-                margin-bottom: 1.5rem;
-            }
-
-            .section h2 {
-                color: #c4cfdd;
-                font-size: 0.875rem;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-            }
-
-            .right-panel {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .right-panel h2 {
-                color: #c4cfdd;
-                font-size: 1.125rem;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-            }
-
-            .generation-icon,
-            .generation-time,
-            .loader-icon {
-                color: #fbbf24;
-            }
-
             .loader-icon {
                 animation: spin 1s linear infinite;
             }
-
-            @keyframes spin {
-                from {
-                    transform: rotate(0deg);
-                }
-                to {
-                    transform: rotate(360deg);
-                }
-            }
-
-            input,
-            select {
-                width: 100%;
-                padding: 0.625rem 0.75rem;
-                background: #3c3c40;
-                border: 2px solid transparent;
-                border-radius: 0.75rem;
-                color: #ecf9fb;
-                font-size: 0.875rem;
-                font-family: inherit;
-                font-weight: 500;
-                transition: border-color 0.1s;
-            }
-
-            input:focus,
-            select:focus {
-                outline: none;
-                border-color: #1bd96a;
-            }
-
-            input[type="checkbox"] {
-                width: 18px !important;
-                height: 18px;
-                min-width: 18px;
-                flex-shrink: 0;
-                appearance: none;
-                -webkit-appearance: none;
-                background: #3c3c40;
-                border: 2px solid #929aa3;
-                border-radius: 0.25rem;
-                cursor: pointer;
-                position: relative;
-                transition: all 0.2s;
-                padding: 0;
-            }
-
-            input[type="checkbox"]:checked {
-                background: #1bd96a;
-                border-color: #1bd96a;
-            }
-
             input[type="checkbox"]:checked::after {
                 content: "";
                 position: absolute;
@@ -161,228 +56,163 @@
                 border-width: 0 2px 2px 0;
                 transform: rotate(45deg);
             }
-
-            .preview-container,
-            .markdown-output {
-                background: #3c3c40;
-                border: 1px solid #3a3a4a;
-                border-radius: 0.75rem;
-                display: flex;
-                align-items: center;
-            }
-
-            .preview-container {
-                padding: 1rem;
-                min-height: 460px;
-                justify-content: center;
-            }
-
-            .preview-container.empty,
-            .markdown-output.empty {
-                color: #929aa3;
-            }
-
-            .preview-container.empty {
-                font-size: 0.875rem;
-            }
-
-            .preview-container img {
-                max-width: 100%;
-            }
-
-            .markdown-output {
-                padding: 0.75rem;
-                font-family: ui-monospace, monospace;
-                font-size: 0.75rem;
-                word-break: break-all;
-                color: #ecf9fb;
-            }
-
-            button {
-                padding: 0.625rem 1rem;
-                background: #1bd96a;
-                color: #000;
-                border: none;
-                border-radius: 0.75rem;
-                font-size: 0.875rem;
-                font-weight: 600;
+            .color-btn {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                border: 2px solid transparent;
+                border-radius: 0.5rem;
                 cursor: pointer;
-                transition: filter 0.2s;
+                transition: all 0.2s;
             }
-
-            button:hover {
-                filter: brightness(110%);
-            }
-
-            button:disabled {
-                background: #3c3c40;
-                color: #b0bac5;
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-
-            .divider {
-                margin: 1.5rem 0;
-                border: 0;
-                border-top: 1px solid #3a3a4a;
-                position: relative;
-            }
-
-            .divider::after {
-                content: "OR";
-                position: absolute;
-                top: -0.625rem;
-                left: 50%;
-                transform: translateX(-50%);
-                background: #101014;
-                padding: 0 0.75rem;
-                font-size: 0.75rem;
-                color: #929aa3;
-                font-weight: 600;
-            }
-
-            @media (max-width: 1080px) {
-                .card-content {
-                    grid-template-columns: 1fr;
-                }
+            .color-btn-selected {
+                border-color: #fff !important;
             }
         </style>
     </head>
-    <body>
-        <div class="card">
-            <div class="card-content">
-                <div class="left-panel">
-                    <a href="/" style="display: inline-block; text-decoration: none">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem">
-                            <img src="/favicon.svg" alt="Modrinth Logo" style="width: 2rem; height: 2rem; margin-top: 0.125rem" />
-                            <h1 style="margin-bottom: 0">Modrinth Embeds</h1>
+    <body class="min-h-screen flex flex-col justify-center items-center pt-10 px-5 pb-0 font-medium text-text-primary overflow-y-scroll">
+        <div class="bg-card-bg border border-border-dark rounded-2xl p-8 max-w-[1200px] w-full shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div>
+                    <a href="/" class="inline-block no-underline">
+                        <div class="flex items-center gap-4 mb-2">
+                            <img src="/favicon.svg" alt="Modrinth Logo" class="w-8 h-8 mt-0.5" />
+                            <h1 class="text-modrinth-green mb-0 text-3xl font-extrabold">Modrinth Embeds</h1>
                         </div>
                     </a>
-                    <p class="subtitle">Generate embeddable cards and badges for Modrinth projects, users, organizations, and collections</p>
+                    <p class="mb-8 text-sm opacity-80">Generate embeddable cards and badges for Modrinth projects, users, organizations, and collections</p>
 
-                    <div class="section">
-                        <h2>Modrinth URL</h2>
-                        <input type="text" id="modrinthUrl" placeholder="https://modrinth.com/mod/fabric-api" />
-                    </div>
-
-                    <hr class="divider" />
-
-                    <div class="section">
-                        <h2>Type</h2>
-                        <select id="embedType">
-                            <option value="card">Card</option>
-                            <option value="badge">Badge</option>
-                        </select>
-                    </div>
-
-                    <div class="section">
-                        <h2>Target</h2>
-                        <select id="targetType">
-                            <option value="user">User</option>
-                            <option value="project">Project</option>
-                            <option value="organization">Organization</option>
-                            <option value="collection">Collection</option>
-                        </select>
-                    </div>
-
-                    <div class="section" id="badgeSection" style="display: none">
-                        <h2>Badge Metric</h2>
-                        <select id="badgeMetric">
-                            <option value="downloads">Downloads</option>
-                            <option value="followers">Followers</option>
-                        </select>
-                    </div>
-
-                    <div class="section">
-                        <h2>Value</h2>
-                        <input type="text" id="identifier" placeholder="Enter username or project slug" />
-                    </div>
-
-                    <hr class="divider" />
-
-                    <div class="section" style="margin-bottom: 0">
-                        <button id="customizationToggle" style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: transparent; color: #c4cfdd; padding: 0.5rem 0; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer">
-                            <span>Customization</span>
-                            <svg id="customizationChevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s">
-                                <path d="m6 9 6 6 6-6"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div id="customizationContent" style="display: none">
-                        <div class="section" id="showProjectsSection">
-                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer">
-                                <input type="checkbox" id="showProjects" checked style="width: auto; cursor: pointer" />
-                                <span style="font-size: 0.875rem; color: #c4cfdd">Show Projects</span>
-                            </label>
+                    <div class="bg-section-bg border border-border-dark rounded-xl px-4 py-2 mb-4">
+                        <div class="mb-0">
+                            <button id="basicToggle" class="w-full flex items-center justify-between bg-transparent text-text-secondary py-2 px-0 text-sm font-semibold border-none cursor-pointer">
+                                <h2 class="text-text-secondary text-2xl font-semibold">Configuration</h2>
+                                <svg id="basicChevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200 rotate-180">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                            </button>
                         </div>
 
-                        <div class="section" id="maxProjectsSection">
-                            <h2>Max Projects (1-50)</h2>
-                            <input type="number" id="maxProjects" min="1" max="50" value="5" />
-                        </div>
+                        <div id="basicContent">
+                            <div class="mb-2">
+                                <h3 class="text-text-secondary text-base font-semibold mt-2 mb-2">Modrinth URL</h3>
+                                <input type="text" id="modrinthUrl" placeholder="https://modrinth.com/mod/fabric-api" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
+                            </div>
 
-                        <div class="section" id="showVersionsSection" style="display: none">
-                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer">
-                                <input type="checkbox" id="showVersions" checked style="width: auto; cursor: pointer" />
-                                <span style="font-size: 0.875rem; color: #c4cfdd">Show Versions</span>
-                            </label>
-                        </div>
+                            <hr class="my-4 border-0 border-t border-border-dark relative divider" />
 
-                        <div class="section" id="maxVersionsSection" style="display: none">
-                            <h2>Max Versions (1-50)</h2>
-                            <input type="number" id="maxVersions" min="1" max="50" value="5" />
-                        </div>
+                            <div class="mb-2">
+                                <h3 class="text-text-secondary text-base font-semibold mb-2">Type</h3>
+                                <select id="embedType" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green">
+                                    <option value="card">Card</option>
+                                    <option value="badge">Badge</option>
+                                </select>
+                            </div>
 
-                        <div class="section">
-                            <h2>Accent Color</h2>
-                            <div id="colorButtons" style="display: flex; flex-wrap: wrap; gap: 0.5rem"></div>
+                            <div class="mb-2">
+                                <h3 class="text-text-secondary text-base font-semibold mb-2">Target</h3>
+                                <select id="targetType" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green">
+                                    <option value="user">User</option>
+                                    <option value="project">Project</option>
+                                    <option value="organization">Organization</option>
+                                    <option value="collection">Collection</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-2 hidden" id="badgeSection">
+                                <h3 class="text-text-secondary text-base font-semibold mb-2">Badge Metric</h3>
+                                <select id="badgeMetric" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green">
+                                    <option value="downloads">Downloads</option>
+                                    <option value="followers">Followers</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-2">
+                                <h3 class="text-text-secondary text-base font-semibold mb-2">Value</h3>
+                                <input type="text" id="identifier" placeholder="Enter username or project slug" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
+                            </div>
                         </div>
                     </div>
 
-                    <div class="section" id="badgeColorSection" style="display: none">
-                        <h2>Accent Color</h2>
-                        <div id="badgeColorButtons" style="display: flex; flex-wrap: wrap; gap: 0.5rem"></div>
+                    <div class="bg-section-bg border border-border-dark rounded-xl px-4 py-2 mb-4 mb-4">
+                        <div class="mb-0">
+                            <button id="customizationToggle" class="w-full flex items-center justify-between bg-transparent text-text-secondary py-2 px-0 text-sm font-semibold border-none cursor-pointer">
+                                <h2 class="text-text-secondary text-2xl font-semibold">Customization</h2>
+                                <svg id="customizationChevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div id="customizationContent" class="hidden">
+                            <div class="mt-2 mb-2" id="showProjectsSection">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="showProjects" checked class="!w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0 checked:bg-modrinth-green checked:border-modrinth-green" />
+                                    <span class="text-base text-text-secondary">Show Projects</span>
+                                </label>
+                            </div>
+
+                            <div class="mb-2" id="maxProjectsSection">
+                                <h3 class="text-text-secondary text-base font-semibold mb-2">Max Projects (1-50)</h3>
+                                <input type="number" id="maxProjects" min="1" max="50" value="5" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
+                            </div>
+
+                            <div class="mb-2 hidden" id="showVersionsSection">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="showVersions" checked class="!w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0 checked:bg-modrinth-green checked:border-modrinth-green" />
+                                    <span class="text-sm text-text-secondary">Show Versions</span>
+                                </label>
+                            </div>
+
+                            <div class="mb-2 hidden" id="maxVersionsSection">
+                                <h3 class="text-text-secondary text-base font-semibold mb-2">Max Versions (1-50)</h3>
+                                <input type="number" id="maxVersions" min="1" max="50" value="5" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
+                            </div>
+
+                            <div class="mb-2">
+                                <h3 class="text-text-secondary text-base font-semibold mb-2">Accent Color</h3>
+                                <div id="colorButtons" class="flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="right-panel">
+                <div class="flex flex-col gap-4">
                     <div>
-                        <h2 style="display: flex; justify-content: space-between; align-items: center">
+                        <h2 class="flex justify-between items-center text-text-secondary text-lg font-semibold mb-2">
                             <span>Preview</span>
-                            <span style="display: flex; align-items: center; gap: 0.25rem">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="generation-icon" id="generationIcon" style="display: none">
+                            <span class="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow hidden" id="generationIcon">
                                     <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="loader-icon" id="loaderIcon" style="display: none"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
-                                <span id="generationTime" class="generation-time"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow loader-icon hidden" id="loaderIcon"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+                                <span id="generationTime" class="text-yellow"></span>
                             </span>
                         </h2>
-                        <div class="preview-container empty" id="previewContainer">
+                        <div class="bg-section-bg border border-border-dark rounded-xl p-4 min-h-[460px] flex items-center justify-center text-text-muted" id="previewContainer">
                             <span id="previewPlaceholder">Your embed will appear here</span>
-                            <a id="previewLink" href="" target="_blank" style="display: none">
-                                <img id="previewImg" src="" alt="Preview" />
+                            <a id="previewLink" href="" target="_blank" class="hidden">
+                                <img id="previewImg" src="" alt="Preview" class="max-w-full" />
                             </a>
                         </div>
                     </div>
 
                     <div>
-                        <h2>Markdown</h2>
-                        <div class="markdown-output empty" id="markdownOutput">
+                        <h2 class="text-text-secondary text-lg font-semibold mb-2">Markdown</h2>
+                        <div class="bg-section-bg border border-border-dark rounded-xl p-3 flex items-center font-mono text-xs break-all text-text-muted" id="markdownOutput">
                             <span id="markdownPlaceholder">Your markdown code will appear here</span>
                         </div>
                     </div>
 
                     <div>
-                        <h2>HTML</h2>
-                        <div class="markdown-output empty" id="htmlOutput">
+                        <h2 class="text-text-secondary text-lg font-semibold mb-2">HTML</h2>
+                        <div class="bg-section-bg border border-border-dark rounded-xl p-3 flex items-center font-mono text-xs break-all text-text-muted" id="htmlOutput">
                             <span id="htmlPlaceholder">Your HTML code will appear here</span>
                         </div>
                     </div>
 
-                    <div style="display: flex; gap: 0.5rem">
-                        <button class="copy-btn" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>Copy Markdown</button>
-                        <button class="copy-btn" onclick="copyHtml()" id="copyHtmlBtn" disabled>Copy HTML</button>
+                    <div class="flex gap-2">
+                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>Copy Markdown</button>
+                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyHtml()" id="copyHtmlBtn" disabled>Copy HTML</button>
                     </div>
                 </div>
             </div>
@@ -410,8 +240,6 @@
             const showVersions = document.getElementById("showVersions");
             const maxVersions = document.getElementById("maxVersions");
             const colorButtons = document.getElementById("colorButtons");
-            const badgeColorButtons = document.getElementById("badgeColorButtons");
-            const badgeColorSection = document.getElementById("badgeColorSection");
             const showProjectsSection = document.getElementById("showProjectsSection");
             const maxProjectsSection = document.getElementById("maxProjectsSection");
             const showVersionsSection = document.getElementById("showVersionsSection");
@@ -445,22 +273,14 @@
 
             function createColorButton(color, container) {
                 const btn = document.createElement("button");
-                btn.style.cssText = `
-                    width: 40px;
-                    height: 40px;
-                    padding: 0;
-                    background: #${color};
-                    border: 2px solid ${color === selectedColor ? '#fff' : 'transparent'};
-                    border-radius: 0.5rem;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                `;
+                btn.className = 'color-btn' + (color === selectedColor ? ' color-btn-selected' : '');
+                btn.style.background = `#${color}`;
                 btn.dataset.color = color;
                 btn.onclick = () => {
                     selectedColor = color;
                     // Update all color buttons
                     document.querySelectorAll('[data-color]').forEach(b => {
-                        b.style.border = `2px solid ${b.dataset.color === selectedColor ? '#fff' : 'transparent'}`;
+                        b.classList.toggle('color-btn-selected', b.dataset.color === selectedColor);
                     });
                     generate();
                     updateUrl();
@@ -470,7 +290,18 @@
 
             colors.forEach(color => {
                 createColorButton(color, colorButtons);
-                createColorButton(color, badgeColorButtons);
+            });
+
+            // Basic section toggle
+            const basicToggle = document.getElementById("basicToggle");
+            const basicContent = document.getElementById("basicContent");
+            const basicChevron = document.getElementById("basicChevron");
+            let basicExpanded = true;
+
+            basicToggle.addEventListener("click", () => {
+                basicExpanded = !basicExpanded;
+                basicContent.classList.toggle('hidden', !basicExpanded);
+                basicChevron.classList.toggle('rotate-180', basicExpanded);
             });
 
             // Customization toggle
@@ -481,8 +312,8 @@
 
             customizationToggle.addEventListener("click", () => {
                 customizationExpanded = !customizationExpanded;
-                customizationContent.style.display = customizationExpanded ? "block" : "none";
-                customizationChevron.style.transform = customizationExpanded ? "rotate(180deg)" : "rotate(0deg)";
+                customizationContent.classList.toggle('hidden', !customizationExpanded);
+                customizationChevron.classList.toggle('rotate-180', customizationExpanded);
             });
 
             // URL state management functions
@@ -539,7 +370,7 @@
                 selectedColor = params.color;
                 // Update all color button selections
                 document.querySelectorAll('[data-color]').forEach(b => {
-                    b.style.border = `2px solid ${b.dataset.color === selectedColor ? '#fff' : 'transparent'}`;
+                    b.classList.toggle('color-btn-selected', b.dataset.color === selectedColor);
                 });
             }
 
@@ -603,18 +434,17 @@
                 const isCard = embedType.value === "card";
                 const isBadge = embedType.value === "badge";
 
-                badgeSection.style.display = isBadge ? "block" : "none";
-                badgeColorSection.style.display = isBadge ? "block" : "none";
+                badgeSection.classList.toggle('hidden', !isBadge);
                 updateBadgeOptions();
 
                 // Show/hide customization sections based on target type
                 const isProject = targetType.value === "project";
                 const isUserOrgOrCollection = ["user", "organization", "collection"].includes(targetType.value);
 
-                showProjectsSection.style.display = isCard && isUserOrgOrCollection ? "block" : "none";
-                maxProjectsSection.style.display = isCard && isUserOrgOrCollection && showProjects.checked ? "block" : "none";
-                showVersionsSection.style.display = isCard && isProject ? "block" : "none";
-                maxVersionsSection.style.display = isCard && isProject && showVersions.checked ? "block" : "none";
+                showProjectsSection.classList.toggle('hidden', !(isCard && isUserOrgOrCollection));
+                maxProjectsSection.classList.toggle('hidden', !(isCard && isUserOrgOrCollection && showProjects.checked));
+                showVersionsSection.classList.toggle('hidden', !(isCard && isProject));
+                maxVersionsSection.classList.toggle('hidden', !(isCard && isProject && showVersions.checked));
 
                 generate();
             }
@@ -625,28 +455,28 @@
                 const identifierValue = identifier.value.trim();
 
                 if (!identifierValue) {
-                    previewContainer.classList.add("empty");
-                    previewPlaceholder.style.display = "inline";
-                    previewLink.style.display = "none";
-                    markdownOutput.classList.add("empty");
+                    previewContainer.classList.add("text-text-muted");
+                    previewPlaceholder.classList.remove('hidden');
+                    previewLink.classList.add('hidden');
+                    markdownOutput.classList.add("text-text-muted");
                     markdownOutput.innerHTML = '<span id="markdownPlaceholder">Your markdown code will appear here</span>';
-                    htmlOutput.classList.add("empty");
+                    htmlOutput.classList.add("text-text-muted");
                     htmlOutput.innerHTML = '<span id="htmlPlaceholder">Your HTML code will appear here</span>';
                     copyMarkdownBtn.disabled = true;
                     copyHtmlBtn.disabled = true;
                     document.getElementById("generationTime").textContent = "";
-                    document.getElementById("generationIcon").style.display = "none";
-                    document.getElementById("loaderIcon").style.display = "none";
+                    document.getElementById("generationIcon").classList.add('hidden');
+                    document.getElementById("loaderIcon").classList.add('hidden');
                     return;
                 }
 
                 // Show loader and placeholder while fetching
-                document.getElementById("loaderIcon").style.display = "inline";
-                document.getElementById("generationIcon").style.display = "none";
+                document.getElementById("loaderIcon").classList.remove('hidden');
+                document.getElementById("generationIcon").classList.add('hidden');
                 document.getElementById("generationTime").textContent = "";
-                previewContainer.classList.add("empty");
-                previewPlaceholder.style.display = "inline";
-                previewLink.style.display = "none";
+                previewContainer.classList.add("text-text-muted");
+                previewPlaceholder.classList.remove('hidden');
+                previewLink.classList.add('hidden');
 
                 // Build URL with customization parameters
                 let url;
@@ -662,7 +492,7 @@
                         urlParams.set("showVersions", "false");
                     }
                     if (maxVersions.value !== "5" && type === "project") {
-                        urlParams.set("maxVersions", maxVersions.value);
+                        urlParams.set("maxVersions", "false");
                     }
                     if (selectedColor !== "1bd96a") {
                         urlParams.set("color", selectedColor);
@@ -681,10 +511,12 @@
 
                 const modrinthUrl = `https://modrinth.com/${type}/${identifierValue}`;
 
-                markdownOutput.classList.remove("empty");
+                markdownOutput.classList.remove("text-text-muted");
+                markdownOutput.classList.add("text-text-bright");
                 markdownOutput.textContent = `[![${identifierValue}](${url})](${modrinthUrl})`;
 
-                htmlOutput.classList.remove("empty");
+                htmlOutput.classList.remove("text-text-muted");
+                htmlOutput.classList.add("text-text-bright");
                 htmlOutput.textContent = `<a href="${modrinthUrl}"><img src="${url}" alt="${identifierValue}" /></a>`;
 
                 copyMarkdownBtn.disabled = false;
@@ -695,14 +527,14 @@
                     const endTime = performance.now();
                     const generationTime = Math.round(endTime - startTime);
                     document.getElementById("generationTime").textContent = `${generationTime}ms`;
-                    document.getElementById("generationIcon").style.display = "inline";
-                    document.getElementById("loaderIcon").style.display = "none";
+                    document.getElementById("generationIcon").classList.remove('hidden');
+                    document.getElementById("loaderIcon").classList.add('hidden');
 
                     // Show image after load
                     previewLink.href = modrinthUrl;
-                    previewContainer.classList.remove("empty");
-                    previewPlaceholder.style.display = "none";
-                    previewLink.style.display = "block";
+                    previewContainer.classList.remove("text-text-muted");
+                    previewPlaceholder.classList.add('hidden');
+                    previewLink.classList.remove('hidden');
 
                     try {
                         const res = await fetch(`/meta/${type}/${encodeURIComponent(identifierValue)}`);
@@ -717,12 +549,12 @@
                 };
 
                 previewImg.onerror = () => {
-                    document.getElementById("loaderIcon").style.display = "none";
-                    document.getElementById("generationIcon").style.display = "none";
+                    document.getElementById("loaderIcon").classList.add('hidden');
+                    document.getElementById("generationIcon").classList.add('hidden');
                     document.getElementById("generationTime").textContent = "";
-                    previewContainer.classList.add("empty");
-                    previewPlaceholder.style.display = "inline";
-                    previewLink.style.display = "none";
+                    previewContainer.classList.add("text-text-muted");
+                    previewPlaceholder.classList.remove('hidden');
+                    previewLink.classList.add('hidden');
                 };
             }
 
@@ -789,8 +621,8 @@
             updateUI();
         </script>
 
-        <footer style="text-align: center; padding: 2rem 1.25rem 1rem; font-size: 1rem; color: #929aa3">
-            Made with &hearts; by <a href="https://github.com/creeperkatze" target="_blank" style="color: #1bd96a; text-decoration: none">Creeperkatze</a> · View <a href="https://github.com/creeperkatze/modrinth-embeds" target="_blank" style="color: #1bd96a; text-decoration: none">Source</a> · <a href="https://github.com/creeperkatze/modrinth-embeds" target="_blank" style="color: #fbbf24; text-decoration: none">&starf; On Github</a> · Not affiliated with Modrinth
+        <footer class="text-center py-8 px-5 pt-8 text-base text-text-muted">
+            Made with &hearts; by <a href="https://github.com/creeperkatze" target="_blank" class="text-modrinth-green no-underline">Creeperkatze</a> · View <a href="https://github.com/creeperkatze/modrinth-embeds" target="_blank" class="text-modrinth-green no-underline">Source</a> · <a href="https://github.com/creeperkatze/modrinth-embeds" target="_blank" class="text-yellow no-underline">&starf; On Github</a> · Not affiliated with Modrinth
         </footer>
     </body>
 </html>
