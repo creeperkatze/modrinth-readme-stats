@@ -2,7 +2,9 @@ import { formatNumber, escapeXml, truncateText, generateSparkline } from "../uti
 import { ICONS } from "../constants/icons.js";
 import { getLoaderColor, getProjectTypeIcon } from "../constants/loaderConfig.js";
 
-const EMBED_VERSION = process.env.npm_package_version;
+import packageJson from "../../package.json" with { type: "json" };
+
+const VERSION = packageJson.version;
 
 export function getThemeColors(theme = "dark", customColor = null)
 {
@@ -359,6 +361,6 @@ export function generateInfo(height, colors)
         fill="${colors.textColor}"
         text-anchor="start"
         opacity="0.6">
-    v${EMBED_VERSION} • ${dateTimeStr}
+    v${VERSION} • ${dateTimeStr}
   </text>`;
 }
