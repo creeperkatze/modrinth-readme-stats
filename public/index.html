@@ -210,10 +210,37 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-2">
-                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>Copy Markdown</button>
-                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyHtml()" id="copyHtmlBtn" disabled>Copy HTML</button>
-                    </div>
+<div class="flex gap-2">
+    <button
+        class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed"
+        onclick="copyMarkdown()"
+        id="copyMarkdownBtn"
+        disabled
+    >
+        Copy Markdown
+    </button>
+
+    <button
+        class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed"
+        onclick="copyHtml()"
+        id="copyHtmlBtn"
+        disabled
+    >
+        Copy HTML
+    </button>
+
+    <a
+        href="/"
+        class="py-2.5 px-4 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold flex items-center gap-2 hover:brightness-110 no-underline"
+    >
+        <span>Reset</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+        </svg>
+    </a>
+</div>
                 </div>
             </div>
         </div>
