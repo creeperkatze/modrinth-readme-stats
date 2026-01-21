@@ -213,7 +213,7 @@
                             </div>
 
                             <div class="mb-2 hidden" id="maxVersionsSection">
-                                <div class="flex justify-between items-center mb-2">
+                                <div class="flex justify-between items-center">
                                     <h3 class="text-text-secondary text-base font-semibold">Max Versions</h3>
                                     <span class="text-modrinth-green text-base font-bold" id="maxVersionsValue">5</span>
                                 </div>
@@ -228,7 +228,7 @@
                             </div>
 
                             <div class="mb-2">
-                                <h3 class="text-text-secondary text-base font-semibold mb-2">Accent Color</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mb-1">Accent Color</h3>
                                 <div id="colorButtons" class="flex flex-wrap gap-2"></div>
                             </div>
                         </div>
@@ -269,10 +269,39 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-2">
-                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>Copy Markdown</button>
+                    <div>
+                        <h2 class="text-text-secondary text-lg font-semibold">URL</h2>
+                        <div class="bg-section-bg border border-border-dark rounded-xl p-3 flex items-center font-mono text-xs break-all text-text-muted" id="urlOutput">
+                            <span id="urlPlaceholder">Your URL will appear here</span>
+                        </div>
+                    </div>
 
-                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyHtml()" id="copyHtmlBtn" disabled>Copy HTML</button>
+                    <div class="flex gap-2">
+                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>
+                            <span>Copy Markdown</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                <path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/>
+                                <path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"/>
+                            </svg>
+                        </button>
+
+                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyHtml()" id="copyHtmlBtn" disabled>
+                            <span>Copy HTML</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m18 16 4-4-4-4"/>
+                                <path d="m6 8-4 4 4 4"/>
+                                <path d="m14.5 4-5 16"/>
+                            </svg>
+                        </button>
+
+                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyUrl()" id="copyUrlBtn" disabled>
+                            <span>Copy URL</span>
+                            <svg id="Discord-Logo" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 126.644 96" fill="currentColor">
+                                <path d="M81.15,0c-1.2376,2.1973-2.3489,4.4704-3.3591,6.794-9.5975-1.4396-19.3718-1.4396-28.9945,0-.985-2.3236-2.1216-4.5967-3.3591-6.794-9.0166,1.5407-17.8059,4.2431-26.1405,8.0568C2.779,32.5304-1.6914,56.3725.5312,79.8863c9.6732,7.1476,20.5083,12.603,32.0505,16.0884,2.6014-3.4854,4.8998-7.1981,6.8698-11.0623-3.738-1.3891-7.3497-3.1318-10.8098-5.1523.9092-.6567,1.7932-1.3386,2.6519-1.9953,20.281,9.547,43.7696,9.547,64.0758,0,.8587.7072,1.7427,1.3891,2.6519,1.9953-3.4601,2.0457-7.0718,3.7632-10.835,5.1776,1.97,3.8642,4.2683,7.5769,6.8698,11.0623,11.5419-3.4854,22.3769-8.9156,32.0509-16.0631,2.626-27.2771-4.496-50.9172-18.817-71.8548C98.9811,4.2684,90.1918,1.5659,81.1752.0505l-.0252-.0505ZM42.2802,65.4144c-6.2383,0-11.4159-5.6575-11.4159-12.6535s4.9755-12.6788,11.3907-12.6788,11.5169,5.708,11.4159,12.6788c-.101,6.9708-5.026,12.6535-11.3907,12.6535ZM84.3576,65.4144c-6.2637,0-11.3907-5.6575-11.3907-12.6535s4.9755-12.6788,11.3907-12.6788,11.4917,5.708,11.3906,12.6788c-.101,6.9708-5.026,12.6535-11.3906,12.6535Z"/>
+                            </svg>
+                        </button>
 
                         <a href="/" class="py-2.5 px-4 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold flex items-center gap-2 hover:brightness-110 no-underline">
                             <span>Reset</span>
@@ -304,8 +333,11 @@
             const markdownPlaceholder = document.getElementById("markdownPlaceholder");
             const htmlOutput = document.getElementById("htmlOutput");
             const htmlPlaceholder = document.getElementById("htmlPlaceholder");
+            const urlOutput = document.getElementById("urlOutput");
+            const urlPlaceholder = document.getElementById("urlPlaceholder");
             const copyMarkdownBtn = document.getElementById("copyMarkdownBtn");
             const copyHtmlBtn = document.getElementById("copyHtmlBtn");
+            const copyUrlBtn = document.getElementById("copyUrlBtn");
             const showProjects = document.getElementById("showProjects");
             const maxProjects = document.getElementById("maxProjects");
             const maxProjectsValue = document.getElementById("maxProjectsValue");
@@ -566,8 +598,11 @@
                     markdownOutput.innerHTML = '<span id="markdownPlaceholder">Your markdown code will appear here</span>';
                     htmlOutput.classList.add("text-text-muted");
                     htmlOutput.innerHTML = '<span id="htmlPlaceholder">Your HTML code will appear here</span>';
+                    urlOutput.classList.add("text-text-muted");
+                    urlOutput.innerHTML = '<span id="urlPlaceholder">Your URL will appear here</span>';
                     copyMarkdownBtn.disabled = true;
                     copyHtmlBtn.disabled = true;
+                    copyUrlBtn.disabled = true;
                     document.getElementById("generationTime").textContent = "";
                     document.getElementById("generationIcon").classList.add("hidden");
                     document.getElementById("loaderIcon").classList.add("hidden");
@@ -626,8 +661,13 @@
                 htmlOutput.classList.add("text-text-bright");
                 htmlOutput.textContent = `<a href="${modrinthUrl}"><img src="${url}" alt="${identifierValue}" /></a>`;
 
+                urlOutput.classList.remove("text-text-muted");
+                urlOutput.classList.add("text-text-bright");
+                urlOutput.textContent = url;
+
                 copyMarkdownBtn.disabled = false;
                 copyHtmlBtn.disabled = false;
+                copyUrlBtn.disabled = false;
 
                 previewImg.src = `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`;
                 previewImg.onload = async () => {
@@ -709,10 +749,11 @@
                 if (!text || text === "Your markdown code will appear here") return;
 
                 navigator.clipboard.writeText(text).then(() => {
-                    const originalText = copyMarkdownBtn.textContent;
-                    copyMarkdownBtn.textContent = "Copied!";
+                    const span = copyMarkdownBtn.querySelector("span");
+                    const originalText = span.textContent;
+                    span.textContent = "Copied!";
                     setTimeout(() => {
-                        copyMarkdownBtn.textContent = originalText;
+                        span.textContent = originalText;
                     }, 2000);
                 });
             }
@@ -722,10 +763,25 @@
                 if (!text || text === "Your HTML code will appear here") return;
 
                 navigator.clipboard.writeText(text).then(() => {
-                    const originalText = copyHtmlBtn.textContent;
-                    copyHtmlBtn.textContent = "Copied!";
+                    const span = copyHtmlBtn.querySelector("span");
+                    const originalText = span.textContent;
+                    span.textContent = "Copied!";
                     setTimeout(() => {
-                        copyHtmlBtn.textContent = originalText;
+                        span.textContent = originalText;
+                    }, 2000);
+                });
+            }
+
+            function copyUrl() {
+                const text = urlOutput.textContent.trim();
+                if (!text || text === "Your URL will appear here") return;
+
+                navigator.clipboard.writeText(text).then(() => {
+                    const span = copyUrlBtn.querySelector("span");
+                    const originalText = span.textContent;
+                    span.textContent = "Copied!";
+                    setTimeout(() => {
+                        span.textContent = originalText;
                     }, 2000);
                 });
             }
