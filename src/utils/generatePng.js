@@ -1,11 +1,15 @@
-import sharp from "sharp";
+import { Resvg } from "@resvg/resvg-js";
 
-export async function generatePng(svgString, width = 450, height = 400)
+export async function generatePng(svgString)
 {
-    const pngBuffer = await sharp(Buffer.from(svgString))
-        .resize(width, height)
-        .png()
-        .toBuffer();
+    const resvg = new Resvg(svgString, {
+        fitTo: {
+            mode: "original"
+        }
+    });
+
+    const pngData = resvg.render();
+    const pngBuffer = pngData.asPng();
 
     return pngBuffer;
 }
