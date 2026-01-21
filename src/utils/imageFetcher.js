@@ -31,7 +31,7 @@ export async function fetchImageAsBase64(url)
             const needsConversion = detectedType?.mime === "image/webp" || detectedType?.mime === "image/svg+xml";
 
             if (needsConversion) {
-                logger.info(`Converting ${detectedType?.mime || "unknown"} image to PNG: ${url}`);
+                logger.info(`Converting ${detectedType?.mime || "unknown"} image to png: ${url}`);
                 pngBuffer = await sharp(buffer).png().toBuffer();
             }
 
