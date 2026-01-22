@@ -281,6 +281,16 @@
                                 <span id="generationTime" class="text-yellow"></span>
                             </span>
                         </h2>
+                        <div id="apiSlowWarning" class="hidden mb-3 bg-yellow/10 border border-yellow/30 rounded-lg px-3 py-2 text-sm text-yellow">
+                            <span class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                                    <path d="M12 9v4" />
+                                    <path d="M12 17h.01" />
+                                </svg>
+                                <span>The Modrinth API is responding slowly. Generated embeds may take longer to load.</span>
+                            </span>
+                        </div>
                         <div class="bg-section-bg border border-border-dark rounded-xl min-h-[460px] flex items-center justify-center text-text-muted p-4" id="previewContainer">
                             <span id="previewPlaceholder">Your embed will appear here</span>
                             <a id="previewLink" href="" target="_blank" class="hidden">
@@ -773,6 +783,7 @@
                     document.getElementById("generationTime").textContent = "";
                     document.getElementById("generationIcon").classList.add("hidden");
                     document.getElementById("loaderIcon").classList.add("hidden");
+                    document.getElementById("apiSlowWarning").classList.add("hidden");
                     return;
                 }
 
@@ -780,6 +791,7 @@
                 document.getElementById("loaderIcon").classList.remove("hidden");
                 document.getElementById("generationIcon").classList.add("hidden");
                 document.getElementById("generationTime").textContent = "";
+                document.getElementById("apiSlowWarning").classList.add("hidden");
                 previewContainer.classList.add("text-text-muted");
                 previewPlaceholder.classList.remove("hidden");
                 previewLink.classList.add("hidden");
@@ -850,6 +862,11 @@
                     document.getElementById("generationIcon").classList.remove("hidden");
                     document.getElementById("loaderIcon").classList.add("hidden");
 
+                    // Show slow API warning if generation time is too long
+                    if (generationTime > 1000) {
+                        document.getElementById("apiSlowWarning").classList.remove("hidden");
+                    }
+
                     // Show image after load
                     previewLink.href = modrinthUrl;
                     previewContainer.classList.remove("text-text-muted");
@@ -872,6 +889,7 @@
                     document.getElementById("loaderIcon").classList.add("hidden");
                     document.getElementById("generationIcon").classList.add("hidden");
                     document.getElementById("generationTime").textContent = "";
+                    document.getElementById("apiSlowWarning").classList.add("hidden");
                     previewContainer.classList.add("text-text-muted");
                     previewPlaceholder.classList.remove("hidden");
                     previewLink.classList.add("hidden");
