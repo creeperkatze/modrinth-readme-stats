@@ -84,8 +84,8 @@ export async function errorHandler(err, req, res, next)
                     "User not found";
     } else if (err.message.includes("Modrinth API"))
     {
-        // Extract status code and error text from error message (format: "Modrinth API error: STATUS|TEXT")
-        const errorMatch = err.message.match(/Modrinth API error: (\d+)\|?(.*)/);
+        // Extract status code and error text from error message (format: "Modrinth API error: STATUS: TEXT")
+        const errorMatch = err.message.match(/Modrinth API error: (\d+):?\s*(.*)/);
         const apiStatusCode = errorMatch ? parseInt(errorMatch[1]) : 502;
         const apiErrorText = errorMatch && errorMatch[2] ? errorMatch[2].trim() : "";
 
