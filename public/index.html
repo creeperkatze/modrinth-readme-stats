@@ -863,6 +863,8 @@
                 }
 
                 const modrinthUrl = `https://modrinth.com/${type}/${identifierValue}`;
+                const cacheBuster = `timestamp=${Date.now()}`;
+                const urlForDiscord = `${url}${url.includes("?") ? "&" : "?"}${cacheBuster}`;
 
                 markdownOutput.classList.remove("text-text-muted");
                 markdownOutput.classList.add("text-text-bright");
@@ -874,7 +876,7 @@
 
                 urlOutput.classList.remove("text-text-muted");
                 urlOutput.classList.add("text-text-bright");
-                urlOutput.textContent = url;
+                urlOutput.textContent = urlForDiscord;
 
                 copyMarkdownBtn.disabled = false;
                 copyHtmlBtn.disabled = false;
