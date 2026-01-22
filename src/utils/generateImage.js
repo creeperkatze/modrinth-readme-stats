@@ -1,6 +1,7 @@
 import path from "path";
 import { readdirSync } from "fs";
 import { Resvg } from "@resvg/resvg-js";
+import { performance } from "perf_hooks";
 
 // Load font files
 const fontsDir = path.join(process.cwd(), "public", "fonts");

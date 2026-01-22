@@ -2,6 +2,7 @@ import logger from "./logger.js";
 import { pLimit, requestDeduplicator } from "./asyncUtils.js";
 import sharp from "sharp";
 import { fileTypeFromBuffer } from "file-type";
+import { performance } from "perf_hooks";
 
 const USER_AGENT = process.env.USER_AGENT;
 const MAX_CONCURRENT_REQUESTS = parseInt(process.env.MAX_CONCURRENT_REQUESTS || "10", 10);

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-import logger from "../utils/logger.js";
 import { fetchImageAsBase64, fetchImagesForProjects, fetchVersionDatesForProjects } from "../utils/imageFetcher.js";
 import { aggregateAllStats, normalizeV3ProjectFields, aggregateProjectStats } from "../utils/statsAggregator.js";
+import { performance } from "perf_hooks";
 
 dotenv.config({ quiet: true });
 
