@@ -3,6 +3,7 @@ import { apiCache } from "../utils/cache.js";
 import { generateBadge } from "../generators/badge.js";
 import { formatNumber } from "../utils/formatters.js";
 import logger from "../utils/logger.js";
+import { generatePng } from "../utils/generateImage.js";
 
 const API_CACHE_TTL = 3600; // 1 hour
 
@@ -39,9 +40,13 @@ const DATA_FETCHERS = {
 const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
     try {
         const identifier = req.params.username || req.params.slug || req.params.id;
+        const format = req.query.format;
         const color = req.query.color ? `#${req.query.color.replace(/^#/, "")}` : "#1bd96a";
         const backgroundColor = req.query.backgroundColor ? `#${req.query.backgroundColor.replace(/^#/, "")}` : null;
         const config = BADGE_CONFIGS[entityType][badgeType];
+
+        // Determine if we need to render the svg as a image
+        const renderImage = req.isImageCrawler || format === "png";
 
         // API data cache key - independent of styling options
         const apiCacheKey = `badge:${entityType}:${identifier}`;
@@ -69,10 +74,28 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
         const value = config.getValue(data.stats);
         const svg = generateBadge(config.label, value, color, backgroundColor);
 
-        const apiTime = fromCache ? `cached (${cacheAge})` : "N/A";
+        // Generate PNG for Discord bots or when format=png is requested
+        if (renderImage) {
+            const { buffer: pngBuffer, renderTime } = await generatePng(svg);
+
+            const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
+            const pngTime = `${Math.round(renderTime)}ms`;
+            const crawlerType = req.crawlerType;
+            const crawlerLog = crawlerType ? `, crawler: ${crawlerType}` : "";
+            const size = `${(Buffer.byteLength(pngBuffer) / 1024).toFixed(1)} KB`;
+
+            logger.info(`Showing ${entityType} ${badgeType} badge for "${identifier}" (api: ${apiTime}, render: ${pngTime}${crawlerLog}, size: ${size})`);
+            res.setHeader("Content-Type", "image/png");
+            res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
+            return res.send(pngBuffer);
+        }
+
+        // Return SVG
+        const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
         const crawlerType = req.crawlerType;
         const crawlerLog = crawlerType ? `, crawler: ${crawlerType}` : "";
-        logger.info(`Showing ${entityType} ${badgeType} badge for "${identifier}" (api: ${apiTime}${crawlerLog})`);
+        const size = `${(Buffer.byteLength(svg) / 1024).toFixed(1)} KB`;
+        logger.info(`Showing ${entityType} ${badgeType} badge for "${identifier}" (api: ${apiTime}${crawlerLog}, size: ${size})`);
 
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);

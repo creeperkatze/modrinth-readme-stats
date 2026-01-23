@@ -254,10 +254,14 @@ export class ModrinthClient
     // Lightweight badge data fetchers - only fetch minimal stats
     async getUserBadgeStats(username)
     {
+        const apiStart = performance.now();
+
         const [user, projects] = await Promise.all([
             this.getUser(username),
             this.getUserProjects(username)
         ]);
+
+        const apiTime = performance.now() - apiStart;
 
         const stats = {
             totalDownloads: projects.reduce((sum, p) => sum + (p.downloads || 0), 0),
@@ -265,12 +269,16 @@ export class ModrinthClient
             projectCount: projects.length
         };
 
-        return { stats };
+        return { stats, timings: { api: apiTime } };
     }
 
     async getProjectBadgeStats(slug, fetchVersions = false)
     {
+        const apiStart = performance.now();
+
         const project = await this.getProject(slug);
+
+        let apiTime = performance.now() - apiStart;
 
         const stats = {
             downloads: project.downloads || 0,
@@ -286,17 +294,22 @@ export class ModrinthClient
             } catch {
                 stats.versionCount = 0;
             }
+            apiTime = performance.now() - apiStart;
         }
 
-        return { stats };
+        return { stats, timings: { api: apiTime } };
     }
 
     async getOrganizationBadgeStats(id)
     {
+        const apiStart = performance.now();
+
         const [organization, rawProjects] = await Promise.all([
             this.getOrganization(id),
             this.getOrganizationProjects(id)
         ]);
+
+        const apiTime = performance.now() - apiStart;
 
         const projects = normalizeV3ProjectFields(rawProjects);
 
@@ -306,11 +319,13 @@ export class ModrinthClient
             projectCount: projects.length
         };
 
-        return { stats };
+        return { stats, timings: { api: apiTime } };
     }
 
     async getCollectionBadgeStats(id)
     {
+        const apiStart = performance.now();
+
         const collection = await this.getCollection(id);
 
         let stats = {
@@ -328,7 +343,9 @@ export class ModrinthClient
             };
         }
 
-        return { stats };
+        const apiTime = performance.now() - apiStart;
+
+        return { stats, timings: { api: apiTime } };
     }
 }
 

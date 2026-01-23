@@ -81,23 +81,25 @@ const handleCardRequest = async (req, res, next, cardType) => {
         if (renderImage) {
             const { buffer: pngBuffer, renderTime } = await generatePng(svg);
 
-            const apiTime = fromCache ? `cached (${cacheAge})` : (data.timings?.api ? `${Math.round(data.timings.api)}ms` : "N/A");
-            const conversionTime = fromCache ? "cached" : (data.timings?.imageConversion ? `${Math.round(data.timings.imageConversion)}ms` : "N/A");
+            const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
+            const conversionTime = fromCache ? "cached" : `${Math.round(data.timings.imageConversion)}ms`;
             const pngTime = `${Math.round(renderTime)}ms`;
             const crawlerType = req.crawlerType;
             const crawlerLog = crawlerType ? `, crawler: ${crawlerType}` : "";
+            const size = `${(Buffer.byteLength(pngBuffer) / 1024).toFixed(1)} KB`;
 
-            logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}, image conversion: ${conversionTime}, render: ${pngTime}${crawlerLog})`);
+            logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}, image conversion: ${conversionTime}, render: ${pngTime}${crawlerLog}, size: ${size})`);
             res.setHeader("Content-Type", "image/png");
             res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
             return res.send(pngBuffer);
         }
 
         // Return SVG
-        const apiTime = fromCache ? `cached (${cacheAge})` : (data.timings?.api ? `${Math.round(data.timings.api)}ms` : "N/A");
+        const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
         const crawlerType = req.crawlerType;
         const crawlerLog = crawlerType ? `, crawler: ${crawlerType}` : "";
-        logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}${crawlerLog})`);
+        const size = `${(Buffer.byteLength(svg) / 1024).toFixed(1)} KB`;
+        logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}${crawlerLog}, size: ${size})`);
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
         res.send(svg);
