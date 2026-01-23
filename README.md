@@ -13,8 +13,8 @@ Use the **[Website](modrinth-embeds.creeperkatze.de)** to visually configure and
 
 Examples:
 
-[![Prospector](https://modrinth-embeds.creeperkatze.de/user/prospector)](https://modrinth.com/user/prospector)
 [![Mod Menu](https://modrinth-embeds.creeperkatze.de/project/modmenu)](https://modrinth.com/project/modmenu)
+[![Prospector](https://modrinth-embeds.creeperkatze.de/user/prospector)](https://modrinth.com/user/prospector)
 [![CaffeineMC](https://modrinth-embeds.creeperkatze.de/organization/caffeinemc)](https://modrinth.com/organization/caffeinemc)
 [![Featured - Vol. 38](https://modrinth-embeds.creeperkatze.de/collection/VEgGDFFE)](https://modrinth.com/collection/VEgGDFFE)
 
@@ -24,22 +24,16 @@ Base URL: `https://modrinth-embeds.creeperkatze.de`
 
 ### Cards
 
-Pattern: `/<type>/<slug-or-id>`
-
 Rich cards showing stats, versions, projects, and activity sparklines.
 
-| Type | Pattern |
-|------|---------|
-| Project | `/project/{slug}` |
-| User | `/user/{username}` |
-| Organization | `/organization/{id}` |
-| Collection | `/collection/{id}` |
+Pattern: `/<type>/<slug-or-id>?<option>=<value>`
 
-```
-https://modrinth-embeds.creeperkatze.de/project/modmenu
-https://modrinth-embeds.creeperkatze.de/user/prospector
-https://modrinth-embeds.creeperkatze.de/organization/caffeinemc
-```
+| Card Type | Path | Example |
+|-----------|------|---------|
+| Project | `/project/<slug-or-id>` | [![Mod Menu](https://modrinth-embeds.creeperkatze.de/project/modmenu)](https://modrinth.com/project/modmenu) |
+| User | `/user/<username-or-id>` | [![Prospector](https://modrinth-embeds.creeperkatze.de/user/prospector)](https://modrinth.com/user/prospector) |
+| Organizationn | `/organization/<slug-or-id>` | [![CaffeineMC](https://modrinth-embeds.creeperkatze.de/organization/caffeinemc)](https://modrinth.com/organization/caffeinemc) |
+| Collection | `/collection/<id>` | [![Featured - Vol. 38](https://modrinth-embeds.creeperkatze.de/collection/VEgGDFFE)](https://modrinth.com/collection/VEgGDFFE) |
 
 #### Card Options
 
@@ -49,29 +43,23 @@ https://modrinth-embeds.creeperkatze.de/organization/caffeinemc
 | `backgroundColor` | Background color (hex) | `transparent` |
 | `showProjects` | Show top projects section | `true` |
 | `showVersions` | Show versions section | `true` |
-| `maxProjects` | Max projects to display (1-50) | `5` |
-| `maxVersions` | Max versions to display (1-50) | `5` |
+| `maxProjects` | Max projects to display (1-10) | `5` |
+| `maxVersions` | Max versions to display (1-10) | `5` |
 | `relativeTime` | Show relative time for dates | `true` |
 | `showSparklines` | Display activity sparklines | `true` |
 
 ### Badges
 
-Pattern: `/<type>/<slug-or-id>/<metric>`
+Pattern: `/<type>/<slug-or-id>/<metric>?<option>=<value>`
 
 Compact badges showing a single metric.
 
-| Type | Available Metrics |
-|------|-------------------|
-| Project | `downloads`, `followers`, `versions` |
-| User | `downloads`, `projects`, `followers` |
-| Organization | `downloads`, `projects`, `followers` |
-| Collection | `downloads`, `projects`, `followers` |
-
-| Badge Type | Example |
-|------------|---------|
-| Downloads | ![Downloads](https://modrinth-embeds.creeperkatze.de/project/modmenu/downloads) |
-| Followers | ![Followers](https://modrinth-embeds.creeperkatze.de/project/modmenu/followers) |
-| Versions | ![Versions](https://modrinth-embeds.creeperkatze.de/project/modmenu/versions) |
+| Badge Type | Path | Example |
+|------------|------|---------|
+| Downloads | `<type>/<slug-or-id>/downloads` | ![Downloads](https://modrinth-embeds.creeperkatze.de/project/modmenu/downloads) |
+| Projects | `<type>/<slug-or-id>/projects` | ![Projects](https://modrinth-embeds.creeperkatze.de/user/prospector/projects) |
+| Followers | `<type>/<slug-or-id>/followers` | ![Followers](https://modrinth-embeds.creeperkatze.de/project/modmenu/followers) |
+| Versions | `<type>/<slug-or-id>/versions` | ![Versions](https://modrinth-embeds.creeperkatze.de/project/modmenu/versions) |
 
 #### Badge Options
 
