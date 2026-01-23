@@ -40,7 +40,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
         const format = req.query.format;
 
         // Determine if we need to fetch images (only for PNG generation)
-        const needsImages = req.isCrawler || format === "image";
+        const needsImages = req.isImageCrawler || format === "image";
 
         // Parse customization options
         const options = {
@@ -95,7 +95,8 @@ const handleCardRequest = async (req, res, next, cardType) => {
 
         // Return SVG
         const apiTime = fromCache ? `cached (${cacheAge})` : (data.timings?.api ? `${Math.round(data.timings.api)}ms` : "N/A");
-        logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime})`);
+        const crawlerType = req.crawlerType || "N/A";
+        logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}, crawler: ${crawlerType})`);
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
         res.send(svg);

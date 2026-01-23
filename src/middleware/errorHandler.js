@@ -101,8 +101,8 @@ export async function errorHandler(err, req, res, next)
     // Check if this is a badge request
     const isBadge = req.path.includes("/badge");
 
-    // Check if image format is requested or if it's a Discord bot
-    const useImage = req.isCrawler || format === "image";
+    // Check if image format is requested or if it's an image crawler
+    const useImage = req.isImageCrawler || format === "image";
 
     if (isBadge)
     {
@@ -117,8 +117,8 @@ export async function errorHandler(err, req, res, next)
         res.setHeader("Content-Type", "image/png");
         res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-        // Use Code 200 for crawlers since they dont like error codes
-        if (req.isCrawler)
+        // Use Code 200 for image crawlers since they dont like error codes
+        if (req.isImageCrawler)
         {
             res.status(200).send(pngBuffer);
         }
@@ -133,8 +133,8 @@ export async function errorHandler(err, req, res, next)
         res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         res.setHeader("X-Error-Status", statusCode.toString());
 
-        // Use Code 200 for crawlers since they dont like error codes
-        if (req.isCrawler)
+        // Use Code 200 for image crawlers since they dont like error codes
+        if (req.isImageCrawler)
         {
             res.status(200).send(generateErrorCard(message, detailText));
         }

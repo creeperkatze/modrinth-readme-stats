@@ -1,4 +1,5 @@
-const CRAWLER_USER_AGENTS = [
+// Crawlers that require PNG images (social media preview bots)
+const IMAGE_CRAWLERS = [
     "Discordbot",
     "Twitterbot",
     "facebookexternalhit",
@@ -9,16 +10,26 @@ const CRAWLER_USER_AGENTS = [
     "SkypeUriPreview"
 ];
 
+// All known crawlers/bots for logging purposes
+const ALL_CRAWLERS = [
+    ...IMAGE_CRAWLERS,
+    "github-camo",
+    "Dropbox",
+    "FacebookBot",
+    "GoogleBot",
+    "BingBot"
+];
+
 export const checkCrawlerMiddleware = (req, res, next) => {
     const userAgent = req.headers["user-agent"] || "";
 
-    // Check if the request is from any known crawler/bot
-    req.isCrawler = CRAWLER_USER_AGENTS.some(crawler =>
+    // Check if the request is from an image crawler (social media bots)
+    req.isImageCrawler = IMAGE_CRAWLERS.some(crawler =>
         userAgent.includes(crawler)
     );
 
-    // Optionally, identify which specific bot it is
-    req.crawlerType = CRAWLER_USER_AGENTS.find(crawler =>
+    // Identify which specific bot it is (for logging)
+    req.crawlerType = ALL_CRAWLERS.find(crawler =>
         userAgent.includes(crawler)
     ) || null;
 
