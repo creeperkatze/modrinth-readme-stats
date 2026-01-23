@@ -22,7 +22,8 @@ export function generateCollectionCard(data, options = {})
         maxProjects = DEFAULT_PROJECTS_COUNT,
         showSparklines = true,
         color = null,
-        backgroundColor = null
+        backgroundColor = null,
+        fromCache = false
     } = options;
 
     const colors = getThemeColors(color, backgroundColor);
@@ -44,7 +45,7 @@ ${generateProfileImage(collection.icon_url_base64, "collection-clip", 400, 60, 3
 ${generateStatsGrid(statsData, colors)}
 ${generateDivider(colors)}
 ${generateProjectList(topProjects, "Projects", colors, showSparklines)}
-${generateInfo(height, colors)}
+${generateInfo(height, colors, fromCache)}
 ${generateAttribution(height, colors)}
 `;
 

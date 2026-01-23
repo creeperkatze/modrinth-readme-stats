@@ -75,6 +75,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
         }
 
         // Always regenerate the output from cached data
+        options.fromCache = fromCache;
         const svg = config.generator(data, options);
 
         // Generate PNG for Discord bots or when format=png is requested
@@ -91,6 +92,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
             logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}, image conversion: ${conversionTime}, render: ${pngTime}${crawlerLog}, size: ${size})`);
             res.setHeader("Content-Type", "image/png");
             res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
+            res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
             return res.send(pngBuffer);
         }
 
@@ -102,6 +104,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
         logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}${crawlerLog}, size: ${size})`);
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
+        res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
         res.send(svg);
     } catch (err) {
         const config = CARD_CONFIGS[cardType];

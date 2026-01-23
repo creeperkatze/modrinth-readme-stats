@@ -22,7 +22,8 @@ export function generateOrganizationCard(data, options = {})
         maxProjects = DEFAULT_PROJECTS_COUNT,
         showSparklines = true,
         color = null,
-        backgroundColor = null
+        backgroundColor = null,
+        fromCache = false
     } = options;
 
     const colors = getThemeColors(color, backgroundColor);
@@ -44,7 +45,7 @@ ${generateProfileImage(organization.icon_url_base64, "org-clip", 400, 60, 35, co
 ${generateStatsGrid(statsData, colors)}
 ${generateDivider(colors)}
 ${generateProjectList(topProjects, "Top Projects", colors, showSparklines)}
-${generateInfo(height, colors)}
+${generateInfo(height, colors, fromCache)}
 ${generateAttribution(height, colors)}
 `;
 

@@ -216,5 +216,12 @@ export const ICONS = {
         <path d="M-28.662 13.511s-.605-4.431-3.127-5.772c-.957-.256-1.802 1.129-2.839.953-.783-.134-.92-1.322.118-2.625 1.253-1.572 3.754-3.239 7.51-3.133s7.899 2.025 8.029 4.378c-.139 1.765-2.05.754-2.05.754s-2.885-1.535-4.801 7.697" fill="none" stroke="${color}" stroke-width="1.81" stroke-linecap="round" stroke-linejoin="round" transform="matrix(1.04036 0 0 1.1631 40.432 -2.278)"/>
         <path d="M-33.825 10.737s-1.006.602-1.867 2.089" fill="none" stroke="${color}" stroke-width="1.81" stroke-linecap="round" stroke-linejoin="round" transform="matrix(1.0317 -.13393 .14973 1.15343 36.882 -5.8)"/>
         <path d="M-21.195 10.385s1.378.38 1.947 1.615" fill="none" stroke="${color}" stroke-width="1.81" stroke-linecap="round" stroke-linejoin="round" transform="matrix(1.04036 0 0 1.1631 41.36 -1.513)"/>
+    `,
+    "database-zap": (color = "currentColor") => `
+        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="${color}" stroke-width="2" fill="none"/>
+        <path d="M3 5v14a9 3 0 0 0 12 1.84" stroke="${color}" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M21 5v3" stroke="${color}" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M21 12l-3 5h4l-3 5" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M3 12a9 3 0 0 0 11.59 2.87" stroke="${color}" stroke-width="2" stroke-linecap="round" fill="none"/>
     `
 };

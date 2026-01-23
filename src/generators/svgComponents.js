@@ -350,7 +350,7 @@ export function generateAttribution(height, colors)
   </text>`;
 }
 
-export function generateInfo(height, colors)
+export function generateInfo(height, colors, fromCache = false)
 {
     const now = new Date();
     const dateTimeStr = now.toLocaleString("en-US", {
@@ -361,14 +361,24 @@ export function generateInfo(height, colors)
         minute: "2-digit"
     });
 
+    const versionText = `v${VERSION} • ${dateTimeStr}`;
+    const cacheHtml = fromCache ? `
+  <!-- Cache icon -->
+  <g opacity="0.6">
+    <svg x="15" y="${height - 15}" width="12" height="12" viewBox="0 0 24 24">
+      ${ICONS["database-zap"](colors.textColor)}
+    </svg>
+  </g>` : "";
+
     return `
   <!-- Bottom left version + date -->
-  <text x="15" y="${height - 5}"
+  <text x="${fromCache ? 30 : 15}" y="${height - 5}"
         font-family="Inter, sans-serif"
         font-size="10"
         fill="${colors.textColor}"
         text-anchor="start"
         opacity="0.6">
-    v${VERSION} • ${dateTimeStr}
-  </text>`;
+    ${versionText}
+  </text>   
+${cacheHtml}`;
 }

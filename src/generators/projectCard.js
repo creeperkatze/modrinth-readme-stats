@@ -24,7 +24,8 @@ export function generateProjectCard(data, options = {})
         maxVersions = DEFAULT_VERSIONS_COUNT,
         showSparklines = true,
         color = null,
-        backgroundColor = null
+        backgroundColor = null,
+        fromCache = false
     } = options;
 
     const colors = getThemeColors(color, backgroundColor);
@@ -79,7 +80,7 @@ ${generateRectImage(
 ${generateStatsGrid(statsData, colors)}
 ${generateDivider(colors)}
 ${generateVersionList(latestVersions, colors, options.relativeTime)}
-${generateInfo(height, colors)}
+${generateInfo(height, colors, fromCache)}
 ${generateAttribution(height, colors)}
 `;
 

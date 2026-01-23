@@ -72,7 +72,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
 
         // Always regenerate the badge from cached data
         const value = config.getValue(data.stats);
-        const svg = generateBadge(config.label, value, color, backgroundColor);
+        const svg = generateBadge(config.label, value, color, backgroundColor, fromCache);
 
         // Generate PNG for Discord bots or when format=png is requested
         if (renderImage) {
@@ -87,6 +87,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
             logger.info(`Showing ${entityType} ${badgeType} badge for "${identifier}" (api: ${apiTime}, render: ${pngTime}${crawlerLog}, size: ${size})`);
             res.setHeader("Content-Type", "image/png");
             res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
+            res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
             return res.send(pngBuffer);
         }
 
@@ -99,6 +100,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
 
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
+        res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
         res.send(svg);
     } catch (err) {
         const identifier = req.params.username || req.params.slug || req.params.id;
