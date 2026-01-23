@@ -1,7 +1,3 @@
 {
-  "functions": {
-    "api/with-font-file.js": {
-      "includeFiles": "public/fonts/**"
-    }
-  }
+  "includeFiles": ["public/fonts/**"]
 }
