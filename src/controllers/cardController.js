@@ -1,40 +1,68 @@
 import modrinthClient from "../services/modrinthClient.js";
+import curseforgeClient from "../services/curseforgeClient.js";
 import { apiCache } from "../utils/cache.js";
 import { generateUserCard } from "../generators/userCard.js";
 import { generateProjectCard } from "../generators/projectCard.js";
 import { generateOrganizationCard } from "../generators/organizationCard.js";
 import { generateCollectionCard } from "../generators/collectionCard.js";
+import { generateCurseforgeCard } from "../generators/curseforgeCard.js";
 import logger from "../utils/logger.js";
 import { generatePng } from "../utils/generateImage.js";
+import { modrinthKeys, curseforgeKeys } from "../utils/cacheKeys.js";
 
 const API_CACHE_TTL = 3600; // 1 hour
+
+// Map card types to their API clients
+const CARD_CLIENTS = {
+    user: modrinthClient,
+    project: modrinthClient,
+    organization: modrinthClient,
+    collection: modrinthClient,
+    curseforge_mod: curseforgeClient
+};
 
 const CARD_CONFIGS = {
     user: {
         paramKey: "username",
         dataFetcher: (client, id, options, convertToPng) => client.getUserStats(id, options.maxProjects, convertToPng),
-        generator: generateUserCard
+        generator: generateUserCard,
+        cacheKeyFn: modrinthKeys.user,
+        entityName: "user"
     },
     project: {
         paramKey: "slug",
         dataFetcher: (client, id, options, convertToPng) => client.getProjectStats(id, options.maxVersions, convertToPng),
-        generator: generateProjectCard
+        generator: generateProjectCard,
+        cacheKeyFn: modrinthKeys.project,
+        entityName: "project"
     },
     organization: {
         paramKey: "id",
         dataFetcher: (client, id, options, convertToPng) => client.getOrganizationStats(id, options.maxProjects, convertToPng),
-        generator: generateOrganizationCard
+        generator: generateOrganizationCard,
+        cacheKeyFn: modrinthKeys.organization,
+        entityName: "organization"
     },
     collection: {
         paramKey: "id",
         dataFetcher: (client, id, options, convertToPng) => client.getCollectionStats(id, options.maxProjects, convertToPng),
-        generator: generateCollectionCard
+        generator: generateCollectionCard,
+        cacheKeyFn: modrinthKeys.collection,
+        entityName: "collection"
+    },
+    curseforge_mod: {
+        paramKey: "modId",
+        dataFetcher: (client, id, options, convertToPng) => client.getModStats(id, options.maxVersions, convertToPng),
+        generator: generateCurseforgeCard,
+        cacheKeyFn: curseforgeKeys.mod,
+        entityName: "mod"
     }
 };
 
 const handleCardRequest = async (req, res, next, cardType) => {
     try {
         const config = CARD_CONFIGS[cardType];
+        const client = CARD_CLIENTS[cardType];
         const identifier = req.params[config.paramKey];
         const format = req.query.format;
 
@@ -54,7 +82,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
         };
 
         // API data cache key - simple, independent of styling options
-        const apiCacheKey = `${cardType}:${identifier}`;
+        const apiCacheKey = config.cacheKeyFn(identifier);
 
         // Check for cached API data
         let cached = apiCache.getWithMeta(apiCacheKey);
@@ -63,7 +91,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
 
         if (!data) {
             // Fetch from API with PNG images (works for both SVG and PNG output)
-            data = await config.dataFetcher(modrinthClient, identifier, options, true);
+            data = await config.dataFetcher(client, identifier, options, true);
             apiCache.set(apiCacheKey, data);
         }
 
@@ -89,7 +117,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
             const crawlerLog = crawlerType ? `, crawler: ${crawlerType}` : "";
             const size = `${(Buffer.byteLength(pngBuffer) / 1024).toFixed(1)} KB`;
 
-            logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}, image conversion: ${conversionTime}, render: ${pngTime}${crawlerLog}, size: ${size})`);
+            logger.info(`Showing ${config.entityName} card for "${identifier}" (api: ${apiTime}, image conversion: ${conversionTime}, render: ${pngTime}${crawlerLog}, size: ${size})`);
             res.setHeader("Content-Type", "image/png");
             res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
             res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
@@ -101,7 +129,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
         const crawlerType = req.crawlerType;
         const crawlerLog = crawlerType ? `, crawler: ${crawlerType}` : "";
         const size = `${(Buffer.byteLength(svg) / 1024).toFixed(1)} KB`;
-        logger.info(`Showing ${cardType} card for "${identifier}" (api: ${apiTime}${crawlerLog}, size: ${size})`);
+        logger.info(`Showing ${config.entityName} card for "${identifier}" (api: ${apiTime}${crawlerLog}, size: ${size})`);
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
         res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
@@ -118,3 +146,6 @@ export const getUser = (req, res, next) => handleCardRequest(req, res, next, "us
 export const getProject = (req, res, next) => handleCardRequest(req, res, next, "project");
 export const getOrganization = (req, res, next) => handleCardRequest(req, res, next, "organization");
 export const getCollection = (req, res, next) => handleCardRequest(req, res, next, "collection");
+
+// CurseForge mod card (using unified card controller)
+export const getCfMod = (req, res, next) => handleCardRequest(req, res, next, "curseforge_mod");

@@ -1,13 +1,14 @@
 import modrinthClient from "../services/modrinthClient.js";
 import { apiCache } from "../utils/cache.js";
 import logger from "../utils/logger.js";
+import { metaKey, PLATFORM } from "../utils/cacheKeys.js";
 
 const API_CACHE_TTL = 3600; // 1 hour
 
 export const getMeta = async (req, res, next) => {
     try {
         const { type, id } = req.params;
-        const cacheKey = `meta:${type}:${id}`;
+        const cacheKey = metaKey(PLATFORM.MODRINTH, type, id);
 
         const cached = apiCache.getWithMeta(cacheKey);
         const cachedResult = cached?.value;

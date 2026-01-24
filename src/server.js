@@ -2,10 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import logger from "./utils/logger.js";
 import path from "path";
-import userRoutes from "./routes/userRoutes.js";
-import projectRoutes from "./routes/projectRoutes.js";
-import organizationRoutes from "./routes/organizationRoutes.js";
-import collectionRoutes from "./routes/collectionRoutes.js";
+import modrinthRoutes from "./routes/modrinth/index.js";
+import curseforgeRoutes from "./routes/curseforge/index.js";
 import metaRoutes from "./routes/metaRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { checkCrawlerMiddleware } from "./middleware/checkCrawler.js";
@@ -19,7 +17,10 @@ app.use(express.static(path.join(process.cwd(), "public")));
 
 app.use(checkCrawlerMiddleware);
 
-app.use("/", userRoutes, projectRoutes, organizationRoutes, collectionRoutes, metaRoutes);
+// Mount platform routes
+app.use(modrinthRoutes);
+app.use(curseforgeRoutes);
+app.use(metaRoutes);
 
 app.use((req, res) =>
 {

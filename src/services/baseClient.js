@@ -1,0 +1,85 @@
+import packageJson from "../../package.json" with { type: "json" };
+const VERSION = packageJson.version;
+
+/**
+ * Base class for API clients with shared fetch logic and error handling.
+ * Platform-specific clients extend this class to inherit common functionality.
+ */
+export class BasePlatformClient {
+    /**
+     * @param {string} platformName - Display name of the platform (for error messages)
+     * @param {Object} config - Client configuration
+     * @param {string} config.baseUrl - Base URL for the API
+     * @param {string} [config.apiKey] - Optional API key
+     * @param {string} [config.userAgent] - Custom user agent string (defaults to package user agent)
+     */
+    constructor(platformName, config = {}) {
+        this.platformName = platformName;
+        this.baseUrl = config.baseUrl;
+        this.apiKey = config.apiKey;
+        this.userAgent = config.userAgent || `creeperkatze/modrinth-embeds/${VERSION} (contact@creeperkatze.de)`;
+    }
+
+    /**
+     * Check if the client is properly configured with required credentials.
+     * Override in subclasses for platform-specific configuration checks.
+     *
+     * @returns {boolean}
+     */
+    isConfigured() {
+        return true; // Base implementation - no API key required by default
+    }
+
+    /**
+     * Get headers for API requests.
+     * Override in subclasses to add platform-specific headers (e.g., API keys).
+     *
+     * @returns {Object}
+     */
+    getHeaders() {
+        return {
+            "User-Agent": this.userAgent
+        };
+    }
+
+    /**
+     * Fetch data from the API with standardized error handling.
+     *
+     * @param {string} endpoint - API endpoint (will be appended to baseUrl if not a full URL)
+     * @param {Object} [options] - Additional fetch options
+     * @returns {Promise<any>} Parsed JSON response
+     * @throws {Error} With descriptive error message on failure
+     */
+    async fetch(endpoint, options = {}) {
+        // Handle full URLs vs relative endpoints
+        const url = endpoint.startsWith("http") ? endpoint : `${this.baseUrl}${endpoint}`;
+
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                ...this.getHeaders(),
+                ...options.headers
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error("Resource not found");
+            }
+
+            const errorBody = await response.text().catch(() => "");
+            let errorText = errorBody;
+
+            try {
+                const json = JSON.parse(errorBody);
+                errorText = json.error || json.message || json.description || errorBody;
+            } catch {
+                // Use raw error text if JSON parsing fails
+            }
+
+            throw new Error(`${this.platformName} API error: ${response.status}: ${errorText}`);
+        }
+
+        return response.json();
+    }
+}

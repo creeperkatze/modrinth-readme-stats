@@ -148,8 +148,22 @@
 
                         <div id="basicContent">
                             <div class="mb-2">
-                                <h3 class="text-text-secondary text-base font-semibold mt-2 mb-1">Modrinth URL</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mt-2 mb-1">URL</h3>
                                 <input type="text" id="modrinthUrl" placeholder="https://modrinth.com/mod/fabric-api" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
+                            </div>
+
+                            <hr class="my-4 border-0 border-t border-border-dark relative divider" />
+
+                            <div class="mb-2">
+                                <h3 class="text-text-secondary text-base font-semibold mb-1">Platform</h3>
+                                <div class="flex gap-2">
+                                    <button id="platformModrinth" class="flex-1 py-2.5 px-3 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
+                                        Modrinth
+                                    </button>
+                                    <button id="platformCurseforge" class="flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
+                                        CurseForge
+                                    </button>
+                                </div>
                             </div>
 
                             <hr class="my-4 border-0 border-t border-border-dark relative divider" />
@@ -181,7 +195,7 @@
                             </div>
 
                             <div class="mb-2">
-                                <h3 class="text-text-secondary text-base font-semibold mb-1">Value</h3>
+                                <h3 class="text-text-secondary text-base font-semibold mb-1" id="valueLabel">Value</h3>
                                 <input type="text" id="identifier" placeholder="Enter username or project slug" class="w-full py-2.5 px-3 bg-input-bg border-2 border-transparent rounded-xl text-text-bright text-sm font-medium transition-[border-color] duration-100 focus:outline-none focus:border-modrinth-green" />
                             </div>
                         </div>
@@ -364,13 +378,13 @@
                             </svg>
                         </button>
 
-                        <a href="/" class="py-2.5 px-4 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold flex items-center gap-2 hover:brightness-110 no-underline">
+                        <button id="resetBtn" class="py-2.5 px-4 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold flex items-center gap-2 hover:brightness-110 cursor-pointer transition-[filter] duration-200">
                             <span>Reset</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                                 <path d="M3 3v5h5" />
                             </svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -399,6 +413,7 @@
             const copyMarkdownBtn = document.getElementById("copyMarkdownBtn");
             const copyHtmlBtn = document.getElementById("copyHtmlBtn");
             const copyUrlBtn = document.getElementById("copyUrlBtn");
+            const resetBtn = document.getElementById("resetBtn");
             const showProjects = document.getElementById("showProjects");
             const maxProjects = document.getElementById("maxProjects");
             const maxProjectsValue = document.getElementById("maxProjectsValue");
@@ -419,9 +434,16 @@
             const relativeTimeSection = document.getElementById("relativeTimeSection");
             const showSparklines = document.getElementById("showSparklines");
             const showSparklinesSection = document.getElementById("showSparklinesSection");
+            const platformModrinth = document.getElementById("platformModrinth");
+            const platformCurseforge = document.getElementById("platformCurseforge");
+            const urlLabel = document.getElementById("urlLabel");
+            const valueLabel = document.getElementById("valueLabel");
 
             let selectedColor = "1bd96a";
             let selectedBgColor = null;
+            let selectedPlatform = "modrinth"; // "modrinth" or "curseforge"
+
+            const CURSEFORGE_COLOR = "F16436";
 
             // HSL to Hex conversion (S=100%, L=75%)
             function hslToHex(h) {
@@ -465,10 +487,15 @@
                 return toHex(r) + toHex(g) + toHex(b);
             }
 
-            // Create color buttons
-            const defaultColor = "1bd96a";
-            const hues = [0, 30, 60, 150, 180, 210, 240, 270, 330];
-            const colors = [defaultColor, ...hues.map((h) => hslToHex(h))];
+            // Create color buttons - different sets for Modrinth vs CurseForge
+            const modrinthColors = ["1bd96a", ...[0, 30, 60, 150, 180, 210, 240, 270, 330].map((h) => hslToHex(h))];
+            const curseforgeColors = ["F16436", ...[0, 30, 60, 150, 180, 210, 240, 270, 330].map((h) => hslToHex(h))];
+
+            function getColors() {
+                return selectedPlatform === "curseforge" ? curseforgeColors : modrinthColors;
+            }
+
+            let colors = getColors();
 
             function createColorButton(color, container) {
                 const btn = document.createElement("button");
@@ -548,6 +575,113 @@
                 createBgColorButton(colorObj, bgColorButtons);
             });
 
+            // Platform toggle
+            function setPlatform(platform) {
+                selectedPlatform = platform;
+                if (platform === "modrinth") {
+                    platformModrinth.className = "flex-1 py-2.5 px-3 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
+                    platformCurseforge.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
+                    modrinthUrl.placeholder = "https://modrinth.com/mod/fabric-api";
+                    targetType.innerHTML = '<option value="user">User</option><option value="project">Project</option><option value="organization">Organization</option><option value="collection">Collection</option>';
+                    targetType.value = "user";
+                    selectedColor = "1bd96a";
+                } else {
+                    platformModrinth.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
+                    platformCurseforge.className = "flex-1 py-2.5 px-3 bg-[#F16436] text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
+                    modrinthUrl.placeholder = "https://www.curseforge.com/minecraft/mc-mods/example-mod";
+                    targetType.innerHTML = '<option value="project">Project</option>';
+                    targetType.value = "project";
+                    selectedColor = CURSEFORGE_COLOR;
+                }
+
+                // Update color picker and regenerate color buttons
+                colors = getColors();
+                colorButtons.innerHTML = "";
+                colors.forEach((color) => {
+                    createColorButton(color, colorButtons);
+                });
+
+                manualColorPicker.value = `#${selectedColor}`;
+                manualColorPickerContainer.style.background = `#${selectedColor}`;
+                document.querySelectorAll("[data-color]").forEach((b) => {
+                    b.classList.toggle("color-btn-selected", b.dataset.color === selectedColor);
+                });
+
+                updateUI();
+                updateUrl();
+            }
+
+            // Reset to defaults for the current platform
+            function resetToDefaults() {
+                const isCurseForge = selectedPlatform === "curseforge";
+                const defaultColor = isCurseForge ? CURSEFORGE_COLOR : "1bd96a";
+
+                // Reset embed type and target
+                embedType.value = "card";
+                targetType.value = isCurseForge ? "project" : "user";
+                badgeMetric.value = "downloads";
+                identifier.value = "";
+
+                // Reset customization options
+                showProjects.checked = true;
+                maxProjects.value = 5;
+                maxProjectsValue.textContent = "5";
+
+                showVersions.checked = true;
+                maxVersions.value = 5;
+                maxVersionsValue.textContent = "5";
+
+                relativeTime.checked = true;
+                showSparklines.checked = true;
+
+                // Reset colors
+                selectedColor = defaultColor;
+                selectedBgColor = null;
+
+                // Update color picker UI
+                colors = getColors();
+                colorButtons.innerHTML = "";
+                colors.forEach((color) => {
+                    createColorButton(color, colorButtons);
+                });
+
+                manualColorPicker.value = `#${selectedColor}`;
+                manualColorPickerContainer.style.background = `#${selectedColor}`;
+                manualColorPickerContainer.classList.remove("color-btn-selected");
+
+                document.querySelectorAll("[data-color]").forEach((b) => {
+                    b.classList.toggle("color-btn-selected", b.dataset.color === selectedColor);
+                });
+
+                // Reset background color picker
+                manualBgColorPicker.value = "#ffffff";
+                manualBgColorPickerContainer.style.background = "transparent";
+                manualBgColorPickerContainer.classList.remove("color-btn-selected");
+
+                document.querySelectorAll("[data-bg-color]").forEach((b) => {
+                    b.classList.toggle("color-btn-selected", b.dataset.bgColor === "null");
+                });
+
+                // Reset URL
+                modrinthUrl.value = "";
+
+                updateUI();
+                updateUrl();
+                generate();
+            }
+
+            platformModrinth.addEventListener("click", () => {
+                setPlatform("modrinth");
+                resetToDefaults();
+            });
+            platformCurseforge.addEventListener("click", () => {
+                setPlatform("curseforge");
+                resetToDefaults();
+            });
+
+            // Reset button
+            resetBtn.addEventListener("click", resetToDefaults);
+
             // Basic section toggle
             const basicToggle = document.getElementById("basicToggle");
             const basicContent = document.getElementById("basicContent");
@@ -608,7 +742,10 @@
             // URL state management functions
             function getUrlParams() {
                 const params = new URLSearchParams(window.location.search);
+                const platform = params.get("platform") || "modrinth";
+                const defaultColor = platform === "curseforge" ? CURSEFORGE_COLOR : "1bd96a";
                 return {
+                    platform,
                     type: params.get("type") || "card",
                     target: params.get("target") || "user",
                     metric: params.get("metric") || "downloads",
@@ -619,7 +756,7 @@
                     maxVersions: parseInt(params.get("maxVersions")) || 5,
                     relativeTime: params.get("relativeTime") !== "false",
                     showSparklines: params.get("showSparklines") !== "false",
-                    color: params.get("color") || "1bd96a",
+                    color: params.get("color") || defaultColor,
                     backgroundColor: params.get("backgroundColor") || null,
                 };
             }
@@ -631,6 +768,7 @@
                 const metric = badgeMetric.value;
                 const value = identifier.value.trim();
 
+                if (selectedPlatform !== "modrinth") params.set("platform", selectedPlatform);
                 if (type !== "card") params.set("type", type);
                 params.set("target", target);
                 if (metric !== "downloads") params.set("metric", metric);
@@ -638,16 +776,18 @@
 
                 // Only add customization params for cards
                 if (type === "card") {
-                    if (!showProjects.checked) params.set("showProjects", "false");
-                    if (maxProjects.value !== "5") params.set("maxProjects", maxProjects.value);
+                    if (!showProjects.checked && selectedPlatform === "modrinth") params.set("showProjects", "false");
+                    if (maxProjects.value !== "5" && selectedPlatform === "modrinth") params.set("maxProjects", maxProjects.value);
                     if (!showVersions.checked) params.set("showVersions", "false");
                     if (maxVersions.value !== "5") params.set("maxVersions", maxVersions.value);
                     if (!relativeTime.checked) params.set("relativeTime", "false");
                     if (!showSparklines.checked) params.set("showSparklines", "false");
-                    if (selectedColor !== "1bd96a") params.set("color", selectedColor);
+                    const defaultColor = selectedPlatform === "curseforge" ? CURSEFORGE_COLOR : "1bd96a";
+                    if (selectedColor !== defaultColor) params.set("color", selectedColor);
                     if (selectedBgColor !== null) params.set("backgroundColor", selectedBgColor);
                 } else {
-                    if (selectedColor !== "1bd96a") params.set("color", selectedColor);
+                    const defaultColor = selectedPlatform === "curseforge" ? CURSEFORGE_COLOR : "1bd96a";
+                    if (selectedColor !== defaultColor) params.set("color", selectedColor);
                     if (selectedBgColor !== null) params.set("backgroundColor", selectedBgColor);
                 }
 
@@ -657,6 +797,9 @@
 
             function loadFromUrl() {
                 const params = getUrlParams();
+
+                // Set platform first
+                setPlatform(params.platform);
 
                 embedType.value = params.type;
                 targetType.value = params.target;
@@ -675,6 +818,8 @@
                 showSparklines.checked = params.showSparklines;
                 selectedColor = params.color;
                 selectedBgColor = params.backgroundColor;
+
+                colors = getColors();
 
                 const isPresetColor = colors.includes(selectedColor);
 
@@ -711,6 +856,24 @@
             function parseModrinthUrl(url) {
                 try {
                     const urlObj = new URL(url);
+
+                    // Handle CurseForge URLs
+                    if (urlObj.hostname.includes("curseforge.com")) {
+                        const pathParts = urlObj.pathname.split("/").filter((p) => p);
+                        if (pathParts.length < 3) return null;
+
+                        // CurseForge URLs are like: /minecraft/mc-mods/geckolib
+                        const game = pathParts[0];
+                        const category = pathParts[1];
+                        const slug = pathParts[2];
+
+                        if (slug) {
+                            return { type: "project", id: slug, slug, isCurseForge: true };
+                        }
+                        return null;
+                    }
+
+                    // Handle Modrinth URLs
                     if (!urlObj.hostname.includes("modrinth.com")) return null;
 
                     const pathParts = urlObj.pathname.split("/").filter((p) => p);
@@ -742,29 +905,66 @@
                 }
             }
 
-            modrinthUrl.addEventListener("input", () => {
-                const parsed = parseModrinthUrl(modrinthUrl.value.trim());
+            modrinthUrl.addEventListener("input", async () => {
+                const urlValue = modrinthUrl.value.trim();
+
+                // Auto-detect platform from URL
+                if (urlValue.includes("curseforge.com")) {
+                    setPlatform("curseforge");
+                } else if (urlValue.includes("modrinth.com")) {
+                    setPlatform("modrinth");
+                }
+
+                const parsed = parseModrinthUrl(urlValue);
                 if (parsed) {
                     targetType.value = parsed.type;
-                    identifier.value = parsed.id;
-                    updateUrl();
-                    updateUI();
+
+                    // For CurseForge, we need to resolve the slug to an ID
+                    if (parsed.isCurseForge && parsed.slug) {
+                        try {
+                            identifier.value = "Resolving...";
+                            const response = await fetch(`/curseforge/lookup/${encodeURIComponent(parsed.slug)}`);
+                            if (!response.ok) {
+                                throw new Error("Mod not found");
+                            }
+                            const data = await response.json();
+                            identifier.value = data.id;
+                            updateUrl();
+                            updateUI();
+                        } catch (err) {
+                            identifier.value = "";
+                            console.error("Failed to resolve CurseForge slug:", err);
+                        }
+                    } else {
+                        identifier.value = parsed.id;
+                        updateUrl();
+                        updateUI();
+                    }
                 }
             });
 
             function updateBadgeOptions() {
-                const isUserOrgOrCollection = ["user", "organization", "collection"].includes(targetType.value);
-                badgeMetric.innerHTML = isUserOrgOrCollection ? '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="projects">Projects</option>' : '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="versions">Versions</option>';
+                if (selectedPlatform === "curseforge") {
+                    badgeMetric.innerHTML = '<option value="downloads">Downloads</option><option value="likes">Likes</option><option value="versions">Versions</option>';
+                } else {
+                    const isUserOrgOrCollection = ["user", "organization", "collection"].includes(targetType.value);
+                    badgeMetric.innerHTML = isUserOrgOrCollection
+                        ? '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="projects">Projects</option>'
+                        : '<option value="downloads">Downloads</option><option value="followers">Followers</option><option value="versions">Versions</option>';
+                }
             }
 
             function updateUI() {
-                const placeholders = {
-                    user: "Enter username or id",
-                    project: "Enter project slug or id",
-                    organization: "Enter organization slug or id",
-                    collection: "Enter collection id",
-                };
+                const placeholders = selectedPlatform === "curseforge"
+                    ? { project: "Enter project ID or slug" }
+                    : {
+                        user: "Enter username or id",
+                        project: "Enter project slug or id",
+                        organization: "Enter organization slug or id",
+                        collection: "Enter collection id",
+                    };
                 identifier.placeholder = placeholders[targetType.value] || "";
+                valueLabel.textContent = selectedPlatform === "curseforge" ? "Project ID" : "Value";
                 const isCard = embedType.value === "card";
                 const isBadge = embedType.value === "badge";
 
@@ -775,8 +975,8 @@
                 const isProject = targetType.value === "project";
                 const isUserOrgOrCollection = ["user", "organization", "collection"].includes(targetType.value);
 
-                showProjectsSection.classList.toggle("hidden", !(isCard && isUserOrgOrCollection));
-                maxProjectsSection.classList.toggle("hidden", !(isCard && isUserOrgOrCollection && showProjects.checked));
+                showProjectsSection.classList.toggle("hidden", !(isCard && isUserOrgOrCollection && selectedPlatform === "modrinth"));
+                maxProjectsSection.classList.toggle("hidden", !(isCard && isUserOrgOrCollection && showProjects.checked && selectedPlatform === "modrinth"));
                 showVersionsSection.classList.toggle("hidden", !(isCard && isProject));
                 maxVersionsSection.classList.toggle("hidden", !(isCard && isProject && showVersions.checked));
                 relativeTimeSection.classList.toggle("hidden", !(isCard && isProject && showVersions.checked));
@@ -825,46 +1025,76 @@
                 let url;
                 if (embedType.value === "card") {
                     const urlParams = new URLSearchParams();
-                    if (!showProjects.checked && ["user", "organization", "collection"].includes(type)) {
-                        urlParams.set("showProjects", "false");
+                    if (selectedPlatform === "curseforge") {
+                        // CurseForge card URL: /curseforge/project/:modId
+                        if (!showVersions.checked) {
+                            urlParams.set("showVersions", "false");
+                        }
+                        if (maxVersions.value !== "5") {
+                            urlParams.set("maxVersions", maxVersions.value);
+                        }
+                        if (!relativeTime.checked) {
+                            urlParams.set("relativeTime", "false");
+                        }
+                        if (!showSparklines.checked) {
+                            urlParams.set("showSparklines", "false");
+                        }
+                        if (selectedColor !== CURSEFORGE_COLOR) {
+                            urlParams.set("color", selectedColor);
+                        }
+                        if (selectedBgColor !== null) {
+                            urlParams.set("backgroundColor", selectedBgColor);
+                        }
+                        const queryString = urlParams.toString();
+                        url = `${window.location.origin}/curseforge/project/${identifierValue}${queryString ? "?" + queryString : ""}`;
+                    } else {
+                        // Modrinth card URL
+                        if (!showProjects.checked && ["user", "organization", "collection"].includes(type)) {
+                            urlParams.set("showProjects", "false");
+                        }
+                        if (maxProjects.value !== "5" && ["user", "organization", "collection"].includes(type)) {
+                            urlParams.set("maxProjects", maxProjects.value);
+                        }
+                        if (!showVersions.checked && type === "project") {
+                            urlParams.set("showVersions", "false");
+                        }
+                        if (maxVersions.value !== "5" && type === "project") {
+                            urlParams.set("maxVersions", maxVersions.value);
+                        }
+                        if (!relativeTime.checked && type === "project") {
+                            urlParams.set("relativeTime", "false");
+                        }
+                        if (!showSparklines.checked) {
+                            urlParams.set("showSparklines", "false");
+                        }
+                        if (selectedColor !== "1bd96a") {
+                            urlParams.set("color", selectedColor);
+                        }
+                        if (selectedBgColor !== null) {
+                            urlParams.set("backgroundColor", selectedBgColor);
+                        }
+                        const queryString = urlParams.toString();
+                        url = `${window.location.origin}/${type}/${identifierValue}${queryString ? "?" + queryString : ""}`;
                     }
-                    if (maxProjects.value !== "5" && ["user", "organization", "collection"].includes(type)) {
-                        urlParams.set("maxProjects", maxProjects.value);
-                    }
-                    if (!showVersions.checked && type === "project") {
-                        urlParams.set("showVersions", "false");
-                    }
-                    if (maxVersions.value !== "5" && type === "project") {
-                        urlParams.set("maxVersions", maxVersions.value);
-                    }
-                    if (!relativeTime.checked && type === "project") {
-                        urlParams.set("relativeTime", "false");
-                    }
-                    if (!showSparklines.checked) {
-                        urlParams.set("showSparklines", "false");
-                    }
-                    if (selectedColor !== "1bd96a") {
-                        urlParams.set("color", selectedColor);
-                    }
-                    if (selectedBgColor !== null) {
-                        urlParams.set("backgroundColor", selectedBgColor);
-                    }
-
-                    const queryString = urlParams.toString();
-                    url = `${window.location.origin}/${type}/${identifierValue}${queryString ? "?" + queryString : ""}`;
                 } else {
                     const badgeParams = new URLSearchParams();
-                    if (selectedColor !== "1bd96a") {
+                    if (selectedColor !== (selectedPlatform === "curseforge" ? CURSEFORGE_COLOR : "1bd96a")) {
                         badgeParams.set("color", selectedColor);
                     }
                     if (selectedBgColor !== null) {
                         badgeParams.set("backgroundColor", selectedBgColor);
                     }
                     const badgeQuery = badgeParams.toString();
-                    url = `${window.location.origin}/${type}/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
+                    if (selectedPlatform === "curseforge") {
+                        url = `${window.location.origin}/curseforge/project/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
+                    } else {
+                        url = `${window.location.origin}/${type}/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
+                    }
                 }
 
-                const modrinthUrl = `https://modrinth.com/${type}/${identifierValue}`;
+                const modrinthUrl = selectedPlatform === "curseforge"
+                    ? `https://www.curseforge.com/minecraft/mc-mods/${identifierValue}`
+                    : `https://modrinth.com/${type}/${identifierValue}`;
                 const cacheBuster = `timestamp=${Date.now()}`;
                 const urlForDiscord = `${url}${url.includes("?") ? "&" : "?"}${cacheBuster}`;
 
@@ -920,7 +1150,10 @@
                     previewLink.classList.remove("hidden");
 
                     try {
-                        const res = await fetch(`/meta/${type}/${encodeURIComponent(identifierValue)}`);
+                        const metaPath = selectedPlatform === "curseforge"
+                            ? `/meta/curseforge/${encodeURIComponent(identifierValue)}`
+                            : `/meta/${type}/${encodeURIComponent(identifierValue)}`;
+                        const res = await fetch(metaPath);
                         if (res.ok) {
                             const data = await res.json();
                             if (data?.name) {
@@ -1043,7 +1276,8 @@
             }
 
             function hasCustomizationFromUrl(params) {
-                return params.showProjects === false || params.maxProjects !== 5 || params.showVersions === false || params.maxVersions !== 5 || params.relativeTime === false || params.showSparklines === false || params.color !== "1bd96a" || params.backgroundColor !== null;
+                const defaultColor = params.platform === "curseforge" ? CURSEFORGE_COLOR : "1bd96a";
+                return params.showProjects === false || params.maxProjects !== 5 || params.showVersions === false || params.maxVersions !== 5 || params.relativeTime === false || params.showSparklines === false || params.color !== defaultColor || params.backgroundColor !== null;
             }
 
             loadFromUrl();

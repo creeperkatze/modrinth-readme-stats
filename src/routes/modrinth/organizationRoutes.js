@@ -1,6 +1,6 @@
 import express from "express";
-import * as cardController from "../controllers/cardController.js";
-import * as badgeController from "../controllers/badgeController.js";
+import * as cardController from "../../controllers/cardController.js";
+import * as badgeController from "../../controllers/badgeController.js";
 
 const router = express.Router();
 
