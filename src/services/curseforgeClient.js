@@ -13,6 +13,9 @@ const CURSEFORGE_API_KEY = process.env.CURSEFORGE_API_KEY;
 // Known loader names (for detecting loaders in gameVersions array)
 const KNOWN_LOADERS = ["Forge", "Fabric", "NeoForge", "Quilt", "Rift", "LiteLoader", "Cauldron", "ModLoader", "Canvas", "Iris", "OptiFine", "Sodium"];
 
+// Tags to filter out from game versions (not actual game versions)
+const FILTERED_TAGS = ["Client", "Server", "Singleplayer", "Java"];
+
 // CurseForge gameVersionTypeId to loader name mapping (for extracting loaders from sortableGameVersions)
 // These are type IDs that represent mod loaders rather than game versions
 const GAME_VERSION_TYPE_IDS = {
@@ -74,9 +77,9 @@ export class CurseforgeClient
         return this.fetch(`${CURSEFORGE_API_URL}/v1/mods/${modId}`);
     }
 
-    async getModFiles(modId)
+    async getModFiles(modId, pageSize = 10)
     {
-        return this.fetch(`${CURSEFORGE_API_URL}/v1/mods/${modId}/files`);
+        return this.fetch(`${CURSEFORGE_API_URL}/v1/mods/${modId}/files?pageSize=${pageSize}`);
     }
 
     /**
@@ -103,9 +106,12 @@ export class CurseforgeClient
 
         // Fetch files for the mod
         let files = [];
+        let totalFileCount = 0;
         try {
-            const filesResponse = await this.getModFiles(modId);
+            const filesResponse = await this.getModFiles(modId, maxFiles);
             const allFiles = filesResponse.data || [];
+            // Use pagination totalCount if available, otherwise use the array length
+            totalFileCount = filesResponse.pagination?.totalCount ?? allFiles.length;
 
             // Sort by date (newest first) and take maxFiles
             files = allFiles
@@ -124,13 +130,17 @@ export class CurseforgeClient
                     // Combine and deduplicate
                     const loaders = [...new Set([...loadersFromTypeId, ...loadersFromGameVersions])];
 
+                    // Filter out loader names and other tags from game versions so only actual game versions remain
+                    const gameVersionsOnly = (file.gameVersions || [])
+                        .filter(v => !KNOWN_LOADERS.includes(v) && !FILTERED_TAGS.includes(v));
+
                     return {
                         displayName: file.displayName || file.fileName,
                         fileName: file.fileName,
                         fileDate: file.fileDate,
                         releaseType: file.releaseType, // 1=Release, 2=Beta, 3=Alpha
                         downloadCount: file.downloadCount || 0,
-                        gameVersions: file.gameVersions || [],
+                        gameVersions: gameVersionsOnly,
                         sortableGameVersions: file.sortableGameVersions || [],
                         modLoaders: loaders
                     };
@@ -147,8 +157,8 @@ export class CurseforgeClient
             files,
             stats: {
                 downloads: mod?.downloadCount || 0,
-                likes: mod?.thumbsUpCount || 0,
-                versionCount: files.length
+                rank: mod?.gamePopularityRank || null,
+                fileCount: totalFileCount
             },
             timings: {
                 api: apiTime,
@@ -173,17 +183,18 @@ export class CurseforgeClient
 
         const stats = {
             downloads: mod?.downloadCount || 0,
-            likes: mod?.thumbsUpCount || 0,
-            versionCount: 0
+            rank: mod?.gamePopularityRank || null,
+            fileCount: 0
         };
 
-        // Only fetch files if specifically requested (for version count badge)
+        // Only fetch files if specifically requested (for file count badge)
         if (fetchFiles) {
             try {
                 const filesResponse = await this.getModFiles(modId);
-                stats.versionCount = filesResponse.data?.length || 0;
+                // Use pagination totalCount if available, otherwise use the array length
+                stats.fileCount = filesResponse.pagination?.totalCount ?? filesResponse.data?.length ?? 0;
             } catch {
-                stats.versionCount = 0;
+                stats.fileCount = 0;
             }
             apiTime = performance.now() - apiStart;
         }

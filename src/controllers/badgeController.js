@@ -35,8 +35,8 @@ const BADGE_CONFIGS = {
     // CurseForge entities
     curseforge_mod: {
         downloads: { label: "Downloads", getValue: stats => formatNumber(stats.downloads) },
-        likes: { label: "Likes", getValue: stats => formatNumber(stats.likes) },
-        versions: { label: "Versions", getValue: stats => stats.versionCount.toString() }
+        rank: { label: "Rank", getValue: stats => stats.rank ? `#${stats.rank}` : "N/A" },
+        versions: { label: "Files", getValue: stats => stats.fileCount.toString() }
     }
 };
 
@@ -156,5 +156,5 @@ export const getCollectionFollowers = (req, res, next) => handleBadgeRequest(req
 
 // CurseForge mod badges
 export const getCfModDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_mod", "downloads");
-export const getCfModLikes = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_mod", "likes");
+export const getCfModRank = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_mod", "rank");
 export const getCfModVersions = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_mod", "versions");

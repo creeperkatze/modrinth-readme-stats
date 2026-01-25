@@ -15,7 +15,7 @@ router.get("/curseforge/project/:modId", cardController.getCfMod);
 router.get("/meta/curseforge/:modId", curseforgeController.getCfMeta);
 
 router.get("/curseforge/project/:modId/downloads", badgeController.getCfModDownloads);
-router.get("/curseforge/project/:modId/likes", badgeController.getCfModLikes);
+router.get("/curseforge/project/:modId/rank", badgeController.getCfModRank);
 router.get("/curseforge/project/:modId/versions", badgeController.getCfModVersions);
 
 export default router;

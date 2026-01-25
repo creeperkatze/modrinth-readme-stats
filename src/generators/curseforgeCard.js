@@ -12,7 +12,7 @@ import {
     generateInfo
 } from "./svgComponents.js";
 
-const DEFAULT_FILES_COUNT = 5;
+const DEFAULT_FILE_COUNT = 5;
 
 // CurseForge logo SVG path (viewBox 0 0 32 32)
 const CURSEFORGE_LOGO = (color) => `
@@ -50,7 +50,7 @@ export function generateCurseforgeCard(data, options = {})
     const { mod, files, stats } = data;
     const {
         showVersions = true,
-        maxVersions = DEFAULT_FILES_COUNT,
+        maxVersions = DEFAULT_FILE_COUNT,
         showSparklines = true,
         color = null,
         backgroundColor = null,
@@ -87,8 +87,8 @@ export function generateCurseforgeCard(data, options = {})
 
     const statsData = [
         { x: 15, label: "Downloads", value: formatNumber(stats.downloads) },
-        { x: 155, label: "Likes", value: formatNumber(stats.likes) },
-        { x: 270, label: "Files", value: stats.versionCount }
+        { x: 155, label: "Rank", value: stats.rank ? stats.rank : "N/A" },
+        { x: 270, label: "Files", value: stats.fileCount }
     ];
 
     const content = `
@@ -127,7 +127,7 @@ ${generateRectImage(
 
 ${generateStatsGrid(statsData, colors)}
 ${generateDivider(colors)}
-${generateVersionList(versions, colors, relativeTime)}
+${generateVersionList(versions, colors, relativeTime, "Latest Files")}
 ${generateInfo(height, colors, fromCache)}
 ${generateAttribution(height, colors)}
 `;

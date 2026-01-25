@@ -131,7 +131,7 @@
                     <a href="/" class="inline-block no-underline">
                         <div class="flex items-center gap-4 mb-2">
                             <img src="/favicon.svg" alt="Modrinth Logo" class="w-8 h-8 mt-0.5" />
-                            <h1 class="text-modrinth-green mb-0 text-3xl font-extrabold">Mod Platform Embeds</h1>
+                            <h1 class="text-modrinth-green mb-0 text-3xl font-extrabold">Modfolio</h1>
                         </div>
                     </a>
                     <p class="mb-8 text-sm opacity-80">Generate embeddable cards and badges for Modrinth projects, users, organizations, and collections.</p>
@@ -230,13 +230,13 @@
                             <div class="mb-2 hidden" id="showVersionsSection">
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="checkbox" id="showVersions" checked class="!w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0 checked:bg-modrinth-green checked:border-modrinth-green" />
-                                    <span class="text-base text-text-secondary">Show Versions</span>
+                                    <span class="text-base text-text-secondary" id="showVersionsLabel">Show Versions</span>
                                 </label>
                             </div>
 
                             <div class="mb-2 hidden" id="maxVersionsSection">
                                 <div class="flex justify-between items-center">
-                                    <h3 class="text-text-secondary text-base font-semibold">Max Versions</h3>
+                                    <h3 class="text-text-secondary text-base font-semibold" id="maxVersionsLabel">Max Versions</h3>
                                     <span class="text-modrinth-green text-base font-bold" id="maxVersionsValue">5</span>
                                 </div>
                                 <input type="range" id="maxVersions" min="1" max="10" value="5" class="w-full" />
@@ -310,7 +310,7 @@
                                     <path d="M12 9v4" />
                                     <path d="M12 17h.01" />
                                 </svg>
-                                <span>The Modrinth API is responding slowly. Embeds may take longer to load.</span>
+                                <span id="apiSlowWarningText">The Modrinth API is responding slowly. Embeds may take longer to load.</span>
                             </span>
                         </div>
                         <div id="apiErrorWarning" class="hidden mb-3 bg-red/10 border border-red/30 rounded-lg px-3 py-2 text-sm text-red">
@@ -320,7 +320,7 @@
                                     <line x1="12" x2="12" y1="8" y2="12"/>
                                     <line x1="12" x2="12.01" y1="16" y2="16"/>
                                 </svg>
-                                <span>The Modrinth API is currently down. Check <a href="https://status.modrinth.com" target="_blank" class="underline hover:text-red-80">status.modrinth.com</a> for updates.</span>
+                                <span id="apiErrorWarningText">The Modrinth API is currently down. Check <a href="https://status.modrinth.com" target="_blank" class="underline hover:text-red-80">status.modrinth.com</a> for updates.</span>
                             </span>
                         </div>
                         <div class="bg-section-bg border border-border-dark rounded-xl min-h-[460px] flex items-center justify-center text-text-muted p-4" id="previewContainer">
@@ -442,6 +442,7 @@
             let selectedColor = "1bd96a";
             let selectedBgColor = null;
             let selectedPlatform = "modrinth"; // "modrinth" or "curseforge"
+            let curseforgeSlug = null; // Store the slug for link generation
 
             const CURSEFORGE_COLOR = "F16436";
 
@@ -575,6 +576,34 @@
                 createBgColorButton(colorObj, bgColorButtons);
             });
 
+            // Update warning messages based on platform
+            function updateWarningMessages() {
+                const slowWarningText = document.getElementById("apiSlowWarningText");
+                const errorWarningText = document.getElementById("apiErrorWarningText");
+
+                if (selectedPlatform === "curseforge") {
+                    slowWarningText.textContent = "The CurseForge API is responding slowly. Embeds may take longer to load.";
+                    errorWarningText.innerHTML = 'The CurseForge API is currently down. Check <a href="https://status.curseforge.com" target="_blank" class="underline hover:text-red-80">status.curseforge.com</a> for updates.';
+                } else {
+                    slowWarningText.textContent = "The Modrinth API is responding slowly. Embeds may take longer to load.";
+                    errorWarningText.innerHTML = 'The Modrinth API is currently down. Check <a href="https://status.modrinth.com" target="_blank" class="underline hover:text-red-80">status.modrinth.com</a> for updates.';
+                }
+            }
+
+            // Update labels based on platform
+            function updateLabels() {
+                const showVersionsLabel = document.getElementById("showVersionsLabel");
+                const maxVersionsLabel = document.getElementById("maxVersionsLabel");
+
+                if (selectedPlatform === "curseforge") {
+                    showVersionsLabel.textContent = "Show Files";
+                    maxVersionsLabel.textContent = "Max Files";
+                } else {
+                    showVersionsLabel.textContent = "Show Versions";
+                    maxVersionsLabel.textContent = "Max Versions";
+                }
+            }
+
             // Platform toggle
             function setPlatform(platform) {
                 selectedPlatform = platform;
@@ -607,6 +636,8 @@
                     b.classList.toggle("color-btn-selected", b.dataset.color === selectedColor);
                 });
 
+                updateWarningMessages();
+                updateLabels();
                 updateUI();
                 updateUrl();
             }
@@ -615,6 +646,9 @@
             function resetToDefaults() {
                 const isCurseForge = selectedPlatform === "curseforge";
                 const defaultColor = isCurseForge ? CURSEFORGE_COLOR : "1bd96a";
+
+                // Reset slug storage
+                curseforgeSlug = null;
 
                 // Reset embed type and target
                 embedType.value = "card";
@@ -921,6 +955,7 @@
 
                     // For CurseForge, we need to resolve the slug to an ID
                     if (parsed.isCurseForge && parsed.slug) {
+                        curseforgeSlug = parsed.slug; // Store the slug for link generation
                         try {
                             identifier.value = "Resolving...";
                             const response = await fetch(`/curseforge/lookup/${encodeURIComponent(parsed.slug)}`);
@@ -933,9 +968,11 @@
                             updateUI();
                         } catch (err) {
                             identifier.value = "";
+                            curseforgeSlug = null;
                             console.error("Failed to resolve CurseForge slug:", err);
                         }
                     } else {
+                        curseforgeSlug = null;
                         identifier.value = parsed.id;
                         updateUrl();
                         updateUI();
@@ -945,7 +982,7 @@
 
             function updateBadgeOptions() {
                 if (selectedPlatform === "curseforge") {
-                    badgeMetric.innerHTML = '<option value="downloads">Downloads</option><option value="likes">Likes</option><option value="versions">Versions</option>';
+                    badgeMetric.innerHTML = '<option value="downloads">Downloads</option><option value="rank">Rank</option><option value="versions">Versions</option>';
                 } else {
                     const isUserOrgOrCollection = ["user", "organization", "collection"].includes(targetType.value);
                     badgeMetric.innerHTML = isUserOrgOrCollection
@@ -1093,7 +1130,7 @@
                 }
 
                 const modrinthUrl = selectedPlatform === "curseforge"
-                    ? `https://www.curseforge.com/minecraft/mc-mods/${identifierValue}`
+                    ? `https://www.curseforge.com/minecraft/mc-mods/${curseforgeSlug || identifierValue}`
                     : `https://modrinth.com/${type}/${identifierValue}`;
                 const cacheBuster = `timestamp=${Date.now()}`;
                 const urlForDiscord = `${url}${url.includes("?") ? "&" : "?"}${cacheBuster}`;

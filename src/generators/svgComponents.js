@@ -324,7 +324,7 @@ export function generateVersionListItem(version, index, colors, relativeTime)
   </g>`;
 }
 
-export function generateVersionList(versions, colors, relativeTime)
+export function generateVersionList(versions, colors, relativeTime, headerText = "Latest Versions")
 {
     if (!versions || versions.length === 0) return "";
 
@@ -333,9 +333,9 @@ export function generateVersionList(versions, colors, relativeTime)
     ).join("");
 
     return `
-  <!-- Latest Versions Header -->
+  <!-- Versions Header -->
   <text x="15" y="130" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="${colors.textColor}">
-    Latest Versions
+    ${escapeXml(headerText)}
   </text>
 
   ${versionsHtml}`;
