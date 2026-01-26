@@ -5,6 +5,7 @@ import path from "path";
 import modrinthRoutes from "./routes/modrinth/index.js";
 import curseforgeRoutes from "./routes/curseforge/index.js";
 import hangarRoutes from "./routes/hangar/index.js";
+import spigotRoutes from "./routes/spigot/index.js";
 import metaRoutes from "./routes/metaRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { checkCrawlerMiddleware } from "./middleware/checkCrawler.js";
@@ -18,10 +19,10 @@ app.use(express.static(path.join(process.cwd(), "public")));
 
 app.use(checkCrawlerMiddleware);
 
-// Mount platform routes
 app.use(modrinthRoutes);
 app.use(curseforgeRoutes);
 app.use(hangarRoutes);
+app.use(spigotRoutes);
 app.use(metaRoutes);
 
 app.use((req, res) =>

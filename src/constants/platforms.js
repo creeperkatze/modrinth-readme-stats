@@ -22,6 +22,12 @@ export const PLATFORMS = {
         name: "Hangar",
         defaultColor: "#3371ED",
         icon: (color) => ICONS.hangar(color)
+    },
+    SPIGOT: {
+        id: "spigot",
+        name: "Spigot",
+        defaultColor: "#E8A838",
+        icon: (color) => ICONS.spigot(color)
     }
 };
 

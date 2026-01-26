@@ -6,7 +6,8 @@ import { ICONS } from "./icons.js";
 const PLATFORM_ICON_VIEWBOXES = {
     modrinth: "0 0 512 514",
     curseforge: "0 0 32 32",
-    hangar: "0 0 100 100"
+    hangar: "0 0 100 100",
+    spigot: "0 0 100 100"
 };
 
 /**
@@ -53,6 +54,18 @@ const STAT_CONFIGS = {
             { label: "Downloads", field: "totalDownloads" },
             { label: "Stars", field: "totalFollowers" },
             { label: "Projects", field: "projectCount" }
+        ]
+    },
+    spigot: {
+        resource: [
+            { label: "Downloads", field: "downloads" },
+            { label: "Likes", field: "likes" },
+            { label: "Rating", field: "rating" }
+        ],
+        author: [
+            { label: "Downloads", field: "totalDownloads" },
+            { label: "Resources", field: "resourceCount" },
+            { label: "Rating", field: "avgRating" }
         ]
     }
 };
@@ -163,6 +176,43 @@ export const PLATFORM_CONFIGS = {
             versions: "versions",
             versionField: "releasedAt"
         }
+    },
+    spigot: {
+        id: "spigot",
+        name: "Spigot",
+        defaultColor: "#E8A838",
+        icon: (color) => ICONS.spigot(color),
+        iconViewBox: PLATFORM_ICON_VIEWBOXES.spigot,
+        labels: {
+            stats: {
+                downloads: "Downloads",
+                followers: "Likes",
+                stars: "Likes",
+                rank: "Rating",
+                versions: "Versions",
+                files: "Versions",
+                projects: "Resources",
+                rating: "Rating"
+            },
+            sections: {
+                latestVersions: "Latest Versions",
+                topProjects: "Top Resources"
+            },
+            errors: {
+                project: "Resource not found",
+                user: "Author not found",
+                organization: "Organization not found",
+                collection: "Collection not found",
+                mod: "Resource not found",
+                resource: "Resource not found",
+                author: "Author not found"
+            }
+        },
+        statConfigs: STAT_CONFIGS.spigot,
+        terminology: {
+            versions: "versions",
+            versionField: "releaseDate"
+        }
     }
 };
 
@@ -178,19 +228,29 @@ export function getPlatformConfig(platformId) {
 /**
  * Get stat configuration for a specific platform and entity type
  * @param {string} platformId - Platform ID
- * @param {string} entityType - Entity type (project, user, organization, collection, mod)
+ * @param {string} entityType - Entity type (project, user, organization, collection, mod, resource, author)
  * @returns {Array|null} Array of stat configs or null if not found
  */
 export function getStatConfigs(platformId, entityType) {
     const platform = PLATFORM_CONFIGS[platformId];
     if (!platform) return null;
 
-    // Map CurseForge "mod" to "project" for stat configs
-    const statKey = platformId === "curseforge" && entityType === "mod"
-        ? "mod"
-        : platform.statConfigs[entityType] ? entityType : null;
+    // Map entity types for stat configs
+    let statKey = entityType;
+    if (platformId === "curseforge" && entityType === "mod") {
+        statKey = "mod";
+    } else if (platformId === "spigot") {
+        // Spigot uses "resource" and "author" instead of "project" and "user"
+        if (entityType === "resource") {
+            statKey = "resource";
+        } else if (entityType === "user" || entityType === "author") {
+            statKey = "author";
+        }
+    } else if (!platform.statConfigs[entityType]) {
+        return null;
+    }
 
-    return statKey ? platform.statConfigs[statKey] : null;
+    return platform.statConfigs[statKey] || null;
 }
 
 /**
@@ -203,8 +263,19 @@ export function getErrorMessage(platformId, entityType) {
     const platform = PLATFORM_CONFIGS[platformId];
     if (!platform) return "Resource not found";
 
-    // Map CurseForge "mod" entity type
-    const errorKey = platformId === "curseforge" && entityType === "project" ? "mod" : entityType;
+    // Map entity types for error messages
+    let errorKey = entityType;
+    if (platformId === "curseforge" && entityType === "project") {
+        errorKey = "mod";
+    } else if (platformId === "spigot") {
+        // Spigot uses "resource" and "author"
+        if (entityType === "resource") {
+            errorKey = "resource";
+        } else if (entityType === "author") {
+            errorKey = "author";
+        }
+    }
+
     return platform.labels.errors[errorKey] || "Resource not found";
 }
 
@@ -216,7 +287,9 @@ export const ENTITY_ICONS = {
     user: "user",
     organization: "building",
     collection: "collection",
-    mod: "box" // CurseForge mods use box icon
+    mod: "box", // CurseForge mods use box icon
+    resource: "box", // Spigot resources use box icon
+    author: "user" // Spigot authors use user icon
 };
 
 /**

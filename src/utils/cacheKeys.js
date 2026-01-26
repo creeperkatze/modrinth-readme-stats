@@ -15,7 +15,8 @@
 export const PLATFORM = {
     MODRINTH: "modrinth",
     CURSEFORGE: "curseforge",
-    HANGAR: "hangar"
+    HANGAR: "hangar",
+    SPIGOT: "spigot"
 };
 
 export const ENTITY_TYPE = {
@@ -147,4 +148,24 @@ export const hangarKeys = {
     projectBadge: (id) => badgeKey(PLATFORM.HANGAR, ENTITY_TYPE.PROJECT, id),
     user: (id) => hangarKey(ENTITY_TYPE.USER, id),
     userBadge: (id) => badgeKey(PLATFORM.HANGAR, ENTITY_TYPE.USER, id)
+};
+
+/**
+ * Creates a cache key for a Spigot entity.
+ *
+ * @param {string} entityType - The entity type (resource, author)
+ * @param {string} id - The entity identifier
+ * @param {string} [suffix] - Optional suffix
+ * @returns {string} The formatted cache key
+ */
+export function spigotKey(entityType, id, suffix = null) {
+    return createCacheKey(PLATFORM.SPIGOT, entityType, id, suffix);
+}
+
+// Convenience exports for common Spigot entities
+export const spigotKeys = {
+    resource: (id) => spigotKey("resource", id),
+    resourceBadge: (id) => badgeKey(PLATFORM.SPIGOT, "resource", id),
+    author: (id) => spigotKey("author", id),
+    authorBadge: (id) => badgeKey(PLATFORM.SPIGOT, "author", id)
 };

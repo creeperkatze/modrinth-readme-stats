@@ -3,12 +3,12 @@ import { generateAttribution, generateInfo } from "../generators/svgComponents.j
 import { generatePng } from "../utils/generateImage.js";
 import { ICONS } from "../constants/icons.js";
 
-export function generateErrorCard(message, detailText = "", isCurseforge = false, isHangar = false)
+export function generateErrorCard(message, detailText = "", isCurseforge = false, isHangar = false, isSpiget = false)
 {
     const bgColor = "transparent";
     const errorTextColor = "#f38ba8";
     const detailTextColor = "#a6adc8";
-    const accentColor = isCurseforge ? "#F16436" : isHangar ? "#3371ED" : "#1bd96a";
+    const accentColor = isSpiget ? "#E8A838" : isCurseforge ? "#F16436" : isHangar ? "#3371ED" : "#1bd96a";
     const borderColor = "#E4E2E2";
 
     // Truncate detail text if too long
@@ -20,7 +20,10 @@ export function generateErrorCard(message, detailText = "", isCurseforge = false
     // Get the correct icon based on platform
     let icon;
     let viewBox;
-    if (isCurseforge) {
+    if (isSpiget) {
+        icon = ICONS.spigot(accentColor);
+        viewBox = "0 0 100 100";
+    } else if (isCurseforge) {
         icon = ICONS.curseforge(accentColor);
         viewBox = "0 0 32 32";
     } else if (isHangar) {
@@ -82,6 +85,7 @@ export async function errorHandler(err, req, res)
     const format = req.query.format;
     const isCurseforge = req.path.includes("/curseforge/");
     const isHangar = req.path.includes("/hangar/");
+    const isSpiget = req.path.includes("/spigot/");
 
     let statusCode = 500;
     let message = "Internal Server Error";
@@ -90,7 +94,6 @@ export async function errorHandler(err, req, res)
     if (err.message.includes("not found"))
     {
         statusCode = 404;
-        const isHangar = req.path.includes("/hangar/");
         if (isCurseforge) {
             message = "Mod not found";
         } else if (isHangar) {
@@ -100,6 +103,13 @@ export async function errorHandler(err, req, res)
             message = isProjectRequest ? "Project not found" :
                 isUserRequest ? "User not found" :
                     "Project not found";
+        } else if (isSpiget) {
+            // Determine if this is a resource or author request
+            const isResourceRequest = req.path.includes("/resource/");
+            const isAuthorRequest = req.path.includes("/author/");
+            message = isResourceRequest ? "Resource not found" :
+                isAuthorRequest ? "Author not found" :
+                    "Resource not found";
         } else {
             // Determine if this is a project, user, organization, or collection request
             const isProjectRequest = req.path.includes("/project/");
@@ -149,7 +159,7 @@ export async function errorHandler(err, req, res)
         res.status(statusCode).send(generateBadge("error", message, "#f38ba8"));
     } else if (useImage)
     {
-        const svg = generateErrorCard(message, detailText, isCurseforge, isHangar);
+        const svg = generateErrorCard(message, detailText, isCurseforge, isHangar, isSpiget);
         const { buffer: pngBuffer } = await generatePng(svg);
 
         res.setHeader("Content-Type", "image/png");
@@ -174,11 +184,11 @@ export async function errorHandler(err, req, res)
         // Use Code 200 for image crawlers since they dont like error codes
         if (req.isImageCrawler)
         {
-            res.status(200).send(generateErrorCard(message, detailText, isCurseforge, isHangar));
+            res.status(200).send(generateErrorCard(message, detailText, isCurseforge, isHangar, isSpiget));
         }
         else
         {
-            res.status(statusCode).send(generateErrorCard(message, detailText, isCurseforge, isHangar));
+            res.status(statusCode).send(generateErrorCard(message, detailText, isCurseforge, isHangar, isSpiget));
         }
     }
 }

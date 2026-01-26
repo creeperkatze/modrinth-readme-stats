@@ -326,19 +326,28 @@ export function generateUnifiedCard(data, platformId, entityType, options = {})
         throw new Error(`Unknown platform: ${platformId}`);
     }
 
-    // Map CurseForge "mod" entity type to "project" for generation
-    const mappedEntityType = (platformId === "curseforge" && entityType === "mod") ? "project" : entityType;
+    // Map platform-specific entity types to standard types
+    let mappedEntityType = entityType;
+    if (platformId === "curseforge" && entityType === "mod") {
+        mappedEntityType = "project";
+    } else if (platformId === "spigot") {
+        if (entityType === "resource") {
+            mappedEntityType = "project";
+        } else if (entityType === "author") {
+            mappedEntityType = "user";
+        }
+    }
 
     switch (mappedEntityType) {
-        case "project":
-            return generateProjectCard(data, options, platformConfig, entityType);
-        case "user":
-            return generateUserCard(data, options, platformConfig);
-        case "organization":
-            return generateOrganizationCard(data, options, platformConfig);
-        case "collection":
-            return generateCollectionCard(data, options, platformConfig);
-        default:
-            throw new Error(`Unknown entity type: ${entityType}`);
+    case "project":
+        return generateProjectCard(data, options, platformConfig, entityType);
+    case "user":
+        return generateUserCard(data, options, platformConfig);
+    case "organization":
+        return generateOrganizationCard(data, options, platformConfig);
+    case "collection":
+        return generateCollectionCard(data, options, platformConfig);
+    default:
+        throw new Error(`Unknown entity type: ${entityType}`);
     }
 }

@@ -35,6 +35,9 @@
             };
         </script>
         <style>
+            :root {
+                --platform-color: #1bd96a;
+            }
             body {
                 background: #06060d url("/images/landing.webp");
                 font-family:
@@ -56,7 +59,15 @@
             .loader-icon {
                 animation: spin 1s linear infinite;
             }
-            input[type="checkbox"]:checked::after {
+            /* Dynamic checkbox styling */
+            .dynamic-checkbox {
+                position: relative;
+            }
+            .dynamic-checkbox:checked {
+                background-color: var(--platform-color) !important;
+                border-color: var(--platform-color) !important;
+            }
+            .dynamic-checkbox:checked::after {
                 content: "";
                 position: absolute;
                 left: 50%;
@@ -67,6 +78,7 @@
                 border-width: 0 2.5px 2.5px 0;
                 transform: translate(-50%, -50%) rotate(45deg);
             }
+            /* Dynamic range slider styling */
             input[type="range"] {
                 -webkit-appearance: none;
                 appearance: none;
@@ -81,26 +93,26 @@
                 appearance: none;
                 width: 18px;
                 height: 18px;
-                background: #1bd96a;
+                background: var(--platform-color);
                 cursor: pointer;
                 border-radius: 50%;
                 transition: all 0.2s;
             }
             input[type="range"]::-webkit-slider-thumb:hover {
-                background: #1fef76;
+                filter: brightness(1.2);
                 transform: scale(1.1);
             }
             input[type="range"]::-moz-range-thumb {
                 width: 18px;
                 height: 18px;
-                background: #1bd96a;
+                background: var(--platform-color);
                 cursor: pointer;
                 border-radius: 50%;
                 border: none;
                 transition: all 0.2s;
             }
             input[type="range"]::-moz-range-thumb:hover {
-                background: #1fef76;
+                filter: brightness(1.2);
                 transform: scale(1.1);
             }
             .color-btn {
@@ -130,8 +142,15 @@
                 <div>
                     <a href="/" class="inline-block no-underline">
                         <div class="flex items-center gap-3 mb-2">
-                            <img src="/favicon.svg" alt="Modfolio Logo" class="w-8 h-8" />
-                            <h1 class="text-modrinth-green mb-0 leading-8 text-4xl font-extrabold">Modfolio</h1>
+                            <svg class="w-8 h-8" id="modfolioLogo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <g id="logo-content">
+                                    <rect fill="var(--platform-color)" width="60" height="20" x="5.62" y="10" ry="10" />
+                                    <rect fill="var(--platform-color)" width="20" height="20" x="75.62" y="10" ry="10" />
+                                    <rect fill="var(--platform-color)" width="90" height="20" x="5.62" y="70" ry="10" />
+                                    <rect fill="var(--platform-color)" width="90" height="20" x="5" y="40" ry="10" />
+                                </g>
+                            </svg>
+                            <h1 class="mb-0 leading-8 text-4xl font-extrabold" id="modfolioTitle" style="color: #1bd96a">Modfolio</h1>
                         </div>
                     </a>
                     <p class="mb-8 text-sm opacity-80">Generate embeddable cards and badges for Modrinth and CurseForge projects.</p>
@@ -157,14 +176,32 @@
                             <div class="mb-2">
                                 <h3 class="text-text-secondary text-base font-semibold mb-1">Platform</h3>
                                 <div class="flex gap-2">
-                                    <button id="platformModrinth" class="flex-1 py-2.5 px-3 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
-                                        Modrinth
+                                    <button id="platformModrinth" class="flex flex-1 flex-row items-center justify-center gap-2 py-2.5 px-3 text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110" style="background-color: #1bd96a">
+                                        <span>Modrinth</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 514">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M503.16 323.56C514.55 281.47 515.32 235.91 503.2 190.76C466.57 54.2299 326.04 -26.8001 189.33 9.77991C83.8101 38.0199 11.3899 128.07 0.689941 230.47H43.99C54.29 147.33 113.74 74.7298 199.75 51.7098C306.05 23.2598 415.13 80.6699 453.17 181.38L411.03 192.65C391.64 145.8 352.57 111.45 306.3 96.8198L298.56 140.66C335.09 154.13 364.72 184.5 375.56 224.91C391.36 283.8 361.94 344.14 308.56 369.17L320.09 412.16C390.25 383.21 432.4 310.3 422.43 235.14L464.41 223.91C468.91 252.62 467.35 281.16 460.55 308.07L503.16 323.56Z" fill="currentColor"/>
+                                            <path d="M321.99 504.22C185.27 540.8 44.7501 459.77 8.11011 323.24C3.84011 307.31 1.17 291.33 0 275.46H43.27C44.36 287.37 46.4699 299.35 49.6799 311.29C53.0399 323.8 57.45 335.75 62.79 347.07L101.38 323.92C98.1299 316.42 95.39 308.6 93.21 300.47C69.17 210.87 122.41 118.77 212.13 94.7601C229.13 90.2101 246.23 88.4401 262.93 89.1501L255.19 133C244.73 133.05 234.11 134.42 223.53 137.25C157.31 154.98 118.01 222.95 135.75 289.09C136.85 293.16 138.13 297.13 139.59 300.99L188.94 271.38L174.07 231.95L220.67 184.08L279.57 171.39L296.62 192.38L269.47 219.88L245.79 227.33L228.87 244.72L237.16 267.79C237.16 267.79 253.95 285.63 253.98 285.64L277.7 279.33L294.58 260.79L331.44 249.12L342.42 273.82L304.39 320.45L240.66 340.63L212.08 308.81L162.26 338.7C187.8 367.78 226.2 383.93 266.01 380.56L277.54 423.55C218.13 431.41 160.1 406.82 124.05 361.64L85.6399 384.68C136.25 451.17 223.84 484.11 309.61 461.16C371.35 444.64 419.4 402.56 445.42 349.38L488.06 364.88C457.17 431.16 398.22 483.82 321.99 504.22Z" fill="currentColor"/>
+                                        </svg>
                                     </button>
-                                    <button id="platformCurseforge" class="flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
-                                        CurseForge
+                                    <button id="platformCurseforge" class="flex flex-1 flex-row items-center justify-center gap-2 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
+                                        <span>CurseForge</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">
+                                            <path fill="currentColor" d="M23.9074 12.0181C23.9074 12.0181 30.0327 11.0522 31 8.23523H21.6168V6H1L3.53975 8.94699V11.9664C3.53975 11.9664 9.94812 11.6332 12.427 13.5129C15.8202 16.6579 8.61065 20.9092 8.61065 20.9092L7.37439 25C9.30758 23.1593 12.9921 20.7781 19.7474 20.8929C17.1767 21.7053 14.5917 22.9743 12.5794 25H26.2354L24.9494 20.9092C24.9494 20.9092 15.0519 15.0732 23.9074 12.0184V12.0181Z"/>
+                                        </svg>
                                     </button>
-                                    <button id="platformHangar" class="flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
-                                        Hangar
+                                    <button id="platformHangar" class="flex flex-1 flex-row items-center justify-center gap-2 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
+                                        <span>Hangar</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 100 100">
+                                            <path fill="currentColor" d="M19.647842,83.405742 17.12912,74.376763 A 59.915284,59.915284 111.54946 0 1 44.240174,5.7251991 L 75.468532,18.867133 A 60.386505,60.386505 111.11049 0 0 48.971728,87.497785 l 2.034591,8.269181 z"/>
+                                            <path fill="currentColor" d="M 55.072512,91.798362 54.544897,85.324719 C 53.694865,74.895151 58.0742,59.624658 64.887713,51.683707 c 4.017964,-4.682809 10.680248,-7.18546 13.990839,-7.389636 l -19.219377,-8.186282 -2.747207,3.929736 a 49.625159,49.625159 102.44905 0 0 -8.190353,37.100386 l 2.354013,13.270894 z" transform="translate(0.3680297)"/>
+                                            <path fill="currentColor" d="m 60.114589,66.945795 23.681507,9.563685 0.139558,-0.915404 A 72.656565,72.656565 89.437067 0 0 83.706626,52.28424 l -0.08143,-0.47171 A 6.8911511,6.8911511 19.183097 0 0 72.237752,47.850769 47.237471,47.237471 122.89221 0 0 60.47418,66.039903 z"/>
+                                        </svg>
+                                    </button>
+                                    <button id="platformSpigot" class="flex flex-1 flex-row items-center justify-center gap-2 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110">
+                                        <span>Spigot</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 100 100">
+                                            <path fill="currentColor" d="m 2.9249314,78.6965 19.0096116,2.096489 a 9.5836714,9.5836714 165.41404 0 0 6.611126,-1.720339 10.495337,10.495337 176.508 0 1 9.251253,-0.564534 l 0.960623,0.2926 a 37.398702,37.398702 3.992193 0 0 16.719233,1.166833 l 14.64982,-2.308783 a 7.9513851,7.9513851 38.283424 0 1 9.164967,7.233751 l 0.938917,11.99131 1.278149,0.376424 a 23.099912,23.099912 173.63632 0 0 17.773461,-1.982205 l 0.02843,-0.01585 -1.15514,-16.787234 A 20.841075,20.841075 51.653295 0 0 83.54127,60.001265 L 68.817419,55.431375 A 5.8337525,5.8337525 52.823892 0 1 64.715192,50.022208 L 64.515708,42.85892 a 3.3667732,3.3667732 112.62429 0 1 1.062628,-2.549752 l 0.808928,-0.758473 A 1.9407677,1.9407677 114.62655 0 0 66.99885,38.21651 l 0.08632,-2.051581 a 0.55247117,0.55247117 136.25907 0 1 0.553032,-0.529245 l 0.541849,0.001 a 0.96576066,0.96576066 134.63993 0 0 0.967493,-0.97973 l -0.04871,-3.366841 a 1.0872176,1.0872176 44.377732 0 0 -1.094991,-1.07146 l -2.062221,0.01496 a 7.2051818,7.2051818 19.358924 0 1 -4.599666,-1.616092 l -2.11075,-1.717409 a 5.630161,5.630161 64.566732 0 1 -2.076803,-4.36719 l -1e-6,-2.293747 a 5.082877,5.082877 126.39522 0 1 3.57902,-4.855313 l 0.193636,-0.05997 a 15.012664,15.012664 176.8037 0 1 7.259213,-0.405383 l 7.744056,1.479633 a 3.6433349,3.6433349 165.60129 0 0 3.006805,-0.771944 l 0.256792,-0.212545 A 6.1957624,6.1957624 94.524381 0 0 79.895421,6.5485418 6.5770737,6.5770737 12.774878 0 0 72.856265,4.9525302 L 67.000902,6.843094 A 8.7476383,8.7476383 9.9043485 0 1 58.963362,5.4396901 L 55.396909,2.6829449 A 5.0273,5.0273 1.5807105 0 0 49.471901,2.5194407 L 44.175759,6.165011 A 4.762533,4.762533 168.89168 0 1 40.458825,6.8948048 L 30.310112,4.6774388 a 6.2941033,6.2941033 163.96838 0 0 -5.746298,1.651157 l -0.323842,0.3169969 a 5.406473,5.406473 102.67933 0 0 -1.290297,5.7351423 l 0.635115,1.721242 a 4.173668,4.173668 29.747764 0 0 4.658371,2.662237 l 9.188404,-1.661717 a 10.7262,10.7262 10.78609 0 1 7.564799,1.44116 4.8554895,4.8554895 66.76881 0 1 1.966931,4.582303 L 46.759033,24.3563 A 2.1432634,2.1432634 120.48794 0 1 45.7761,26.025791 l -3.809492,2.440234 a 6.7504395,6.7504395 163.43372 0 1 -3.58337,1.065952 l -1.876142,0.01605 a 1.556823,1.556823 134.5592 0 0 -1.543465,1.567399 l 0.0099,1.446444 a 1.3004363,1.3004363 49.745371 0 0 1.077225,1.27226 1.9010333,1.9010333 53.161199 0 1 1.491144,1.990442 l -0.02045,0.73725 a 2.5108794,2.5108794 69.410205 0 0 0.666679,1.77463 4.0955218,4.0955218 70.294175 0 1 1.007071,2.811739 l -1e-6,4.133108 a 10.039651,10.039651 117.10552 0 1 -4.168447,8.143926 l -0.750183,0.540829 a 5.240243,5.240243 179.36985 0 1 -6.034769,0.06637 l -1.2696,-0.873507 A 4.1062743,4.1062743 15.167796 0 0 24.34442,52.446566 L 2.6554892,54.036668 A 1.8238983,1.8238983 132.92263 0 0 0.96495069,55.854464 L 0.95114283,76.49158 A 2.2167967,2.2167967 48.165905 0 0 2.9249314,78.6965 Z" transform="translate(0.16030833,-0.57488003)"/>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
@@ -221,7 +258,7 @@
                         <div id="customizationContent" class="hidden mt-2">
                             <div class="mb-2" id="showProjectsSection">
                                 <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="showProjects" checked class="!w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0 checked:bg-modrinth-green checked:border-modrinth-green" />
+                                    <input type="checkbox" id="showProjects" checked class="dynamic-checkbox !w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0" />
                                     <span class="text-base text-text-secondary">Show Projects</span>
                                 </label>
                             </div>
@@ -229,14 +266,14 @@
                             <div class="mb-2" id="maxProjectsSection">
                                 <div class="flex justify-between items-center mb-2">
                                     <h3 class="text-text-secondary text-base font-semibold">Max Projects</h3>
-                                    <span class="text-modrinth-green text-base font-bold" id="maxProjectsValue">5</span>
+                                    <span class="dynamic-color text-base font-bold" id="maxProjectsValue">5</span>
                                 </div>
                                 <input type="range" id="maxProjects" min="1" max="10" value="5" class="w-full" />
                             </div>
 
                             <div class="mb-2 hidden" id="showVersionsSection">
                                 <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="showVersions" checked class="!w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0 checked:bg-modrinth-green checked:border-modrinth-green" />
+                                    <input type="checkbox" id="showVersions" checked class="dynamic-checkbox !w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0" />
                                     <span class="text-base text-text-secondary" id="showVersionsLabel">Show Versions</span>
                                 </label>
                             </div>
@@ -244,21 +281,21 @@
                             <div class="mb-2 hidden" id="maxVersionsSection">
                                 <div class="flex justify-between items-center">
                                     <h3 class="text-text-secondary text-base font-semibold" id="maxVersionsLabel">Max Versions</h3>
-                                    <span class="text-modrinth-green text-base font-bold" id="maxVersionsValue">5</span>
+                                    <span class="dynamic-color text-base font-bold" id="maxVersionsValue">5</span>
                                 </div>
                                 <input type="range" id="maxVersions" min="1" max="10" value="5" class="w-full" />
                             </div>
 
                             <div class="mb-2 hidden" id="relativeTimeSection">
                                 <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="relativeTime" checked class="!w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0 checked:bg-modrinth-green checked:border-modrinth-green" />
+                                    <input type="checkbox" id="relativeTime" checked class="dynamic-checkbox !w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0" />
                                     <span class="text-base text-text-secondary">Relative Time</span>
                                 </label>
                             </div>
 
                             <div class="mb-2 hidden" id="showSparklinesSection">
                                 <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="showSparklines" checked class="!w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0 checked:bg-modrinth-green checked:border-modrinth-green" />
+                                    <input type="checkbox" id="showSparklines" checked class="dynamic-checkbox !w-[18px] h-[18px] min-w-[18px] flex-shrink-0 appearance-none bg-input-bg border-2 border-text-muted rounded cursor-pointer relative transition-all duration-200 p-0" />
                                     <span class="text-base text-text-secondary">Sparkline Graphs</span>
                                 </label>
                             </div>
@@ -360,7 +397,7 @@
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>
+                        <button class="py-2.5 px-4 text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyMarkdown()" id="copyMarkdownBtn" disabled>
                             <span>Copy Markdown</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brackets-icon lucide-brackets">
                                 <path d="M16 3h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3" />
@@ -368,7 +405,7 @@
                             </svg>
                         </button>
 
-                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyHtml()" id="copyHtmlBtn" disabled>
+                        <button class="py-2.5 px-4 text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyHtml()" id="copyHtmlBtn" disabled>
                             <span>Copy HTML</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code-icon lucide-code">
                                 <path d="m16 18 6-6-6-6" />
@@ -376,7 +413,7 @@
                             </svg>
                         </button>
 
-                        <button class="py-2.5 px-4 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyUrl()" id="copyUrlBtn" disabled>
+                        <button class="py-2.5 px-4 text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110 flex items-center gap-2 disabled:bg-input-bg disabled:text-text-primary disabled:opacity-50 disabled:cursor-not-allowed" onclick="copyUrl()" id="copyUrlBtn" disabled>
                             <span>Copy URL</span>
                             <svg id="Discord-Logo" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 126.644 96" fill="currentColor">
                                 <path
@@ -397,8 +434,8 @@
             </div>
         </div>
         <footer class="text-center py-8 px-5 pt-8 text-base text-text-muted font-semibold">
-            Made with &hearts; by <a href="https://github.com/creeperkatze" target="_blank" class="text-modrinth-green no-underline">Creeperkatze</a> · View <a href="https://github.com/creeperkatze/modfolio" target="_blank" class="text-modrinth-green no-underline">Source</a> ·
-            <a href="https://github.com/creeperkatze/modfolio" target="_blank" class="text-yellow no-underline">&starf; On Github</a> · Not affiliated with Modrinth, CurseForge, Hangar or Spigot
+            Made with &hearts; by <a href="https://github.com/creeperkatze" target="_blank" class="dynamic-link no-underline" id="footerAuthorLink">Creeperkatze</a> · View <a href="https://github.com/creeperkatze/modfolio" target="_blank" class="dynamic-link no-underline" id="footerSourceLink">Source</a> ·
+            <a href="https://github.com/creeperkatze/modfolio" target="_blank" class="no-underline" style="color: #fbbf24">&starf; On Github</a> · Not affiliated with Modrinth, CurseForge, Hangar, Spigot, or Spigot
         </footer>
         <script>
             const modrinthUrl = document.getElementById("modrinthUrl");
@@ -444,6 +481,7 @@
             const platformModrinth = document.getElementById("platformModrinth");
             const platformCurseforge = document.getElementById("platformCurseforge");
             const platformHangar = document.getElementById("platformHangar");
+            const platformSpigot = document.getElementById("platformSpigot");
             const urlLabel = document.getElementById("urlLabel");
             const valueLabel = document.getElementById("valueLabel");
 
@@ -484,6 +522,18 @@
                     badgeMetrics: {
                         user: ["downloads", "projects", "stars"],
                         project: ["downloads", "versions", "views"]
+                    }
+                },
+                spigot: {
+                    id: "spigot",
+                    name: "Spigot",
+                    defaultColor: "E8A838",
+                    baseUrl: "spigotmc.org",
+                    projectPath: "resources",
+                    targets: ["author", "resource"],
+                    badgeMetrics: {
+                        author: ["downloads", "resources", "rating"],
+                        resource: ["downloads", "likes", "rating", "versions"]
                     }
                 }
             };
@@ -637,7 +687,7 @@
                 if (selectedPlatform === "curseforge") {
                     showVersionsLabel.textContent = "Show Files";
                     maxVersionsLabel.textContent = "Max Files";
-                } else if (selectedPlatform === "hangar") {
+                } else if (selectedPlatform === "hangar" || selectedPlatform === "spigot") {
                     showVersionsLabel.textContent = "Show Versions";
                     maxVersionsLabel.textContent = "Max Versions";
                 } else {
@@ -652,19 +702,71 @@
                 selectedPlatform = platform;
                 selectedColor = config.defaultColor;
 
-                // Update button styles
-                if (platform === "modrinth") {
-                    platformModrinth.className = "flex-1 py-2.5 px-3 bg-modrinth-green text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                    platformCurseforge.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                    platformHangar.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                } else if (platform === "curseforge") {
-                    platformModrinth.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                    platformCurseforge.className = "flex-1 py-2.5 px-3 bg-[#F16436] text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                    platformHangar.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                } else if (platform === "hangar") {
-                    platformModrinth.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                    platformCurseforge.className = "flex-1 py-2.5 px-3 bg-input-bg text-text-bright border border-border-dark rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                    platformHangar.className = "flex-1 py-2.5 px-3 bg-[#3371ED] text-black border-none rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
+                // Base classes for platform buttons
+                const baseClass = "flex flex-1 flex-row items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
+                const inactiveClass = `${baseClass} bg-input-bg text-text-bright border border-border-dark`;
+                const activeClass = `${baseClass} text-black border-none`;
+
+                // Helper to add # prefix if needed
+                const withHash = (color) => color.startsWith("#") ? color : `#${color}`;
+
+                // Update button styles with dynamic colors
+                const setActiveStyle = (element, color, isActive) => {
+                    element.className = isActive ? activeClass : inactiveClass;
+                    element.style.backgroundColor = isActive ? withHash(color) : "";
+                };
+
+                setActiveStyle(platformModrinth, PLATFORMS.modrinth.defaultColor, platform === "modrinth");
+                setActiveStyle(platformCurseforge, PLATFORMS.curseforge.defaultColor, platform === "curseforge");
+                setActiveStyle(platformHangar, PLATFORMS.hangar.defaultColor, platform === "hangar");
+                setActiveStyle(platformSpigot, PLATFORMS.spigot.defaultColor, platform === "spigot");
+
+                // Update copy buttons with platform color (only when enabled)
+                const copyBtns = [copyMarkdownBtn, copyHtmlBtn, copyUrlBtn];
+                const platformColor = withHash(config.defaultColor);
+                copyBtns.forEach(btn => {
+                    // Only set the color if the button is enabled (not disabled)
+                    if (!btn.disabled) {
+                        btn.style.backgroundColor = platformColor;
+                    } else {
+                        // Clear the inline style for disabled buttons so Tailwind classes work
+                        btn.style.backgroundColor = "";
+                    }
+                });
+
+                // Update checkboxes with platform color using accent-color
+                document.querySelectorAll(".dynamic-checkbox").forEach(checkbox => {
+                    checkbox.style.accentColor = platformColor;
+                });
+
+                // Update color value labels with platform color
+                document.querySelectorAll(".dynamic-color").forEach(label => {
+                    label.style.color = platformColor;
+                });
+
+                // Update title color
+                const modfolioTitle = document.getElementById("modfolioTitle");
+                if (modfolioTitle) {
+                    modfolioTitle.style.color = platformColor;
+                }
+
+                // Update footer links color
+                document.querySelectorAll(".dynamic-link").forEach(link => {
+                    link.style.color = platformColor;
+                });
+
+                // Update CSS custom property for sliders and checkboxes
+                document.documentElement.style.setProperty("--platform-color", platformColor);
+
+                // Update favicon with platform color
+                const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="${platformColor}"><rect width="60" height="20" x="5.62" y="10" ry="10"/><rect width="20" height="20" x="75.62" y="10" ry="10"/><rect width="90" height="20" x="5.62" y="70" ry="10"/><rect width="90" height="20" x="5" y="40" ry="10"/></g></svg>`;
+                const faviconUrl = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
+                let faviconLink = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
+                if (!faviconLink) {
+                    faviconLink = document.querySelector('link[rel="icon"]');
+                }
+                if (faviconLink) {
+                    faviconLink.href = faviconUrl;
                 }
 
                 // Update URL placeholder
@@ -765,6 +867,10 @@
             });
             platformHangar.addEventListener("click", () => {
                 setPlatform("hangar");
+                resetToDefaults();
+            });
+            platformSpigot.addEventListener("click", () => {
+                setPlatform("spigot");
                 resetToDefaults();
             });
 
@@ -868,9 +974,10 @@
                 if (type === "card") {
                     const isUserOrgOrCollection = ["user", "organization", "collection"].includes(target);
                     const isHangarUser = selectedPlatform === "hangar" && target === "user";
+                    const isSpigotAuthor = selectedPlatform === "spigot" && target === "author";
                     const isModrinthUserOrg = selectedPlatform === "modrinth" && isUserOrgOrCollection;
-                    if (!showProjects.checked && (isModrinthUserOrg || isHangarUser)) params.set("showProjects", "false");
-                    if (maxProjects.value !== "5" && (isModrinthUserOrg || isHangarUser)) params.set("maxProjects", maxProjects.value);
+                    if (!showProjects.checked && (isModrinthUserOrg || isHangarUser || isSpigotAuthor)) params.set("showProjects", "false");
+                    if (maxProjects.value !== "5" && (isModrinthUserOrg || isHangarUser || isSpigotAuthor)) params.set("maxProjects", maxProjects.value);
                     if (!showVersions.checked) params.set("showVersions", "false");
                     if (maxVersions.value !== "5") params.set("maxVersions", maxVersions.value);
                     if (!relativeTime.checked) params.set("relativeTime", "false");
@@ -979,6 +1086,36 @@
                         }
                     }
 
+                    if (platform && platform.id === "spigot") {
+                        // Handle Spigot URLs:
+                        // /resources/example-resource.12345
+                        // /resources/authors/username.12345
+                        const pathParts = urlObj.pathname.split("/").filter((p) => p);
+                        if (pathParts.length < 2) return null;
+
+                        // Check for author URLs: /resources/authors/username.12345
+                        if (pathParts[0] === "resources" && pathParts[1] === "authors" && pathParts[2]) {
+                            const match = pathParts[2].match(/\.(\d+)$/);
+                            if (match) {
+                                return { type: "author", id: match[1] };
+                            }
+                            if (/^\d+$/.test(pathParts[2])) {
+                                return { type: "author", id: pathParts[2] };
+                            }
+                        }
+                        // Check for resource URLs: /resources/example-resource.12345
+                        else if (pathParts[0] === "resources" && pathParts[1]) {
+                            const match = pathParts[1].match(/\.(\d+)$/);
+                            if (match) {
+                                return { type: "resource", id: match[1] };
+                            }
+                            if (/^\d+$/.test(pathParts[1])) {
+                                return { type: "resource", id: pathParts[1] };
+                            }
+                        }
+                        return null;
+                    }
+
                     if (!platform || platform.id !== "modrinth") return null;
 
                     // Handle Modrinth URLs
@@ -1058,7 +1195,10 @@
                     rank: "Rank",
                     stars: "Stars",
                     versions: "Versions",
-                    views: "Views"
+                    views: "Views",
+                    likes: "Likes",
+                    resources: "Resources",
+                    rating: "Rating"
                 };
                 badgeMetric.innerHTML = metrics.map(m => `<option value="${m}">${metricLabels[m]}</option>`).join('');
             }
@@ -1070,13 +1210,17 @@
                     project: "Enter project ID or slug",
                     organization: "Enter organization slug or id",
                     collection: "Enter collection id",
+                    author: "Enter author ID",
+                    resource: "Enter resource ID",
                 };
                 identifier.placeholder = placeholders[targetType.value] || "";
                 const valueLabels = {
                     user: "Username",
-                    project: selectedPlatform === "curseforge" ? "Project ID" : "Project Slug",
+                    project: selectedPlatform === "curseforge" || selectedPlatform === "spigot" ? "Project ID" : "Project Slug",
                     organization: "Organization Slug",
                     collection: "Collection ID",
+                    author: "Author ID",
+                    resource: "Resource ID",
                 };
                 valueLabel.textContent = valueLabels[targetType.value] || "Value";
                 const isCard = embedType.value === "card";
@@ -1086,12 +1230,13 @@
                 updateBadgeOptions();
 
                 // Show/hide customization sections based on target type
-                const isProject = targetType.value === "project";
+                const isProject = targetType.value === "project" || targetType.value === "resource";
                 const isUserOrgOrCollection = ["user", "organization", "collection"].includes(targetType.value);
                 const isHangarUser = selectedPlatform === "hangar" && targetType.value === "user";
+                const isSpigotAuthor = selectedPlatform === "spigot" && targetType.value === "author";
 
-                showProjectsSection.classList.toggle("hidden", !(isCard && (isUserOrgOrCollection || isHangarUser)));
-                maxProjectsSection.classList.toggle("hidden", !(isCard && (isUserOrgOrCollection || isHangarUser) && showProjects.checked));
+                showProjectsSection.classList.toggle("hidden", !(isCard && (isUserOrgOrCollection || isHangarUser || isSpigotAuthor)));
+                maxProjectsSection.classList.toggle("hidden", !(isCard && (isUserOrgOrCollection || isHangarUser || isSpigotAuthor) && showProjects.checked));
                 showVersionsSection.classList.toggle("hidden", !(isCard && isProject));
                 maxVersionsSection.classList.toggle("hidden", !(isCard && isProject && showVersions.checked));
                 relativeTimeSection.classList.toggle("hidden", !(isCard && isProject && showVersions.checked));
@@ -1115,9 +1260,12 @@
                     htmlOutput.innerHTML = '<span id="htmlPlaceholder">Your HTML code will appear here</span>';
                     urlOutput.classList.add("text-text-muted");
                     urlOutput.innerHTML = '<span id="urlPlaceholder">Your URL will appear here</span>';
-                    copyMarkdownBtn.disabled = true;
-                    copyHtmlBtn.disabled = true;
-                    copyUrlBtn.disabled = true;
+
+                    // Disable buttons and clear inline styles so gray background shows
+                    [copyMarkdownBtn, copyHtmlBtn, copyUrlBtn].forEach(btn => {
+                        btn.disabled = true;
+                        btn.style.backgroundColor = "";
+                    });
                     document.getElementById("generationTime").textContent = "";
                     document.getElementById("generationIcon").classList.add("hidden");
                     document.getElementById("loaderIcon").classList.add("hidden");
@@ -1196,6 +1344,39 @@
                         }
                         const queryString = urlParams.toString();
                         url = `${window.location.origin}/hangar/${type}/${identifierValue}${queryString ? "?" + queryString : ""}`;
+                    } else if (selectedPlatform === "spigot") {
+                        // Spigot card URL: /spigot/resource/:id or /spigot/author/:id
+                        const isResource = type === "resource";
+                        const isAuthor = type === "author";
+                        if (isResource) {
+                            if (!showVersions.checked) {
+                                urlParams.set("showVersions", "false");
+                            }
+                            if (maxVersions.value !== "5") {
+                                urlParams.set("maxVersions", maxVersions.value);
+                            }
+                            if (!relativeTime.checked) {
+                                urlParams.set("relativeTime", "false");
+                            }
+                        } else if (isAuthor) {
+                            if (!showProjects.checked) {
+                                urlParams.set("showProjects", "false");
+                            }
+                            if (maxProjects.value !== "5") {
+                                urlParams.set("maxProjects", maxProjects.value);
+                            }
+                        }
+                        if (!showSparklines.checked) {
+                            urlParams.set("showSparklines", "false");
+                        }
+                        if (selectedColor !== config.defaultColor) {
+                            urlParams.set("color", selectedColor);
+                        }
+                        if (selectedBgColor !== null) {
+                            urlParams.set("backgroundColor", selectedBgColor);
+                        }
+                        const queryString = urlParams.toString();
+                        url = `${window.location.origin}/spigot/${type}/${identifierValue}${queryString ? "?" + queryString : ""}`;
                     } else {
                         // Modrinth card URL
                         if (!showProjects.checked && ["user", "organization", "collection"].includes(type)) {
@@ -1238,6 +1419,8 @@
                         url = `${window.location.origin}/curseforge/project/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
                     } else if (selectedPlatform === "hangar") {
                         url = `${window.location.origin}/hangar/${type}/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
+                    } else if (selectedPlatform === "spigot") {
+                        url = `${window.location.origin}/spigot/${type}/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
                     } else {
                         url = `${window.location.origin}/modrinth/${type}/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
                     }
@@ -1249,6 +1432,10 @@
                     ? type === "user"
                         ? `https://${config.baseUrl}/u/${identifierValue}`
                         : `https://${config.baseUrl}/${config.projectPath}/${identifierValue}`
+                    : selectedPlatform === "spigot"
+                    ? type === "author"
+                        ? `https://${config.baseUrl}/authors/${identifierValue}`
+                        : `https://${config.baseUrl}/${config.projectPath}/${identifierValue}/`
                     : `https://modrinth.com/${type}/${identifierValue}`;
                 const cacheBuster = `timestamp=${Date.now()}`;
                 const urlForDiscord = `${url}${url.includes("?") ? "&" : "?"}${cacheBuster}`;
@@ -1265,9 +1452,12 @@
                 urlOutput.classList.add("text-text-bright");
                 urlOutput.textContent = urlForDiscord;
 
-                copyMarkdownBtn.disabled = false;
-                copyHtmlBtn.disabled = false;
-                copyUrlBtn.disabled = false;
+                // Enable buttons and restore platform color
+                const currentPlatformColor = `#${PLATFORMS[selectedPlatform].defaultColor}`;
+                [copyMarkdownBtn, copyHtmlBtn, copyUrlBtn].forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.backgroundColor = currentPlatformColor;
+                });
 
                 previewImg.src = `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`;
                 previewImg.onload = async () => {
@@ -1310,6 +1500,8 @@
                             ? `/meta/curseforge/${encodeURIComponent(identifierValue)}`
                             : selectedPlatform === "hangar"
                             ? `/meta/hangar/${encodeURIComponent(identifierValue)}`
+                            : selectedPlatform === "spigot"
+                            ? `/spigot/meta/${encodeURIComponent(identifierValue)}`
                             : `/meta/${type}/${encodeURIComponent(identifierValue)}`;
                         const res = await fetch(metaPath);
                         if (res.ok) {
@@ -1435,7 +1627,7 @@
 
             function hasCustomizationFromUrl(params) {
                 const config = PLATFORMS[params.platform];
-                const relevantPlatform = params.platform === "modrinth" || params.platform === "hangar";
+                const relevantPlatform = params.platform === "modrinth" || params.platform === "hangar" || params.platform === "spigot";
                 return (relevantPlatform && params.showProjects === false) || (relevantPlatform && params.maxProjects !== 5) || params.showVersions === false || params.maxVersions !== 5 || params.relativeTime === false || params.showSparklines === false || params.color !== config.defaultColor || params.backgroundColor !== null;
             }
 

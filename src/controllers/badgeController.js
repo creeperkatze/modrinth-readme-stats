@@ -1,12 +1,13 @@
 import modrinthClient from "../services/modrinthClient.js";
 import curseforgeClient from "../services/curseforgeClient.js";
 import hangarClient from "../services/hangarClient.js";
+import spigotClient from "../services/spigotClient.js";
 import { apiCache } from "../utils/cache.js";
 import { generateBadge } from "../generators/badge.js";
 import { formatNumber } from "../utils/formatters.js";
 import logger from "../utils/logger.js";
 import { generatePng } from "../utils/generateImage.js";
-import { modrinthKeys, curseforgeKeys, hangarKeys } from "../utils/cacheKeys.js";
+import { modrinthKeys, curseforgeKeys, hangarKeys, spigotKeys } from "../utils/cacheKeys.js";
 import { PLATFORMS } from "../constants/platforms.js";
 
 const API_CACHE_TTL = 3600; // 1 hour
@@ -49,6 +50,18 @@ const BADGE_CONFIGS = {
         downloads: { label: "Downloads", getValue: stats => formatNumber(stats.totalDownloads) },
         projects: { label: "Projects", getValue: stats => stats.projectCount.toString() },
         stars: { label: "Stars", getValue: stats => formatNumber(stats.totalFollowers) }
+    },
+    // Spigot entities
+    spigot_resource: {
+        downloads: { label: "Downloads", getValue: stats => formatNumber(stats.downloads) },
+        likes: { label: "Likes", getValue: stats => formatNumber(stats.likes) },
+        rating: { label: "Rating", getValue: stats => stats.rating ? stats.rating.toFixed(1) : "N/A" },
+        versions: { label: "Versions", getValue: stats => stats.versionCount.toString() }
+    },
+    spigot_author: {
+        downloads: { label: "Downloads", getValue: stats => formatNumber(stats.totalDownloads) },
+        resources: { label: "Resources", getValue: stats => stats.resourceCount.toString() },
+        rating: { label: "Rating", getValue: stats => stats.avgRating ? stats.avgRating.toString() : "N/A" }
     }
 };
 
@@ -62,7 +75,10 @@ const DATA_FETCHERS = {
     curseforge_mod: curseforgeClient.getModBadgeStats.bind(curseforgeClient),
     // Hangar fetchers
     hangar_project: hangarClient.getProjectBadgeStats.bind(hangarClient),
-    hangar_user: hangarClient.getUserBadgeStats.bind(hangarClient)
+    hangar_user: hangarClient.getUserBadgeStats.bind(hangarClient),
+    // Spigot fetchers
+    spigot_resource: spigotClient.getResourceBadgeStats.bind(spigotClient),
+    spigot_author: spigotClient.getAuthorBadgeStats.bind(spigotClient)
 };
 
 // Platform and cache key mapping for each entity type
@@ -73,7 +89,9 @@ const ENTITY_CONFIG = {
     collection: { platform: PLATFORMS.MODRINTH.id, platformName: "modrinth", cacheKeyFn: modrinthKeys.collectionBadge },
     curseforge_mod: { platform: PLATFORMS.CURSEFORGE.id, platformName: "curseforge", cacheKeyFn: curseforgeKeys.modBadge },
     hangar_project: { platform: PLATFORMS.HANGAR.id, platformName: "hangar", cacheKeyFn: hangarKeys.projectBadge },
-    hangar_user: { platform: PLATFORMS.HANGAR.id, platformName: "hangar", cacheKeyFn: hangarKeys.userBadge }
+    hangar_user: { platform: PLATFORMS.HANGAR.id, platformName: "hangar", cacheKeyFn: hangarKeys.userBadge },
+    spigot_resource: { platform: "spigot", platformName: "spigot", cacheKeyFn: spigotKeys.resourceBadge },
+    spigot_author: { platform: "spigot", platformName: "spigot", cacheKeyFn: spigotKeys.authorBadge }
 };
 
 const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
@@ -86,7 +104,9 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
             ? PLATFORMS.CURSEFORGE.defaultColor
             : platform === PLATFORMS.HANGAR.id
                 ? PLATFORMS.HANGAR.defaultColor
-                : PLATFORMS.MODRINTH.defaultColor;
+                : platform === "spigot"
+                    ? "#E8A838"
+                    : PLATFORMS.MODRINTH.defaultColor;
         const color = req.query.color ? `#${req.query.color.replace(/^#/, "")}` : defaultColor;
         const backgroundColor = req.query.backgroundColor ? `#${req.query.backgroundColor.replace(/^#/, "")}` : null;
         const config = BADGE_CONFIGS[entityType][badgeType];
@@ -104,7 +124,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
 
         if (!data) {
             // Only fetch versions for version count badges
-            const fetchVersions = (entityType === "project" || entityType === "curseforge_mod" || entityType === "hangar_project") && badgeType === "versions";
+            const fetchVersions = (entityType === "project" || entityType === "curseforge_mod" || entityType === "hangar_project" || entityType === "spigot_resource") && badgeType === "versions";
             data = await DATA_FETCHERS[entityType](identifier, fetchVersions);
             apiCache.set(apiCacheKey, data);
         }
@@ -190,3 +210,14 @@ export const getHangarProjectViews = (req, res, next) => handleBadgeRequest(req,
 export const getHangarUserDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "hangar_user", "downloads");
 export const getHangarUserProjects = (req, res, next) => handleBadgeRequest(req, res, next, "hangar_user", "projects");
 export const getHangarUserStars = (req, res, next) => handleBadgeRequest(req, res, next, "hangar_user", "stars");
+
+// Spigot resource badges
+export const getSpigotResourceDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "spigot_resource", "downloads");
+export const getSpigotResourceLikes = (req, res, next) => handleBadgeRequest(req, res, next, "spigot_resource", "likes");
+export const getSpigotResourceRating = (req, res, next) => handleBadgeRequest(req, res, next, "spigot_resource", "rating");
+export const getSpigotResourceVersions = (req, res, next) => handleBadgeRequest(req, res, next, "spigot_resource", "versions");
+
+// Spigot author badges
+export const getSpigotAuthorDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "spigot_author", "downloads");
+export const getSpigotAuthorResources = (req, res, next) => handleBadgeRequest(req, res, next, "spigot_author", "resources");
+export const getSpigotAuthorRating = (req, res, next) => handleBadgeRequest(req, res, next, "spigot_author", "rating");

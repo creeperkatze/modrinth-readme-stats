@@ -1,6 +1,7 @@
 import modrinthClient from "../services/modrinthClient.js";
 import curseforgeClient from "../services/curseforgeClient.js";
 import hangarClient from "../services/hangarClient.js";
+import spigotClient from "../services/spigotClient.js";
 import { apiCache } from "../utils/cache.js";
 import { generateUserCard } from "../generators/userCard.js";
 import { generateProjectCard } from "../generators/projectCard.js";
@@ -9,7 +10,7 @@ import { generateCollectionCard } from "../generators/collectionCard.js";
 import { generateUnifiedCard } from "../generators/unifiedCard.js";
 import logger from "../utils/logger.js";
 import { generatePng } from "../utils/generateImage.js";
-import { modrinthKeys, curseforgeKeys, hangarKeys } from "../utils/cacheKeys.js";
+import { modrinthKeys, curseforgeKeys, hangarKeys, spigotKeys } from "../utils/cacheKeys.js";
 import { generateErrorCard } from "../middleware/errorHandler.js";
 import { getPlatformConfig, getErrorMessage } from "../constants/platformConfig.js";
 
@@ -23,7 +24,9 @@ const CARD_CLIENTS = {
     collection: modrinthClient,
     curseforge_mod: curseforgeClient,
     hangar_project: hangarClient,
-    hangar_user: hangarClient
+    hangar_user: hangarClient,
+    spigot_resource: spigotClient,
+    spigot_author: spigotClient
 };
 
 const CARD_CONFIGS = {
@@ -82,6 +85,22 @@ const CARD_CONFIGS = {
         entityName: "user",
         platformId: "hangar",
         useUnified: true
+    },
+    spigot_resource: {
+        paramKey: "id",
+        dataFetcher: (client, id, options, convertToPng) => client.getResourceStats(id, options.maxVersions, convertToPng),
+        cacheKeyFn: spigotKeys.resource,
+        entityName: "resource",
+        platformId: "spigot",
+        useUnified: true
+    },
+    spigot_author: {
+        paramKey: "id",
+        dataFetcher: (client, id, options, convertToPng) => client.getAuthorStats(id, options.maxProjects, convertToPng),
+        cacheKeyFn: spigotKeys.author,
+        entityName: "author",
+        platformId: "spigot",
+        useUnified: true
     }
 };
 
@@ -131,7 +150,8 @@ const handleCardRequest = async (req, res, next, cardType) => {
                     errorMessage,
                     "",
                     config.platformId === "curseforge",
-                    config.platformId === "hangar"
+                    config.platformId === "hangar",
+                    config.platformId === "spigot"
                 );
 
                 if (renderImage) {
@@ -214,3 +234,9 @@ export const getHangarProject = (req, res, next) => handleCardRequest(req, res, 
 
 // Hangar user card
 export const getHangarUser = (req, res, next) => handleCardRequest(req, res, next, "hangar_user");
+
+// Spiget resource card
+export const getSpigetResource = (req, res, next) => handleCardRequest(req, res, next, "spigot_resource");
+
+// Spiget author card
+export const getSpigetAuthor = (req, res, next) => handleCardRequest(req, res, next, "spigot_author");
