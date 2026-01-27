@@ -212,9 +212,9 @@ export class SpigotClient extends BasePlatformClient
                     downloads: r?.downloads || 0,
                     likes: r?.likes || 0,
                     rating: r?.rating?.average || 0,
-                    date_created: r?.releaseDate ? new Date(r.releaseDate).toISOString() : null,
-                    createdAt: r?.releaseDate ? new Date(r.releaseDate).toISOString() : null,
-                    lastUpdated: r?.updateDate ? new Date(r.updateDate).toISOString() : null,
+                    date_created: r?.releaseDate ? new Date(r.releaseDate * 1000).toISOString() : null,
+                    createdAt: r?.releaseDate ? new Date(r.releaseDate * 1000).toISOString() : null,
+                    lastUpdated: r?.updateDate ? new Date(r.updateDate * 1000).toISOString() : null,
                     // Construct icon URL manually - Spiget API has separate icon endpoint per resource
                     icon_url: `${SPIGOT_API_URL}/v2/resources/${r.id}/icon`,
                     project_type: "plugin", // Spigot primarily has plugins
@@ -228,9 +228,10 @@ export class SpigotClient extends BasePlatformClient
             const projectsConversionTime = await this.fetchImagesForResources(resources, convertToPng);
             imageConversionTime += projectsConversionTime;
 
-            // We don't fetch version dates for Spigot authors as it would require many API calls
-            // Each resource would need its own versions endpoint call
-            allVersionDates = [];
+            // Use resource creation dates for sparkline (better than no sparkline, no extra API calls)
+            allVersionDates = allResources
+                .map(r => r?.releaseDate ? new Date(r.releaseDate * 1000).toISOString() : null)
+                .filter(Boolean);
         } catch {
             // If resources fetch fails, continue with empty resources array
             resources = [];
