@@ -146,6 +146,9 @@ function generateUserCard(data, options, platformConfig)
         date: project.date_created || project.createdAt,
         icon_url_base64: project.icon_url_base64 || project.icon || null,
         project_type: project.project_type || "mod",
+        loaders: project.loaders || [],
+        game_versions: project.game_versions || [],
+        categories: project.categories || [],
         versionDates: project.versionDates || []
     }));
 
@@ -212,7 +215,11 @@ function generateOrganizationCard(data, options, platformConfig)
         followers: project.followers || 0,
         date: project.date_created || project.createdAt,
         icon_url_base64: project.icon_url_base64 || project.icon || null,
-        project_type: project.project_type || "mod"
+        project_type: project.project_type || "mod",
+        loaders: project.loaders || [],
+        game_versions: project.game_versions || [],
+        categories: project.categories || [],
+        versionDates: project.versionDates || []
     }));
 
     // Get all version dates for sparkline
@@ -265,7 +272,8 @@ function generateCollectionCard(data, options, platformConfig)
     const colors = getThemeColors(accentColor, backgroundColor);
     colors.accentColor = accentColor;
 
-    const topProjects = showProjects ? projects.slice(0, maxProjects) : [];
+    // Use stats.topProjects since that's where icons were fetched
+    const topProjects = showProjects ? (stats.topProjects || []).slice(0, maxProjects) : [];
     const hasProjects = showProjects && topProjects.length > 0;
     const height = hasProjects ? 150 + (topProjects.length * 50) : 130;
 
@@ -278,7 +286,11 @@ function generateCollectionCard(data, options, platformConfig)
         followers: project.followers || 0,
         date: project.date_created || project.createdAt,
         icon_url_base64: project.icon_url_base64 || project.icon || null,
-        project_type: project.project_type || "mod"
+        project_type: project.project_type || "mod",
+        loaders: project.loaders || [],
+        game_versions: project.game_versions || [],
+        categories: project.categories || [],
+        versionDates: project.versionDates || []
     }));
 
     // Get all version dates for sparkline
@@ -298,6 +310,7 @@ function generateCollectionCard(data, options, platformConfig)
     const content = `
 ${showSparklines ? generateActivitySparkline(allVersionDates, colors) : ""}
 ${generateHeader("collection", "collection", title, colors, platformConfig.icon(colors.accentColor), platformConfig.iconViewBox)}
+${generateProfileImage(collection.icon_url_base64 || collection.icon || null, "profile-clip", 400, 60, 35, colors)}
 ${generateStatsGrid(statsData, colors)}
 ${generateDivider(colors)}
 ${generateProjectList(mappedProjects, platformConfig.labels.sections.topProjects, colors, showSparklines, relativeTime)}
