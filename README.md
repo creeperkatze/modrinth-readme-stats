@@ -14,9 +14,9 @@ Use the **[Website](https://modfolio.creeperkatze.de)** to visually configure an
 Examples:
 
 [![Mod Menu](https://modfolio.creeperkatze.de/modrinth/project/modmenu)](https://modrinth.com/project/modmenu)
-[![Sodium](https://modfolio.creeperkatze.de/curseforge/project/394468)](https://www.curseforge.com/minecraft/mc-mods/sodium)
-[![NoticeAPI](https://modfolio.creeperkatze.de/hangar/project/NoticeAPI)](https://hangar.papermc.io/NoticeAPI/NoticeAPI)
-[![Vault](https://modfolio.creeperkatze.de/spigot/resource/77333)](https://www.spigotmc.org/resources/vault.77333/)
+[![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172)](https://www.curseforge.com/minecraft/mc-mods/geckolib)
+[![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat)](https://hangar.papermc.io/henkelmax/SimpleVoiceChat)
+[![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140)](https://spigotmc.org/resources/28140/)
 
 ## Endpoints
 
@@ -41,22 +41,21 @@ Rich cards showing stats, versions, projects, and activity sparklines.
 
 | Card Type | Path | Example |
 |-----------|------|---------|
-| Project | `/curseforge/project/<id>` | [![Sodium](https://modfolio.creeperkatze.de/curseforge/project/394468)](https://www.curseforge.com/minecraft/mc-mods/sodium) |
-| Lookup | `/curseforge/lookup/<slug>` | Resolves slug to project ID |
+| Project | `/curseforge/project/<id>` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
 
 #### Hangar
 
 | Card Type | Path | Example |
 |-----------|------|---------|
-| Project | `/hangar/project/<slug>` | [![NoticeAPI](https://modfolio.creeperkatze.de/hangar/project/NoticeAPI)](https://hangar.papermc.io/NoticeAPI/NoticeAPI) |
-| User | `/hangar/user/<username>` | [![Kevin](https://modfolio.creeperkatze.de/hangar/user/KevinPT)](https://hangar.papermc.io/KevinPT) |
+| Project | `/hangar/project/<slug>` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
+| User | `/hangar/user/<username>` | [![henkelmax](https://modfolio.creeperkatze.de/hangar/user/henkelmax)](https://hangar.papermc.io/u/henkelmax) |
 
 #### Spigot
 
 | Card Type | Path | Example |
 |-----------|------|---------|
-| Resource | `/spigot/resource/<id>` | [![Vault](https://modfolio.creeperkatze.de/spigot/resource/77333)](https://www.spigotmc.org/resources/vault.77333/) |
-| Author | `/spigot/author/<id>` | Author stats card |
+| Resource | `/spigot/resource/<id>` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140)](https://spigotmc.org/resources/28140/) |
+| Author | `/spigot/author/<id>` | [![SkriptJava](https://modfolio.creeperkatze.de/spigot/author/100356)](https://spigotmc.org/authors/100356) |
 
 #### Card Options
 
@@ -83,38 +82,38 @@ Compact badges showing a single metric.
 
 | Badge | Path | Example |
 |-------|------|---------|
-| Downloads | `/modrinth/<type>/<id>/downloads` | ![Downloads](https://modfolio.creeperkatze.de/modrinth/project/modmenu/downloads) |
-| Followers | `/modrinth/<type>/<id>/followers` | ![Followers](https://modfolio.creeperkatze.de/modrinth/project/modmenu/followers) |
-| Versions | `/modrinth/<type>/<id>/versions` | ![Versions](https://modfolio.creeperkatze.de/modrinth/project/modmenu/versions) |
-| Projects | `/modrinth/user|organization/<id>/projects` | ![Projects](https://modfolio.creeperkatze.de/modrinth/user/prospector/projects) |
+| Downloads | `/modrinth/<type>/<id>/downloads` | [![Mod Menu](https://modfolio.creeperkatze.de/modrinth/project/modmenu/downloads)](https://modrinth.com/project/modmenu) |
+| Followers | `/modrinth/<type>/<id>/followers` | [![Mod Menu](https://modfolio.creeperkatze.de/modrinth/project/modmenu/followers)](https://modrinth.com/project/modmenu) |
+| Versions | `/modrinth/<type>/<id>/versions` | [![Mod Menu](https://modfolio.creeperkatze.de/modrinth/project/modmenu/versions)](https://modrinth.com/project/modmenu) |
+| Projects | `/modrinth/user|organization/<id>/projects` | [![Prospector](https://modfolio.creeperkatze.de/modrinth/user/prospector/projects)](https://modrinth.com/user/prospector) |
 
 #### CurseForge
 
 | Badge | Path | Example |
 |-------|------|---------|
-| Downloads | `/curseforge/project/<id>/downloads` | ![Downloads](https://modfolio.creeperkatze.de/curseforge/project/394468/downloads) |
-| Rank | `/curseforge/project/<id>/rank` | ![Rank](https://modfolio.creeperkatze.de/curseforge/project/394468/rank) |
-| Files | `/curseforge/project/<id>/versions` | ![Files](https://modfolio.creeperkatze.de/curseforge/project/394468/versions) |
+| Downloads | `/curseforge/project/<id>/downloads` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172/downloads)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
+| Rank | `/curseforge/project/<id>/rank` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172/rank)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
+| Files | `/curseforge/project/<id>/versions` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172/versions)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
 
 #### Hangar
 
 | Badge | Path | Example |
 |-------|------|---------|
-| Downloads | `/hangar/<type>/<id>/downloads` | ![Downloads](https://modfolio.creeperkatze.de/hangar/project/NoticeAPI/downloads) |
-| Stars | `/hangar/<type>/<id>/stars` | ![Stars](https://modfolio.creeperkatze.de/hangar/project/NoticeAPI/stars) |
-| Versions | `/hangar/<type>/<id>/versions` | ![Versions](https://modfolio.creeperkatze.de/hangar/project/NoticeAPI/versions) |
-| Views | `/hangar/project/<id>/views` | ![Views](https://modfolio.creeperkatze.de/hangar/project/NoticeAPI/views) |
-| Projects | `/hangar/user/<id>/projects` | ![Projects](https://modfolio.creeperkatze.de/hangar/user/KevinPT/projects) |
+| Downloads | `/hangar/<type>/<id>/downloads` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/downloads)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
+| Stars | `/hangar/<type>/<id>/stars` | [![/enkelmax](https://modfolio.creeperkatze.de/hangar/user//enkelmax/stars)](https://hangar.papermc.io/u//enkelmax) |
+| Versions | `/hangar/<type>/<id>/versions` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/versions)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
+| Views | `/hangar/project/<id>/views` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/views)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
+| Projects | `/hangar/user/<id>/projects` | [![henkelmax](https://modfolio.creeperkatze.de/hangar/user/henkelmax/downloads)](https://hangar.papermc.io/u/henkelmax) |
 
 #### Spigot
 
 | Badge | Path | Example |
 |-------|------|---------|
-| Downloads | `/spigot/<type>/<id>/downloads` | ![Downloads](https://modfolio.creeperkatze.de/spigot/resource/77333/downloads) |
-| Likes | `/spigot/<type>/<id>/likes` | ![Likes](https://modfolio.creeperkatze.de/spigot/resource/77333/likes) |
-| Rating | `/spigot/<type>/<id>/rating` | ![Rating](https://modfolio.creeperkatze.de/spigot/resource/77333/rating) |
-| Versions | `/spigot/<type>/<id>/versions` | ![Versions](https://modfolio.creeperkatze.de/spigot/resource/77333/versions) |
-| Resources | `/spigot/author/<id>/resources` | ![Resources](https://modfolio.creeperkatze.de/spigot/author/1/resources) |
+| Downloads | `/spigot/<type>/<id>/downloads` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/downloads)](https://spigotmc.org/resources/28140/) |
+| Likes | `/spigot/<type>/<id>/likes` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/likes)](https://spigotmc.org/resources/28140/) |
+| Rating | `/spigot/<type>/<id>/rating` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/rating)](https://spigotmc.org/resources/28140/) |
+| Versions | `/spigot/<type>/<id>/versions` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/versions)](https://spigotmc.org/resources/28140/) |
+| Resources | `/spigot/author/<id>/resources` | [![SkriptJava](https://modfolio.creeperkatze.de/spigot/author/100356/resources)](https://spigotmc.org/authors/100356) |
 
 #### Badge Options
 
