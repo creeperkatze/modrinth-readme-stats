@@ -8,6 +8,9 @@ const router = express.Router();
 // Slug lookup route (resolve CurseForge slugs to IDs)
 router.get("/curseforge/lookup/:slug", curseforgeController.getCfSlugLookup);
 
+// User lookup route (resolve CurseForge usernames to IDs)
+router.get("/curseforge/lookup/user/:username", curseforgeController.getCfUserLookup);
+
 // Card routes
 router.get("/curseforge/project/:projectId", cardController.getCfMod);
 

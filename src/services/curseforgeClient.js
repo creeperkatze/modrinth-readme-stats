@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { performance } from "perf_hooks";
-import { fetchImageAsBase64 } from "../utils/imageFetcher.js";
+import { fetchImageAsBase64, fetchVersionDatesForProjects } from "../utils/imageFetcher.js";
 import { BasePlatformClient } from "./baseClient.js";
 
 dotenv.config({ quiet: true });
@@ -213,6 +213,170 @@ export class CurseforgeClient extends BasePlatformClient
         }
 
         return data[0].id;
+    }
+
+    async getUser(userId)
+    {
+        return this.fetch(`/v1/users/${userId}`);
+    }
+
+    /**
+     * Get stats for a CurseForge user (for card generation)
+     * @param {number|string} userId - The user ID
+     * @param {number} maxProjects - Maximum projects to fetch
+     * @param {boolean} convertToPng - Whether to convert images to PNG
+     */
+    async getUserStats(userId, maxProjects = 5, convertToPng = false)
+    {
+        // Validate userId is a number
+        if (!/^\d+$/.test(String(userId))) {
+            return null;
+        }
+
+        const apiStart = performance.now();
+
+        const userResponse = await this.getUser(userId);
+        if (!userResponse) {
+            return null;
+        }
+        const user = userResponse.data;
+
+        let imageConversionTime = 0;
+
+        // Fetch user avatar if available
+        if (user?.avatarUrl) {
+            // Replace {0} placeholder in Twitch avatar URLs with actual size
+            const avatarUrl = user.avatarUrl.replace("{0}", "300x300");
+            const result = await fetchImageAsBase64(avatarUrl, convertToPng);
+            user.avatar_url_base64 = result?.data;
+            if (result?.conversionTime) imageConversionTime += result.conversionTime;
+        }
+
+        // Fetch user's projects using search API with authorId
+        let projects = [];
+        let projectCount = 0;
+        try {
+            const searchUrl = `${CURSEFORGE_API_URL}/v1/mods/search?gameId=432&authorId=${userId}&pageSize=${maxProjects}&sortField=6&sortOrder=desc`;
+            const searchResponse = await this.fetch(searchUrl);
+            const searchResults = searchResponse.data || [];
+
+            // Get total project count from pagination
+            projectCount = searchResponse.pagination?.totalCount || searchResults.length;
+
+            // Map projects to standard format
+            projects = await Promise.all(searchResults.map(async (mod) => {
+                let icon_url_base64 = null;
+
+                // Fetch project icon if available
+                if (mod?.logo?.url) {
+                    const result = await fetchImageAsBase64(mod.logo.url, convertToPng);
+                    icon_url_base64 = result?.data;
+                    if (result?.conversionTime) imageConversionTime += result.conversionTime;
+                }
+
+                return {
+                    id: mod.id,
+                    title: mod.name,
+                    slug: mod.slug,
+                    description: mod.summary,
+                    downloads: mod.downloadCount || 0,
+                    followers: 0, // CurseForge doesn't have followers for mods
+                    date_created: mod.dateCreated,
+                    icon_url_base64: icon_url_base64,
+                    icon: mod.logo?.url || null
+                };
+            }));
+
+            // Fetch version dates for sparkline
+            await fetchVersionDatesForProjects(projects, async (modId) => {
+                const filesResponse = await this.getModFiles(modId, 50);
+                const files = filesResponse.data || [];
+                return files.map(file => ({
+                    date_published: file.fileDate
+                }));
+            });
+        } catch {
+            // If project fetch fails, continue with empty projects array
+            projects = [];
+        }
+
+        // Collect all version dates for sparkline
+        const allVersionDates = projects.flatMap(p => p.versionDates || []);
+
+        // Map CurseForge user fields to standard format
+        const mappedUser = {
+            name: user.displayName,
+            username: user.displayName,
+            avatar_url_base64: user.avatar_url_base64,
+            avatarUrl: user.avatarUrl?.replace("{0}", "300x300"),
+            date_created: user.dateCreated
+        };
+
+        // Calculate total downloads from projects (if available) or use user's total
+        const projectsDownloads = projects.reduce((sum, p) => sum + (p.downloads || 0), 0);
+        const totalDownloads = user?.modsDownloadCount || projectsDownloads;
+
+        const apiTime = performance.now() - apiStart;
+
+        return {
+            user: mappedUser,
+            projects: projects,
+            stats: {
+                totalDownloads: totalDownloads,
+                projectCount: projectCount,
+                totalFollowers: user?.followerCount || 0,
+                allVersionDates: allVersionDates
+            },
+            timings: {
+                api: apiTime,
+                imageConversion: imageConversionTime
+            }
+        };
+    }
+
+    /**
+     * Get badge stats for a CurseForge user (lightweight)
+     * @param {number|string} userId - The user ID
+     * @param {boolean} fetchProjects - Whether to fetch projects for project count
+     */
+    async getUserBadgeStats(userId, fetchProjects = false)
+    {
+        // Validate userId is a number
+        if (!/^\d+$/.test(String(userId))) {
+            return null;
+        }
+
+        const apiStart = performance.now();
+
+        const userResponse = await this.getUser(userId);
+        if (!userResponse) {
+            return null;
+        }
+        const user = userResponse.data;
+
+        let projectCount = 0;
+
+        // Fetch project count if requested
+        if (fetchProjects) {
+            try {
+                const searchUrl = `${CURSEFORGE_API_URL}/v1/mods/search?gameId=432&authorId=${userId}&pageSize=1`;
+                const searchResponse = await this.fetch(searchUrl);
+                projectCount = searchResponse.pagination?.totalCount || 0;
+            } catch {
+                projectCount = 0;
+            }
+        }
+
+        const apiTime = performance.now() - apiStart;
+
+        return {
+            stats: {
+                totalDownloads: user?.modsDownloadCount || 0,
+                projectCount: projectCount,
+                totalFollowers: user?.followerCount || 0
+            },
+            timings: { api: apiTime }
+        };
     }
 
     /**

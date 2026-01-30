@@ -40,6 +40,11 @@ const BADGE_CONFIGS = {
         rank: { label: "Rank", getValue: stats => stats.rank ? `#${stats.rank}` : "N/A" },
         versions: { label: "Files", getValue: stats => stats.fileCount.toString() }
     },
+    curseforge_user: {
+        downloads: { label: "Downloads", getValue: stats => formatNumber(stats.totalDownloads) },
+        projects: { label: "Projects", getValue: stats => stats.projectCount.toString() },
+        followers: { label: "Followers", getValue: stats => formatNumber(stats.totalFollowers) }
+    },
     // Hangar entities
     hangar_project: {
         downloads: { label: "Downloads", getValue: stats => formatNumber(stats.downloads) },
@@ -73,6 +78,7 @@ const DATA_FETCHERS = {
     collection: modrinthClient.getCollectionBadgeStats.bind(modrinthClient),
     // CurseForge fetchers
     curseforge_project: curseforgeClient.getModBadgeStats.bind(curseforgeClient),
+    curseforge_user: curseforgeClient.getUserBadgeStats.bind(curseforgeClient),
     // Hangar fetchers
     hangar_project: hangarClient.getProjectBadgeStats.bind(hangarClient),
     hangar_user: hangarClient.getUserBadgeStats.bind(hangarClient),
@@ -88,6 +94,7 @@ const ENTITY_CONFIG = {
     organization: { platform: PLATFORMS.MODRINTH.id, platformName: "modrinth", cacheKeyFn: modrinthKeys.organizationBadge },
     collection: { platform: PLATFORMS.MODRINTH.id, platformName: "modrinth", cacheKeyFn: modrinthKeys.collectionBadge },
     curseforge_project: { platform: PLATFORMS.CURSEFORGE.id, platformName: "curseforge", cacheKeyFn: curseforgeKeys.projectBadge },
+    curseforge_user: { platform: PLATFORMS.CURSEFORGE.id, platformName: "curseforge", cacheKeyFn: curseforgeKeys.userBadge },
     hangar_project: { platform: PLATFORMS.HANGAR.id, platformName: "hangar", cacheKeyFn: hangarKeys.projectBadge },
     hangar_user: { platform: PLATFORMS.HANGAR.id, platformName: "hangar", cacheKeyFn: hangarKeys.userBadge },
     spigot_resource: { platform: "spigot", platformName: "spigot", cacheKeyFn: spigotKeys.resourceBadge },
@@ -125,7 +132,9 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
         if (!data) {
             // Only fetch versions for version count badges
             const fetchVersions = (entityType === "project" || entityType === "curseforge_project" || entityType === "hangar_project" || entityType === "spigot_resource") && badgeType === "versions";
-            data = await DATA_FETCHERS[entityType](identifier, fetchVersions);
+            // Fetch projects for project count badges (for CurseForge users)
+            const fetchProjects = entityType === "curseforge_user" && badgeType === "projects";
+            data = await DATA_FETCHERS[entityType](identifier, fetchVersions || fetchProjects);
             apiCache.set(apiCacheKey, data);
         }
 
@@ -200,6 +209,11 @@ export const getCollectionFollowers = (req, res, next) => handleBadgeRequest(req
 export const getCfModDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_project", "downloads");
 export const getCfModRank = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_project", "rank");
 export const getCfModVersions = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_project", "versions");
+
+// CurseForge user badges
+export const getCfUserDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_user", "downloads");
+export const getCfUserProjects = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_user", "projects");
+export const getCfUserFollowers = (req, res, next) => handleBadgeRequest(req, res, next, "curseforge_user", "followers");
 
 // Hangar project badges
 export const getHangarProjectDownloads = (req, res, next) => handleBadgeRequest(req, res, next, "hangar_project", "downloads");

@@ -3,7 +3,7 @@
   "info": {
     "title": "Modfolio",
     "description": "Generate fast, beautiful and consistent embeddable cards and badges for Modrinth, CurseForge, Hangar and Spigot content.",
-    "version": "1.1.10",
+    "version": "1.1.11",
     "contact": {
       "name": "Creeperkatze",
       "url": "https://github.com/creeperkatze/modfolio"
@@ -418,12 +418,136 @@
       "get": {
         "tags": ["CurseForge"],
         "summary": "Get CurseForge project metadata",
-        "description": "Returns JSON metadata for a CurseForge project.",
+        "description": "Returns JSON metadata for a CurseForge project. (Deprecated - use /curseforge/meta/project/:id instead)",
+        "deprecated": true,
         "parameters": [
           { "$ref": "#/components/parameters/ProjectId" }
         ],
         "responses": {
           "200": { "$ref": "#/components/responses/JSON" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/curseforge/meta/{type}/{id}": {
+      "get": {
+        "tags": ["CurseForge"],
+        "summary": "Get CurseForge entity metadata",
+        "description": "Returns JSON metadata for a CurseForge entity (project or user).",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "enum": ["project", "user"] },
+            "description": "Entity type"
+          },
+          { "$ref": "#/components/parameters/Id" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/JSON" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/curseforge/user/{id}": {
+      "get": {
+        "tags": ["CurseForge"],
+        "summary": "Get CurseForge user card",
+        "description": "Returns a rich SVG card showing user stats and top projects.",
+        "parameters": [
+          { "$ref": "#/components/parameters/Id" },
+          { "$ref": "#/components/parameters/Color" },
+          { "$ref": "#/components/parameters/BackgroundColor" },
+          { "$ref": "#/components/parameters/ShowProjects" },
+          { "$ref": "#/components/parameters/MaxProjects" },
+          { "$ref": "#/components/parameters/RelativeTime" },
+          { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/Format" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/SVGCard" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/curseforge/user/{id}/downloads": {
+      "get": {
+        "tags": ["CurseForge"],
+        "summary": "Get CurseForge user total downloads badge",
+        "parameters": [
+          { "$ref": "#/components/parameters/Id" },
+          { "$ref": "#/components/parameters/Color" },
+          { "$ref": "#/components/parameters/BackgroundColor" },
+          { "$ref": "#/components/parameters/Format" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/SVGBadge" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/curseforge/user/{id}/projects": {
+      "get": {
+        "tags": ["CurseForge"],
+        "summary": "Get CurseForge user projects count badge",
+        "parameters": [
+          { "$ref": "#/components/parameters/Id" },
+          { "$ref": "#/components/parameters/Color" },
+          { "$ref": "#/components/parameters/BackgroundColor" },
+          { "$ref": "#/components/parameters/Format" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/SVGBadge" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/curseforge/user/{id}/followers": {
+      "get": {
+        "tags": ["CurseForge"],
+        "summary": "Get CurseForge user followers badge",
+        "parameters": [
+          { "$ref": "#/components/parameters/Id" },
+          { "$ref": "#/components/parameters/Color" },
+          { "$ref": "#/components/parameters/BackgroundColor" },
+          { "$ref": "#/components/parameters/Format" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/SVGBadge" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/curseforge/lookup/user/{username}": {
+      "get": {
+        "tags": ["CurseForge"],
+        "summary": "Lookup CurseForge user ID by username",
+        "description": "Resolves a CurseForge username to its numeric ID by searching for their projects.",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "CurseForge username",
+            "example": "gecko"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User ID found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "description": "CurseForge user ID" }
+                  }
+                }
+              }
+            }
+          },
           "404": { "$ref": "#/components/responses/NotFound" }
         }
       }

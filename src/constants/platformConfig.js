@@ -42,6 +42,11 @@ const STAT_CONFIGS = {
             { label: "Downloads", field: "downloads" },
             { label: "Rank", field: "rank" },
             { label: "Files", field: "versionCount" }
+        ],
+        user: [
+            { label: "Downloads", field: "totalDownloads" },
+            { label: "Followers", field: "totalFollowers" },
+            { label: "Projects", field: "projectCount" }
         ]
     },
     hangar: {

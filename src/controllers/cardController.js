@@ -19,6 +19,7 @@ const CARD_CLIENTS = {
     modrinth_organization: modrinthClient,
     modrinth_collection: modrinthClient,
     curseforge_project: curseforgeClient,
+    curseforge_user: curseforgeClient,
     hangar_project: hangarClient,
     hangar_user: hangarClient,
     spigot_resource: spigotClient,
@@ -63,6 +64,14 @@ const CARD_CONFIGS = {
         dataFetcher: (client, id, options, convertToPng) => client.getModStats(id, options.maxVersions, convertToPng),
         cacheKeyFn: curseforgeKeys.project,
         entityName: "project",
+        platformId: "curseforge",
+        useUnified: true
+    },
+    curseforge_user: {
+        paramKey: "id",
+        dataFetcher: (client, id, options, convertToPng) => client.getUserStats(id, options.maxProjects, convertToPng),
+        cacheKeyFn: curseforgeKeys.user,
+        entityName: "user",
         platformId: "curseforge",
         useUnified: true
     },
@@ -221,6 +230,9 @@ export const getCollection = (req, res, next) => handleCardRequest(req, res, nex
 
 // CurseForge project card
 export const getCfMod = (req, res, next) => handleCardRequest(req, res, next, "curseforge_project");
+
+// CurseForge user card
+export const getCfUser = (req, res, next) => handleCardRequest(req, res, next, "curseforge_user");
 
 // Hangar project card
 export const getHangarProject = (req, res, next) => handleCardRequest(req, res, next, "hangar_project");

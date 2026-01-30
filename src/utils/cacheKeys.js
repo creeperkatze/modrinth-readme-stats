@@ -127,7 +127,10 @@ export const modrinthKeys = {
 export const curseforgeKeys = {
     project: (id) => curseforgeKey(ENTITY_TYPE.PROJECT, id),
     projectBadge: (id) => badgeKey(PLATFORM.CURSEFORGE, ENTITY_TYPE.PROJECT, id),
-    slugLookup: (slug) => curseforgeKey(ENTITY_TYPE.SLUG, slug)
+    slugLookup: (slug) => curseforgeKey(ENTITY_TYPE.SLUG, slug),
+    user: (id) => curseforgeKey(ENTITY_TYPE.USER, id),
+    userBadge: (id) => badgeKey(PLATFORM.CURSEFORGE, ENTITY_TYPE.USER, id),
+    userLookup: (username) => curseforgeKey("userLookup", username)
 };
 
 /**

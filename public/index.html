@@ -507,9 +507,11 @@
                     defaultColor: "F16436",
                     baseUrl: "curseforge.com",
                     projectPath: "minecraft/mc-mods",
-                    targets: ["project"],
+                    userPath: "members",
+                    targets: ["project", "user"],
                     badgeMetrics: {
-                        project: ["downloads", "rank", "versions"]
+                        project: ["downloads", "rank", "versions"],
+                        user: ["downloads", "projects", "followers"]
                     }
                 },
                 hangar: {
@@ -1153,12 +1155,22 @@
                     const platform = Object.values(PLATFORMS).find(p => urlObj.hostname.includes(p.baseUrl));
 
                     if (platform && platform.id === "curseforge") {
-                        // Handle CurseForge URLs: /minecraft/mc-mods/geckolib
+                        // Handle CurseForge URLs:
+                        // /minecraft/mc-mods/geckolib (project)
+                        // /members/username (user - username will be shown but ID is required)
                         const pathParts = urlObj.pathname.split("/").filter((p) => p);
-                        if (pathParts.length < 3) return null;
-                        const slug = pathParts[2];
-                        if (slug) {
-                            return { type: "project", id: slug, slug, isCurseForge: true };
+                        if (pathParts.length < 2) return null;
+
+                        const firstPart = pathParts[0];
+                        if (firstPart === "members" && pathParts[1]) {
+                            // /members/username - user (note: API requires numeric ID, not username)
+                            return { type: "user", id: pathParts[1], isCurseForge: true, needsId: true };
+                        } else if (pathParts.length >= 3) {
+                            // /minecraft/mc-mods/slug - project
+                            const slug = pathParts[2];
+                            if (slug) {
+                                return { type: "project", id: slug, slug, isCurseForge: true };
+                            }
                         }
                         return null;
                     }
@@ -1260,28 +1272,54 @@
                     // Set the parsed type
                     targetType.value = parsed.type;
 
-                    // For CurseForge, silently resolve slug to ID in background
-                    if (parsed.isCurseForge && parsed.slug) {
-                        curseforgeSlug = parsed.slug;
-                        // Do lookup in background without showing "Resolving..."
-                        fetch(`/curseforge/lookup/${encodeURIComponent(parsed.slug)}`)
-                            .then(res => {
-                                if (!res.ok) throw new Error("Lookup failed");
-                                return res.json();
-                            })
-                            .then(data => {
-                                if (data.id) {
-                                    identifier.value = data.id;
-                                    updateUrl();
-                                    generate();
-                                } else {
+                    // For CurseForge, silently resolve slug/username to ID in background
+                    if (parsed.isCurseForge) {
+                        if (parsed.type === "project" && parsed.slug) {
+                            // Project slug lookup
+                            curseforgeSlug = parsed.slug;
+                            fetch(`/curseforge/lookup/${encodeURIComponent(parsed.slug)}`)
+                                .then(res => {
+                                    if (!res.ok) throw new Error("Lookup failed");
+                                    return res.json();
+                                })
+                                .then(data => {
+                                    if (data.id) {
+                                        identifier.value = data.id;
+                                        updateUrl();
+                                        generate();
+                                    } else {
+                                        curseforgeSlug = null;
+                                    }
+                                })
+                                .catch(() => {
                                     curseforgeSlug = null;
-                                }
-                            })
-                            .catch(() => {
-                                // If lookup fails, clear the slug
-                                curseforgeSlug = null;
-                            });
+                                });
+                        } else if (parsed.type === "user") {
+                            // User username lookup
+                            curseforgeSlug = parsed.id;
+                            fetch(`/curseforge/lookup/user/${encodeURIComponent(parsed.id)}`)
+                                .then(res => {
+                                    if (!res.ok) throw new Error("Lookup failed");
+                                    return res.json();
+                                })
+                                .then(data => {
+                                    if (data.id) {
+                                        identifier.value = data.id;
+                                        updateUrl();
+                                        generate();
+                                    } else {
+                                        curseforgeSlug = null;
+                                    }
+                                })
+                                .catch(() => {
+                                    curseforgeSlug = null;
+                                });
+                        } else {
+                            curseforgeSlug = null;
+                            identifier.value = parsed.id;
+                            updateUI();
+                            updateUrl();
+                        }
                     } else {
                         curseforgeSlug = null;
                         identifier.value = parsed.id;
@@ -1397,18 +1435,32 @@
                 if (embedType.value === "card") {
                     const urlParams = new URLSearchParams();
                     if (selectedPlatform === "curseforge") {
-                        // CurseForge card URL: /curseforge/project/:modId
-                        if (!showVersions.checked) {
-                            urlParams.set("showVersions", "false");
-                        }
-                        if (maxVersions.value !== "5") {
-                            urlParams.set("maxVersions", maxVersions.value);
-                        }
-                        if (!relativeTime.checked) {
-                            urlParams.set("relativeTime", "false");
-                        }
-                        if (!showSparklines.checked) {
-                            urlParams.set("showSparklines", "false");
+                        // CurseForge card URL: /curseforge/project/:modId or /curseforge/user/:userId
+                        const isProject = type === "project";
+                        const isUser = type === "user";
+                        if (isProject) {
+                            if (!showVersions.checked) {
+                                urlParams.set("showVersions", "false");
+                            }
+                            if (maxVersions.value !== "5") {
+                                urlParams.set("maxVersions", maxVersions.value);
+                            }
+                            if (!relativeTime.checked) {
+                                urlParams.set("relativeTime", "false");
+                            }
+                            if (!showSparklines.checked) {
+                                urlParams.set("showSparklines", "false");
+                            }
+                        } else if (isUser) {
+                            if (!showProjects.checked) {
+                                urlParams.set("showProjects", "false");
+                            }
+                            if (maxProjects.value !== "5") {
+                                urlParams.set("maxProjects", maxProjects.value);
+                            }
+                            if (!showSparklines.checked) {
+                                urlParams.set("showSparklines", "false");
+                            }
                         }
                         if (selectedColor !== config.defaultColor) {
                             urlParams.set("color", selectedColor);
@@ -1417,7 +1469,7 @@
                             urlParams.set("backgroundColor", selectedBgColor);
                         }
                         const queryString = urlParams.toString();
-                        url = `${window.location.origin}/curseforge/project/${identifierValue}${queryString ? "?" + queryString : ""}`;
+                        url = `${window.location.origin}/curseforge/${type}/${identifierValue}${queryString ? "?" + queryString : ""}`;
                     } else if (selectedPlatform === "hangar") {
                         // Hangar card URL: /hangar/project/:slug or /hangar/user/:username
                         const isProject = type === "project";
@@ -1523,7 +1575,7 @@
                     }
                     const badgeQuery = badgeParams.toString();
                     if (selectedPlatform === "curseforge") {
-                        url = `${window.location.origin}/curseforge/project/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
+                        url = `${window.location.origin}/curseforge/${type}/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
                     } else if (selectedPlatform === "hangar") {
                         url = `${window.location.origin}/hangar/${type}/${identifierValue}/${badgeMetric.value}${badgeQuery ? "?" + badgeQuery : ""}`;
                     } else if (selectedPlatform === "spigot") {
@@ -1534,7 +1586,9 @@
                 }
 
                 const fallbackUrl = selectedPlatform === "curseforge"
-                    ? `https://www.${config.baseUrl}/${config.projectPath}/${curseforgeSlug || identifierValue}`
+                    ? type === "user"
+                        ? `https://www.${config.baseUrl}/${config.userPath}/${identifierValue}`
+                        : `https://www.${config.baseUrl}/${config.projectPath}/${curseforgeSlug || identifierValue}`
                     : selectedPlatform === "hangar"
                     ? type === "user"
                         ? `https://${config.baseUrl}/u/${identifierValue}`
@@ -1550,7 +1604,7 @@
                 let metaUrl = null;
                 try {
                     const metaPath = selectedPlatform === "curseforge"
-                        ? `/curseforge/meta/${encodeURIComponent(identifierValue)}`
+                        ? `/curseforge/meta/${type}/${encodeURIComponent(identifierValue)}`
                         : selectedPlatform === "hangar"
                         ? `/hangar/meta/${encodeURIComponent(identifierValue)}?type=${type}`
                         : selectedPlatform === "spigot"

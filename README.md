@@ -43,6 +43,7 @@ Rich cards showing stats, versions, projects, and activity sparklines.
 | Card Type | Path | Example |
 |-----------|------|---------|
 | Project | `/curseforge/project/<id>` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
+| User | `/curseforge/user/<id>` | [![Gecko](https://modfolio.creeperkatze.de/curseforge/user/100005756)](https://www.curseforge.com/members/100005756) |
 
 #### Hangar
 
@@ -92,9 +93,11 @@ Compact badges showing a single metric.
 
 | Badge | Path | Example |
 |-------|------|---------|
-| Downloads | `/curseforge/project/<id>/downloads` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172/downloads)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
+| Downloads | `/curseforge/<type>/<id>/downloads` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172/downloads)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
 | Rank | `/curseforge/project/<id>/rank` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172/rank)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
 | Files | `/curseforge/project/<id>/versions` | [![GeckoLib](https://modfolio.creeperkatze.de/curseforge/project/388172/versions)](https://www.curseforge.com/minecraft/mc-mods/geckolib) |
+| Projects | `/curseforge/user/<id>/projects` | [![Gecko](https://modfolio.creeperkatze.de/curseforge/user/100005756/projects)](https://www.curseforge.com/members/100005756) |
+| Followers | `/curseforge/user/<id>/followers` | [![Gecko](https://modfolio.creeperkatze.de/curseforge/user/100005756/followers)](https://www.curseforge.com/members/100005756) |
 
 #### Hangar
 
