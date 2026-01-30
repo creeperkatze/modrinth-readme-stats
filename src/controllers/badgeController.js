@@ -163,6 +163,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
             res.setHeader("Content-Type", "image/png");
             res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
             res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
+            res.setHeader("X-API-Time", fromCache ? apiTime : `${Math.round(data.timings.api)}ms`);
             return res.send(pngBuffer);
         }
 
@@ -176,6 +177,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
         res.setHeader("Content-Type", "image/svg+xml");
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
         res.setHeader("X-Cache", fromCache ? "HIT" : "MISS");
+        res.setHeader("X-API-Time", fromCache ? apiTime : `${Math.round(data.timings.api)}ms`);
         res.send(svg);
     } catch (err) {
         const identifier = req.params.username || req.params.slug || req.params.id || req.params.projectId;

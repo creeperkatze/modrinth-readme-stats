@@ -1601,21 +1601,23 @@
                     try {
                         const res = await fetch(url, { method: 'HEAD' });
                         const errorStatus = res.headers.get("X-Error-Status");
+                        const apiTime = res.headers.get("X-API-Time");
 
                         if (errorStatus && (errorStatus.startsWith('5') || errorStatus === '502' || errorStatus === '503' || errorStatus === '504')) {
                             document.getElementById("apiErrorWarning").classList.remove("hidden");
                         } else {
                             document.getElementById("apiErrorWarning").classList.add("hidden");
                         }
+
+                        // Show slow API warning if actual API time > 2s (not cached)
+                        const apiTimeMs = apiTime?.match(/(\d+)ms/)?.[1];
+                        if (apiTimeMs && parseInt(apiTimeMs) > 2000) {
+                            document.getElementById("apiSlowWarning").classList.remove("hidden");
+                        } else {
+                            document.getElementById("apiSlowWarning").classList.add("hidden");
+                        }
                     } catch {
                         document.getElementById("apiErrorWarning").classList.add("hidden");
-                    }
-
-                    // Show slow API warning if generation time is too long
-                    if (generationTime > 2000) {
-                        document.getElementById("apiSlowWarning").classList.remove("hidden");
-                    } else {
-                        document.getElementById("apiSlowWarning").classList.add("hidden");
                     }
 
                     // Show image after load
