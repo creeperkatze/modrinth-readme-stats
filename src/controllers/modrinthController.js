@@ -5,7 +5,7 @@ import { metaKey, PLATFORM } from "../utils/cacheKeys.js";
 
 const API_CACHE_TTL = 3600; // 1 hour
 
-export const getMeta = async (req, res, next) => {
+export const getModrinthMeta = async (req, res, next) => {
     try {
         const { type, id } = req.params;
         const cacheKey = metaKey(PLATFORM.MODRINTH, type, id);
@@ -15,7 +15,7 @@ export const getMeta = async (req, res, next) => {
 
         if (cachedResult) {
             const minutesAgo = Math.round((Date.now() - cached.cachedAt) / 60000);
-            logger.info(`Showing Modrinth meta for ${type} "${id}" (cached ${minutesAgo}m ago)`);
+            logger.info(`Showing modrinth meta for ${type} "${id}" (cached ${minutesAgo}m ago)`);
             res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
             return res.json(cachedResult);
         }
@@ -43,12 +43,12 @@ export const getMeta = async (req, res, next) => {
 
         const result = { name, url };
         apiCache.set(cacheKey, result);
-        logger.info(`Showing Modrinth meta for ${type} "${id}"`);
+        logger.info(`Showing modrinth meta for ${type} "${id}"`);
 
         res.setHeader("Cache-Control", `public, max-age=${API_CACHE_TTL}`);
         res.json(result);
     } catch (err) {
-        logger.warn(`Error fetching meta for "${req.params.type}" "${req.params.id}": ${err.message}`);
+        logger.warn(`Error fetching modrinth meta for "${req.params.type}" "${req.params.id}": ${err.message}`);
         next(err);
     }
 };

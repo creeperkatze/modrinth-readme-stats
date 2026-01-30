@@ -1,8 +1,8 @@
 import express from "express";
-import * as spigotController from "../../controllers/spigotController.js";
+import { getSpigotMeta } from "../../controllers/spigotController.js";
 
 const router = express.Router();
 
-router.get("/spigot/meta/:id", spigotController.getSpigotMeta);
+router.get("/spigot/meta/:id", getSpigotMeta);
 
 export default router;

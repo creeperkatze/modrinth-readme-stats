@@ -1,16 +1,6 @@
 import { escapeXml } from "../utils/formatters.js";
 import { PLATFORMS, getPlatform } from "../constants/platforms.js";
 
-/**
- * Generate a platform badge SVG.
- *
- * @param {string} label - The badge label (e.g., "Downloads", "Followers")
- * @param {string} value - The badge value (e.g., "1.2K", "42")
- * @param {string} [platformId="modrinth"] - The platform ID for icon and default color
- * @param {string} [color] - Custom color (overrides platform default)
- * @param {string|null} [backgroundColor] - Optional background color hex
- * @returns {string} The SVG badge markup
- */
 export function generateBadge(label, value, platformId = "modrinth", color = null, backgroundColor = null)
 {
     const platform = getPlatform(platformId) || PLATFORMS.MODRINTH;

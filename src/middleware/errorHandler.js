@@ -1,5 +1,5 @@
 import { generateBadge } from "../generators/badge.js";
-import { generateAttribution, generateInfo } from "../generators/svgComponents.js";
+import { generateAttribution, generateInfo } from "../utils/svgComponents.js";
 import { generatePng } from "../utils/generateImage.js";
 import { ICONS } from "../constants/icons.js";
 

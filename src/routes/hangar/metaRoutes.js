@@ -1,8 +1,8 @@
 import express from "express";
-import * as hangarController from "../../controllers/hangarController.js";
+import { getHangarMeta } from "../../controllers/hangarController.js";
 
 const router = express.Router();
 
-router.get("/hangar/meta/:slug", hangarController.getHangarMeta);
+router.get("/hangar/meta/:slug", getHangarMeta);
 
 export default router;

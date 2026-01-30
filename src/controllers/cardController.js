@@ -3,7 +3,7 @@ import curseforgeClient from "../services/curseforgeClient.js";
 import hangarClient from "../services/hangarClient.js";
 import spigotClient from "../services/spigotClient.js";
 import { apiCache } from "../utils/cache.js";
-import { generateUnifiedCard } from "../generators/unifiedCard.js";
+import { generateCard } from "../generators/card.js";
 import logger from "../utils/logger.js";
 import { generatePng } from "../utils/generateImage.js";
 import { modrinthKeys, curseforgeKeys, hangarKeys, spigotKeys } from "../utils/cacheKeys.js";
@@ -136,7 +136,6 @@ const handleCardRequest = async (req, res, next, cardType) => {
 
             // Handle not found (null response) without throwing
             if (!data) {
-                const platformConfig = getPlatformConfig(config.platformId);
                 const errorMessage = getErrorMessage(config.platformId, config.entityName);
 
                 logger.warn(`Error showing ${config.platformId} ${config.entityName} card for "${identifier}": ${errorMessage}`);
@@ -177,9 +176,9 @@ const handleCardRequest = async (req, res, next, cardType) => {
         options.fromCache = fromCache;
 
         // Use unified card generator for all platforms
-        const svg = generateUnifiedCard(data, config.platformId, config.entityName, options);
+        const svg = generateCard(data, config.platformId, config.entityName, options);
 
-        // Generate PNG for Discord bots or when format=png is requested
+        // Generate PNG for bots or when format=png is requested
         if (renderImage) {
             const { buffer: pngBuffer, renderTime } = await generatePng(svg);
 

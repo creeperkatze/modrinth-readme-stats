@@ -5,14 +5,13 @@ import { curseforgeKeys, metaKey, PLATFORM } from "../utils/cacheKeys.js";
 
 const API_CACHE_TTL = 3600; // 1 hour;
 
-// CurseForge meta endpoint
-export const getCfMeta = async (req, res, next) => {
+export const getCurseforgeMeta = async (req, res, next) => {
     try {
         const { projectId } = req.params;
 
-        // Validate projectId is a number
+        // Validate project id is a number
         if (!/^\d+$/.test(String(projectId))) {
-            return res.status(400).json({ error: "Invalid curseforge project ID: must be a number. Use /curseforge/lookup/{slug} to resolve slugs to IDs." });
+            return res.status(400).json({ error: "Invalid curseforge project id: must be a number" });
         }
 
         const cacheKey = metaKey(PLATFORM.CURSEFORGE, "project", projectId);
