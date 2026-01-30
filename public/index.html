@@ -704,92 +704,12 @@
                 selectedPlatform = platform;
                 selectedColor = config.defaultColor;
 
-                // Base classes for platform buttons
-                const baseClass = "flex flex-1 flex-row items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
-                const inactiveClass = `${baseClass} bg-input-bg text-text-bright border border-border-dark`;
-                const activeClass = `${baseClass} text-black border-none`;
-
-                // Helper to add # prefix if needed
-                const withHash = (color) => color.startsWith("#") ? color : `#${color}`;
-
-                // Update button styles with dynamic colors
-                const setActiveStyle = (element, color, isActive) => {
-                    element.className = isActive ? activeClass : inactiveClass;
-                    element.style.backgroundColor = isActive ? withHash(color) : "";
-                };
-
-                setActiveStyle(platformModrinth, PLATFORMS.modrinth.defaultColor, platform === "modrinth");
-                setActiveStyle(platformCurseforge, PLATFORMS.curseforge.defaultColor, platform === "curseforge");
-                setActiveStyle(platformHangar, PLATFORMS.hangar.defaultColor, platform === "hangar");
-                setActiveStyle(platformSpigot, PLATFORMS.spigot.defaultColor, platform === "spigot");
-
-                // Update copy buttons with platform color (only when enabled)
-                const copyBtns = [copyMarkdownBtn, copyHtmlBtn, copyUrlBtn];
-                const platformColor = withHash(config.defaultColor);
-                copyBtns.forEach(btn => {
-                    // Only set the color if the button is enabled (not disabled)
-                    if (!btn.disabled) {
-                        btn.style.backgroundColor = platformColor;
-                    } else {
-                        // Clear the inline style for disabled buttons so Tailwind classes work
-                        btn.style.backgroundColor = "";
-                    }
-                });
-
-                // Update checkboxes with platform color using accent-color
-                document.querySelectorAll(".dynamic-checkbox").forEach(checkbox => {
-                    checkbox.style.accentColor = platformColor;
-                });
-
-                // Update color value labels with platform color
-                document.querySelectorAll(".dynamic-color").forEach(label => {
-                    label.style.color = platformColor;
-                });
-
-                // Update title color
-                const modfolioTitle = document.getElementById("modfolioTitle");
-                if (modfolioTitle) {
-                    modfolioTitle.style.color = platformColor;
-                }
-
-                // Update footer links color
-                document.querySelectorAll(".dynamic-link").forEach(link => {
-                    link.style.color = platformColor;
-                });
-
-                // Update CSS custom property for sliders and checkboxes
-                document.documentElement.style.setProperty("--platform-color", platformColor);
-
-                // Update favicon with platform color
-                const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="${platformColor}"><rect width="60" height="20" x="5.62" y="10" ry="10"/><rect width="20" height="20" x="75.62" y="10" ry="10"/><rect width="90" height="20" x="5.62" y="70" ry="10"/><rect width="90" height="20" x="5" y="40" ry="10"/></g></svg>`;
-                const faviconUrl = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
-                let faviconLink = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
-                if (!faviconLink) {
-                    faviconLink = document.querySelector('link[rel="icon"]');
-                }
-                if (faviconLink) {
-                    faviconLink.href = faviconUrl;
-                }
-
-                // Update URL placeholder
-                modrinthUrl.placeholder = `https://www.${config.baseUrl}/${config.projectPath}/example`;
-
-                // Update target type dropdown
-                targetType.innerHTML = config.targets.map(t => `<option value="${t}">${t.charAt(0).toUpperCase() + t.slice(1)}</option>`).join('');
-                targetType.value = config.targets[0];
-
-                // Update color picker and regenerate color buttons
-                colors = getColors();
-                colorButtons.innerHTML = "";
-                colors.forEach((color) => {
-                    createColorButton(color, colorButtons);
-                });
-
-                manualColorPicker.value = `#${selectedColor}`;
-                manualColorPickerContainer.style.background = `#${selectedColor}`;
-                document.querySelectorAll("[data-color]").forEach((b) => {
-                    b.classList.toggle("color-btn-selected", b.dataset.color === selectedColor);
-                });
+                // Update platform UI (colors, buttons, etc.)
+                updatePlatformTheme(platform);
+                // Update target dropdown
+                updateTargetDropdown(platform);
+                // Update color options
+                updateColorOptions(platform);
 
                 updateWarningMessages();
                 updateLabels();
@@ -797,11 +717,9 @@
                 updateUrl();
             }
 
-            // Update platform UI elements without calling generate() (for URL auto-detection)
-            function updatePlatformUI(platform) {
+            // Update platform-specific UI theme (colors, buttons, etc.)
+            function updatePlatformTheme(platform) {
                 const config = PLATFORMS[platform];
-                selectedPlatform = platform;
-                selectedColor = config.defaultColor;
 
                 // Base classes for platform buttons
                 const baseClass = "flex flex-1 flex-row items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold cursor-pointer transition-[filter] duration-200 hover:brightness-110";
@@ -822,9 +740,10 @@
                 setActiveStyle(platformHangar, PLATFORMS.hangar.defaultColor, platform === "hangar");
                 setActiveStyle(platformSpigot, PLATFORMS.spigot.defaultColor, platform === "spigot");
 
+                const platformColor = withHash(config.defaultColor);
+
                 // Update copy buttons with platform color (only when enabled)
                 const copyBtns = [copyMarkdownBtn, copyHtmlBtn, copyUrlBtn];
-                const platformColor = withHash(config.defaultColor);
                 copyBtns.forEach(btn => {
                     if (!btn.disabled) {
                         btn.style.backgroundColor = platformColor;
@@ -867,14 +786,23 @@
                 if (faviconLink) {
                     faviconLink.href = faviconUrl;
                 }
+            }
+
+            // Update target type dropdown for platform
+            function updateTargetDropdown(platform) {
+                const config = PLATFORMS[platform];
+                targetType.innerHTML = config.targets.map(t => `<option value="${t}">${t.charAt(0).toUpperCase() + t.slice(1)}</option>`).join('');
+                targetType.value = config.targets[0];
+            }
+
+            // Update color options for platform
+            function updateColorOptions(platform) {
+                const config = PLATFORMS[platform];
+                selectedColor = config.defaultColor;
 
                 // Update URL placeholder
                 modrinthUrl.placeholder = `https://www.${config.baseUrl}/${config.projectPath}/example`;
 
-                // Update target type dropdown (but don't reset the value)
-                targetType.innerHTML = config.targets.map(t => `<option value="${t}">${t.charAt(0).toUpperCase() + t.slice(1)}</option>`).join('');
-
-                // Update color picker and regenerate color buttons
                 colors = getColors();
                 colorButtons.innerHTML = "";
                 colors.forEach((color) => {
@@ -886,9 +814,6 @@
                 document.querySelectorAll("[data-color]").forEach((b) => {
                     b.classList.toggle("color-btn-selected", b.dataset.color === selectedColor);
                 });
-
-                updateWarningMessages();
-                updateLabels();
             }
 
             // Reset to defaults for the current platform
@@ -1069,11 +994,13 @@
                 // Only add customization params for cards
                 if (type === "card") {
                     const isUserOrgOrCollection = ["user", "organization", "collection"].includes(target);
+                    const isModrinthUserOrg = selectedPlatform === "modrinth" && isUserOrgOrCollection;
+                    const isCurseforgeUser = selectedPlatform === "curseforge" && target === "user";
                     const isHangarUser = selectedPlatform === "hangar" && target === "user";
                     const isSpigotAuthor = selectedPlatform === "spigot" && target === "author";
-                    const isModrinthUserOrg = selectedPlatform === "modrinth" && isUserOrgOrCollection;
-                    if (!showProjects.checked && (isModrinthUserOrg || isHangarUser || isSpigotAuthor)) params.set("showProjects", "false");
-                    if (maxProjects.value !== "5" && (isModrinthUserOrg || isHangarUser || isSpigotAuthor)) params.set("maxProjects", maxProjects.value);
+                    const supportsProjects = isModrinthUserOrg || isCurseforgeUser || isHangarUser || isSpigotAuthor;
+                    if (!showProjects.checked && supportsProjects) params.set("showProjects", "false");
+                    if (maxProjects.value !== "5" && supportsProjects) params.set("maxProjects", maxProjects.value);
                     if (!showVersions.checked) params.set("showVersions", "false");
                     if (maxVersions.value !== "5") params.set("maxVersions", maxVersions.value);
                     if (!relativeTime.checked) params.set("relativeTime", "false");
@@ -1092,59 +1019,73 @@
             function loadFromUrl() {
                 const params = getUrlParams();
 
-                // Set platform first
-                setPlatform(params.platform);
+                // Set platform theme and dropdown first
+                updatePlatformTheme(params.platform);
+                updateTargetDropdown(params.platform);
 
+                // Now set all the values from URL params
+                selectedPlatform = params.platform;
                 embedType.value = params.type;
                 targetType.value = params.target;
                 badgeMetric.value = params.metric;
                 identifier.value = params.value;
 
+                // Show/hide projects checkbox
                 showProjects.checked = params.showProjects;
                 maxProjects.value = params.maxProjects;
                 maxProjectsValue.textContent = params.maxProjects;
 
+                // Show/hide versions checkbox
                 showVersions.checked = params.showVersions;
                 maxVersions.value = params.maxVersions;
                 maxVersionsValue.textContent = params.maxVersions;
 
+                // Other options
                 relativeTime.checked = params.relativeTime;
                 showSparklines.checked = params.showSparklines;
                 selectedColor = params.color;
                 selectedBgColor = params.backgroundColor;
 
-                colors = getColors();
-
-                const isPresetColor = colors.includes(selectedColor);
-
-                manualColorPicker.value = `#${selectedColor}`;
-                manualColorPickerContainer.style.background = `#${selectedColor}`;
-
-                manualColorPickerContainer.classList.toggle("color-btn-selected", !isPresetColor);
-
-                document.querySelectorAll("[data-color]").forEach((b) => {
-                    b.classList.toggle("color-btn-selected", b.dataset.color === selectedColor);
-                });
-
-                // Background color
-                const isPresetBgColor = bgColors.some((c) => String(c.value) === String(selectedBgColor));
-
-                if (selectedBgColor !== null) {
-                    manualBgColorPicker.value = `#${selectedBgColor}`;
-                    manualBgColorPickerContainer.style.background = `#${selectedBgColor}`;
+                // Update color options
+                updateColorOptions(params.platform);
+                // Override with URL colors if specified
+                if (params.color) {
+                    selectedColor = params.color;
+                    manualColorPicker.value = `#${selectedColor}`;
+                    manualColorPickerContainer.style.background = `#${selectedColor}`;
+                    const isPresetColor = colors.includes(selectedColor);
+                    manualColorPickerContainer.classList.toggle("color-btn-selected", !isPresetColor);
+                    document.querySelectorAll("[data-color]").forEach((b) => {
+                        b.classList.toggle("color-btn-selected", b.dataset.color === selectedColor);
+                    });
                 }
 
-                manualBgColorPickerContainer.classList.toggle("color-btn-selected", !isPresetBgColor && selectedBgColor !== null);
+                // Background color from URL
+                if (params.backgroundColor !== null) {
+                    selectedBgColor = params.backgroundColor;
+                    manualBgColorPicker.value = `#${selectedBgColor}`;
+                    manualBgColorPickerContainer.style.background = `#${selectedBgColor}`;
+                    const isPresetBgColor = bgColors.some((c) => String(c.value) === String(selectedBgColor));
+                    manualBgColorPickerContainer.classList.toggle("color-btn-selected", !isPresetBgColor && selectedBgColor !== null);
+                    document.querySelectorAll("[data-bg-color]").forEach((b) => {
+                        b.classList.toggle("color-btn-selected", b.dataset.bgColor === String(selectedBgColor));
+                    });
+                }
 
-                document.querySelectorAll("[data-bg-color]").forEach((b) => {
-                    b.classList.toggle("color-btn-selected", b.dataset.bgColor === String(selectedBgColor));
-                });
-
+                // Expand customization if needed
                 if (hasCustomizationFromUrl(params)) {
                     customizationExpanded = true;
                     customizationContent.classList.remove("hidden");
                     customizationChevron.classList.add("rotate-180");
                 }
+
+                // Update labels and warnings
+                updateWarningMessages();
+                updateLabels();
+                updateUI();
+
+                // Generate the card with loaded params
+                generate();
             }
 
             function parseModrinthUrl(url) {
@@ -1264,10 +1205,13 @@
                     // Set platform directly without calling setPlatform to avoid premature generate() call
                     if (selectedPlatform !== platform.id) {
                         selectedPlatform = platform.id;
-                        const config = PLATFORMS[platform.id];
-                        selectedColor = config.defaultColor;
+                        selectedColor = PLATFORMS[platform.id].defaultColor;
                         // Update platform UI elements only (skip updateUI/updateUrl which call generate)
-                        updatePlatformUI(platform.id);
+                        updatePlatformTheme(platform.id);
+                        updateTargetDropdown(platform.id);
+                        updateColorOptions(platform.id);
+                        updateWarningMessages();
+                        updateLabels();
                     }
                     // Set the parsed type
                     targetType.value = parsed.type;
@@ -1794,12 +1738,11 @@
 
             function hasCustomizationFromUrl(params) {
                 const config = PLATFORMS[params.platform];
-                const relevantPlatform = params.platform === "modrinth" || params.platform === "hangar" || params.platform === "spigot";
+                const relevantPlatform = params.platform === "modrinth" || params.platform === "curseforge" || params.platform === "hangar" || params.platform === "spigot";
                 return (relevantPlatform && params.showProjects === false) || (relevantPlatform && params.maxProjects !== 5) || params.showVersions === false || params.maxVersions !== 5 || params.relativeTime === false || params.showSparklines === false || params.color !== config.defaultColor || params.backgroundColor !== null;
             }
 
             loadFromUrl();
-            updateUI();
         </script>
     </body>
 </html>
