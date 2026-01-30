@@ -47,15 +47,15 @@ Rich cards showing stats, versions, projects, and activity sparklines.
 
 | Card Type | Path | Example |
 |-----------|------|---------|
-| Project | `/hangar/project/<slug>` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
-| User | `/hangar/user/<username>` | [![henkelmax](https://modfolio.creeperkatze.de/hangar/user/henkelmax)](https://hangar.papermc.io/u/henkelmax) |
+| Project | `/hangar/project/<slug>` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat)](https://hangar.papermc.io/henkelmax/SimpleVoiceChat) |
+| User | `/hangar/user/<username>` | [![henkelmax](https://modfolio.creeperkatze.de/hangar/user/henkelmax)](https://hangar.papermc.io/henkelmax) |
 
 #### Spigot
 
 | Card Type | Path | Example |
 |-----------|------|---------|
 | Resource | `/spigot/resource/<id>` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140)](https://spigotmc.org/resources/28140/) |
-| Author | `/spigot/author/<id>` | [![SkriptJava](https://modfolio.creeperkatze.de/spigot/author/100356)](https://spigotmc.org/authors/100356) |
+| Author | `/spigot/author/<id>` | [![Luck](https://modfolio.creeperkatze.de/spigot/author/100356)](https://www.spigotmc.org/members/luck.100356/) |
 
 #### Card Options
 
@@ -99,11 +99,11 @@ Compact badges showing a single metric.
 
 | Badge | Path | Example |
 |-------|------|---------|
-| Downloads | `/hangar/<type>/<id>/downloads` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/downloads)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
-| Stars | `/hangar/<type>/<id>/stars` | [![/enkelmax](https://modfolio.creeperkatze.de/hangar/user//enkelmax/stars)](https://hangar.papermc.io/u//enkelmax) |
-| Versions | `/hangar/<type>/<id>/versions` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/versions)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
-| Views | `/hangar/project/<id>/views` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/views)](https://hangar.papermc.io/plugins/SimpleVoiceChat) |
-| Projects | `/hangar/user/<id>/projects` | [![henkelmax](https://modfolio.creeperkatze.de/hangar/user/henkelmax/downloads)](https://hangar.papermc.io/u/henkelmax) |
+| Downloads | `/hangar/<type>/<id>/downloads` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/downloads)](https://hangar.papermc.io/henkelmax/SimpleVoiceChat) |
+| Stars | `/hangar/project/<id>/stars` | [![henkelmax](https://modfolio.creeperkatze.de/hangar/user/henkelmax/stars)](https://hangar.papermc.io/henkelmax) |
+| Versions | `/hangar/project/<id>/versions` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/versions)](https://hangar.papermc.io/henkelmax/SimpleVoiceChat) |
+| Views | `/hangar/project/<id>/views` | [![SimpleVoiceChat](https://modfolio.creeperkatze.de/hangar/project/SimpleVoiceChat/views)](https://hangar.papermc.io/henkelmax/SimpleVoiceChat) |
+| Projects | `/hangar/user/<id>/projects` | [![henkelmax](https://modfolio.creeperkatze.de/hangar/user/henkelmax/downloads)](https://hangar.papermc.io/henkelmax) |
 
 #### Spigot
 
@@ -112,8 +112,8 @@ Compact badges showing a single metric.
 | Downloads | `/spigot/<type>/<id>/downloads` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/downloads)](https://spigotmc.org/resources/28140/) |
 | Likes | `/spigot/<type>/<id>/likes` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/likes)](https://spigotmc.org/resources/28140/) |
 | Rating | `/spigot/<type>/<id>/rating` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/rating)](https://spigotmc.org/resources/28140/) |
-| Versions | `/spigot/<type>/<id>/versions` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/versions)](https://spigotmc.org/resources/28140/) |
-| Resources | `/spigot/author/<id>/resources` | [![SkriptJava](https://modfolio.creeperkatze.de/spigot/author/100356/resources)](https://spigotmc.org/authors/100356) |
+| Versions | `/spigot/project/<id>/versions` | [![LuckPerms](https://modfolio.creeperkatze.de/spigot/resource/28140/versions)](https://spigotmc.org/resources/28140/) |
+| Resources | `/spigot/author/<id>/resources` | [![Luck](https://modfolio.creeperkatze.de/spigot/author/100356/resources)](https://www.spigotmc.org/members/Luck.100356/) |
 
 #### Badge Options
 
@@ -123,7 +123,14 @@ Compact badges showing a single metric.
 | `backgroundColor` | Background color (hex) | `transparent` |
 | `format` | Output format (`svg` / `png`) | `svg` |
 
-**Platform defaults:** Modrinth `#1bd96a` | CurseForge `#F16436` | Hangar `#3371ED` | Spigot `#E8A838`
+#### Platform Defaults
+
+| Platform | Accent color (hex) |
+|----------|--------------------|
+| Modrinth | `#1bd96a` |
+| CurseForge |`#F16436` |
+| Hangar | `#3371ED` |
+| Spigot | `#E8A838`|
 
 ## Development
 
