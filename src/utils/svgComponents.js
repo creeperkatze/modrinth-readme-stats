@@ -192,7 +192,7 @@ ${showSparklines ? `    <!-- Project version activity sparkline (centered) -->
     </g>` : ""}
 
     <!-- Relative downloads bar -->
-    <rect x="15" y="${yPos - 17.5}" width="${barWidth}" height="3" fill="${colors.accentColor}" clip-path="url(#project-clip-${index})"/>
+    <rect x="15.5" y="${yPos - 18.5}" width="${barWidth - 0.5}" height="3" fill="${colors.accentColor}" clip-path="url(#project-clip-${index})"/>
 
     <!-- Project image -->
     ${projectIconUrl ? `<image x="20" y="${yPos - 12}" width="28" height="28" href="${projectIconUrl}" clip-path="url(#project-icon-clip-${index})"/>` : `<rect x="20" y="${yPos - 12}" width="28" height="28" fill="${colors.borderColor}" rx="4"/>`}

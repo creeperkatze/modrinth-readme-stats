@@ -186,7 +186,7 @@ export const PLATFORM_CONFIGS = {
         id: "spigot",
         name: "Spigot",
         defaultColor: "#E8A838",
-        icon: (color) => ICONS.spigot(color),
+        icon: (color) => ICONS.spigotPlatform(color),
         iconViewBox: PLATFORM_ICON_VIEWBOXES.spigot,
         labels: {
             stats: {
