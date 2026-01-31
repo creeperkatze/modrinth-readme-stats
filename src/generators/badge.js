@@ -8,8 +8,9 @@ export function generateBadge(label, value, platformId = "modrinth", color = nul
     const icon = platform.icon(badgeColor);
 
     const iconWidth = 30;
-    const labelWidth = label.length * 7 + 20;
-    const valueWidth = value.length * 8 + 20;
+    const paddingX = 10;
+    const labelWidth = label.length * 8 + paddingX * 2;
+    const valueWidth = value.length * 8 + paddingX * 2;
     const totalWidth = iconWidth + labelWidth + valueWidth;
     const height = 30;
 
@@ -41,9 +42,9 @@ export function generateBadge(label, value, platformId = "modrinth", color = nul
     ${icon}
   </svg>
 
-  <g text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="500">
-    <text x="${iconWidth + (labelWidth / 2)}" y="20 " fill="${labelTextColor}">${escapeXml(label)}</text>
-    <text x="${iconWidth + labelWidth + (valueWidth / 2)}" y="21" font-size="16" font-weight="700" letter-spacing="-1" fill="${valueTextColor}">${escapeXml(value)}</text>
+  <g text-anchor="left" font-family="Inter, sans-serif" font-size="14" font-weight="500">
+    <text x="${iconWidth + 8}" y="20" fill="${labelTextColor}">${escapeXml(label)}</text>
+    <text x="${iconWidth + labelWidth + 8}" y="21" font-size="16" font-weight="700" letter-spacing="-1" fill="${valueTextColor}">${escapeXml(value)}</text>
   </g>
 </svg>`.trim();
 }
