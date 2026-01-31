@@ -20,6 +20,7 @@ export function generateUserCard(data, options, platformConfig)
         showProjects = true,
         maxProjects = CARD_LIMITS.DEFAULT_COUNT,
         showSparklines = true,
+        showDownloadBars = true,
         color = null,
         backgroundColor = null,
         fromCache = false,
@@ -73,7 +74,7 @@ ${generateHeader("user", "user", title, colors, platformConfig.icon(colors.accen
 ${generateProfileImage(user.avatar_url_base64 || user.avatarUrl || null, "profile-clip", 400, 60, 35, colors)}
 ${generateStatsGrid(statsData, colors)}
 ${generateDivider(colors)}
-${generateProjectList(mappedProjects, platformConfig.labels.sections.topProjects, colors, showSparklines, relativeTime)}
+${generateProjectList(mappedProjects, platformConfig.labels.sections.topProjects, colors, showSparklines, showDownloadBars, relativeTime)}
 ${generateInfo(height, colors, fromCache)}
 ${generateAttribution(height, colors)}
 `;

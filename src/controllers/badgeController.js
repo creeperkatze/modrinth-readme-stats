@@ -150,7 +150,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
         if (renderImage) {
             const { buffer: pngBuffer, renderTime } = await generatePng(svg);
 
-            const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
+            const apiTime = fromCache ? "-1" : `${Math.round(data.timings.api)}ms`;
             const pngTime = `${Math.round(renderTime)}ms`;
             const crawlerLog = req.crawlerType ? `, crawler: ${req.crawlerType}` : "";
             const size = `${(Buffer.byteLength(pngBuffer) / 1024).toFixed(1)} KB`;
@@ -164,7 +164,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
         }
 
         // Return SVG
-        const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
+        const apiTime = fromCache ? "-1" : `${Math.round(data.timings.api)}ms`;
         const crawlerLog = req.crawlerType ? `, crawler: ${req.crawlerType}` : "";
         const size = `${(Buffer.byteLength(svg) / 1024).toFixed(1)} KB`;
         logger.info(`Showing ${entityConfig.platformName} ${entityConfig.entityName} ${badgeType} badge for "${identifier}" (api: ${apiTime}${crawlerLog}, size: ${size})`);

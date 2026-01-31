@@ -127,6 +127,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
             maxVersions: Math.min(Math.max(parseInt(req.query.maxVersions) || CARD_LIMITS.DEFAULT_COUNT, 1), CARD_LIMITS.MAX_COUNT),
             relativeTime: req.query.relativeTime !== "false",
             showSparklines: req.query.showSparklines !== "false",
+            showDownloadBars: req.query.showDownloadBars !== "false",
             color: req.query.color ? `#${req.query.color.replace(/^#/, "")}` : null,
             backgroundColor: req.query.backgroundColor ? `#${req.query.backgroundColor.replace(/^#/, "")}` : null
         };
@@ -191,7 +192,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
         if (renderImage) {
             const { buffer: pngBuffer, renderTime } = await generatePng(svg);
 
-            const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
+            const apiTime = fromCache ? "-1" : `${Math.round(data.timings.api)}ms`;
             const conversionTime = fromCache ? "cached" : `${Math.round(data.timings.imageConversion)}ms`;
             const pngTime = `${Math.round(renderTime)}ms`;
             const crawlerType = req.crawlerType;
@@ -207,7 +208,7 @@ const handleCardRequest = async (req, res, next, cardType) => {
         }
 
         // Return SVG
-        const apiTime = fromCache ? `cached (${cacheAge})` : `${Math.round(data.timings.api)}ms`;
+        const apiTime = fromCache ? "-1" : `${Math.round(data.timings.api)}ms`;
         const crawlerType = req.crawlerType;
         const crawlerLog = crawlerType ? `, crawler: ${crawlerType}` : "";
         const size = `${(Buffer.byteLength(svg) / 1024).toFixed(1)} KB`;

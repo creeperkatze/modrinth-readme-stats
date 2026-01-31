@@ -126,7 +126,7 @@ export function generateStatsGrid(stats, colors)
   </g>`).join("");
 }
 
-export function generateProjectListItem(project, index, totalDownloads, colors, showSparklines = true)
+export function generateProjectListItem(project, index, totalDownloads, colors, showSparklines = true, showDownloadBars = true)
 {
     const yPos = 160 + (index * 50);
     const projectName = escapeXml(truncateText(project.title, 18));
@@ -191,8 +191,8 @@ ${showSparklines ? `    <!-- Project version activity sparkline (centered) -->
       </g>
     </g>` : ""}
 
-    <!-- Relative downloads bar -->
-    <rect x="15.5" y="${yPos - 18.5}" width="${barWidth - 0.5}" height="3" fill="${colors.accentColor}" clip-path="url(#project-clip-${index})"/>
+${showDownloadBars ? `    <!-- Relative downloads bar -->
+    <rect x="15.5" y="${yPos - 18.5}" width="${barWidth - 0.5}" height="3" fill="${colors.accentColor}" clip-path="url(#project-clip-${index})"/>` : ""}
 
     <!-- Project image -->
     ${projectIconUrl ? `<image x="20" y="${yPos - 12}" width="28" height="28" href="${projectIconUrl}" clip-path="url(#project-icon-clip-${index})"/>` : `<rect x="20" y="${yPos - 12}" width="28" height="28" fill="${colors.borderColor}" rx="4"/>`}
@@ -234,13 +234,13 @@ export function generateDivider(colors)
   <line x1="15" y1="110" x2="435" y2="110" stroke="${colors.borderColor}" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
 }
 
-export function generateProjectList(topProjects, sectionTitle, colors, showSparklines = true)
+export function generateProjectList(topProjects, sectionTitle, colors, showSparklines = true, showDownloadBars = true, relativeTime = false)
 {
     if (!topProjects || topProjects.length === 0) return "";
 
     const totalDownloads = topProjects.reduce((sum, p) => sum + p.downloads, 0);
     const projectsHtml = topProjects.map((project, index) =>
-        generateProjectListItem(project, index, totalDownloads, colors, showSparklines)
+        generateProjectListItem(project, index, totalDownloads, colors, showSparklines, showDownloadBars)
     ).join("");
 
     return `
