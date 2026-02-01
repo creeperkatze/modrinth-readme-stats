@@ -45,6 +45,7 @@
           { "$ref": "#/components/parameters/MaxVersions" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -114,6 +115,7 @@
           { "$ref": "#/components/parameters/MaxProjects" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -183,6 +185,7 @@
           { "$ref": "#/components/parameters/MaxProjects" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -252,6 +255,7 @@
           { "$ref": "#/components/parameters/MaxProjects" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -344,6 +348,7 @@
           { "$ref": "#/components/parameters/MaxVersions" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -448,6 +453,7 @@
           { "$ref": "#/components/parameters/MaxProjects" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -552,6 +558,7 @@
           { "$ref": "#/components/parameters/MaxVersions" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -621,6 +628,7 @@
           { "$ref": "#/components/parameters/MaxProjects" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -706,6 +714,7 @@
           { "$ref": "#/components/parameters/MaxVersions" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -791,6 +800,7 @@
           { "$ref": "#/components/parameters/MaxProjects" },
           { "$ref": "#/components/parameters/RelativeTime" },
           { "$ref": "#/components/parameters/ShowSparklines" },
+          { "$ref": "#/components/parameters/ShowBorder" },
           { "$ref": "#/components/parameters/Format" }
         ],
         "responses": {
@@ -943,6 +953,12 @@
         "in": "query",
         "schema": { "type": "boolean", "default": true },
         "description": "Display activity sparklines"
+      },
+      "ShowBorder": {
+        "name": "showBorder",
+        "in": "query",
+        "schema": { "type": "boolean", "default": true },
+        "description": "Show outer border on the card"
       },
       "Format": {
         "name": "format",
