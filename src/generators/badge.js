@@ -60,9 +60,9 @@ export function generateBadge(label, value, platformId = "modrinth", color = nul
     ${icon}
   </svg>
 
-  <g text-anchor="left" font-family="Inter, sans-serif" font-size="14" font-weight="500">
-    <text x="${iconWidth + 8}" y="20" fill="${labelTextColor}">${escapeXml(label)}</text>
-    <text x="${iconWidth + labelWidth + 8}" y="21" font-size="16" font-weight="700" letter-spacing="-1" fill="${valueTextColor}">${escapeXml(value)}</text>
+  <g font-family="Inter, sans-serif" font-size="14" font-weight="500">
+    <text x="${iconWidth + labelWidth / 2}" y="20" text-anchor="middle" fill="${labelTextColor}">${escapeXml(label)}</text>
+    <text x="${iconWidth + labelWidth + valueWidth / 2}" y="21" text-anchor="middle" font-size="16" font-weight="700" letter-spacing="-1" fill="${valueTextColor}">${escapeXml(value)}</text>
   </g>
 </svg>`.trim();
 }
