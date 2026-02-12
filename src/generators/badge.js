@@ -19,7 +19,7 @@ function estimateTextWidth(text, fontSize)
     return Math.ceil(width);
 }
 
-export function generateBadge(label, value, platformId = "modrinth", color = null, backgroundColor = null)
+export function generateBadge(label, value, platformId, color = null, backgroundColor = null, valueColor = null)
 {
     const platform = getPlatform(platformId) || PLATFORMS.MODRINTH;
     const badgeColor = color || platform.defaultColor;
@@ -36,7 +36,7 @@ export function generateBadge(label, value, platformId = "modrinth", color = nul
     const isValidBgHex = backgroundColor && /^#[0-9A-F]{6}$/i.test(backgroundColor);
     const bgColor = isValidBgHex ? backgroundColor : "transparent";
     const labelTextColor = "#8b949e";
-    const valueTextColor = badgeColor;
+    const valueTextColor = valueColor || badgeColor;
     const borderColor = "#E4E2E2";
 
     // Get icon viewBox - Modrinth uses 0 0 512 514, CurseForge uses 0 0 32 32, Hangar/Spigot use 0 0 100 100

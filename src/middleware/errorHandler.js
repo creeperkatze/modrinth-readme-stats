@@ -21,7 +21,7 @@ export function generateErrorCard(message, detailText = "", isCurseforge = false
     let icon;
     let viewBox;
     if (isSpiget) {
-        icon = ICONS.spigot(accentColor);
+        icon = ICONS.spigotPlatform(accentColor);
         viewBox = "0 0 100 100";
     } else if (isCurseforge) {
         icon = ICONS.curseforge(accentColor);

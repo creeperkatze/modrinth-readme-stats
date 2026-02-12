@@ -138,6 +138,9 @@ export class HangarClient extends BasePlatformClient
         const apiStart = performance.now();
 
         const projectResponse = await this.getProject(projectSlug);
+        if (!projectResponse) {
+            return null;
+        }
         const project = projectResponse;
 
         const stats = {
@@ -275,6 +278,9 @@ export class HangarClient extends BasePlatformClient
         const apiStart = performance.now();
 
         const userResponse = await this.getUser(username);
+        if (!userResponse) {
+            return null;
+        }
         const user = userResponse;
 
         let totalDownloads = 0;

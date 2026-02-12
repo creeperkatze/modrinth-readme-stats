@@ -41,8 +41,8 @@ export class BasePlatformClient {
         });
 
         if (!response.ok) {
-            // For 404s, return null instead of throwing
-            if (response.status === 404) {
+            // For 404s and other 4xx client errors, return null instead of throwing
+            if (response.status >= 400 && response.status < 500) {
                 return null;
             }
 

@@ -9,6 +9,7 @@ import logger from "../utils/logger.js";
 import { generatePng } from "../utils/generateImage.js";
 import { modrinthKeys, curseforgeKeys, hangarKeys, spigotKeys } from "../utils/cacheKeys.js";
 import { PLATFORMS } from "../constants/platforms.js";
+import { getErrorMessage } from "../constants/platformConfig.js";
 
 const API_CACHE_TTL = 3600; // 1 hour
 
@@ -132,6 +133,27 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
         if (!data) {
             // Fetch from API (badge stats methods always fetch full data now)
             data = await DATA_FETCHERS[entityType](identifier);
+
+            if (!data) {
+                const errorMessage = getErrorMessage(entityConfig.platformName, entityConfig.entityName);
+
+                logger.warn(`Error showing ${entityConfig.platformName} ${entityConfig.entityName} ${badgeType} badge for "${identifier}": ${errorMessage}`);
+
+                const notFoundSvg = generateBadge(badgeConfig.label, "Not found", entityConfig.platformName, defaultColor, null, "#f38ba8");
+
+                if (renderImage) {
+                    const { buffer: pngBuffer } = await generatePng(notFoundSvg);
+                    res.setHeader("Content-Type", "image/png");
+                    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                    return req.isImageCrawler ? res.status(200).send(pngBuffer) : res.status(404).send(pngBuffer);
+                }
+
+                res.setHeader("Content-Type", "image/svg+xml");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader("X-Error-Status", "404");
+                return req.isImageCrawler ? res.status(200).send(notFoundSvg) : res.status(404).send(notFoundSvg);
+            }
+
             apiCache.set(apiCacheKey, data);
         }
 
