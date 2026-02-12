@@ -166,7 +166,7 @@ const handleBadgeRequest = async (req, res, next, entityType, badgeType) => {
 
         // Always regenerate the badge from cached data
         const value = badgeConfig.getValue(data.stats);
-        const svg = generateBadge(badgeConfig.label, value, platform, color, backgroundColor, fromCache);
+        const svg = generateBadge(badgeConfig.label, value, platform, color, backgroundColor);
 
         // Generate PNG for Discord bots or when format=png is requested
         if (renderImage) {
