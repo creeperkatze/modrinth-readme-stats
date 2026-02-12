@@ -54,10 +54,9 @@ export function generateProjectCard(data, options, platformConfig, entityType = 
     const statsData = statConfigs ? statConfigs.map((config, index) => {
         const xPositions = [15, 155, 270];
         const value = stats[config.field];
-        // Special handling for CurseForge rank - add "#" prefix
         let displayValue;
         if (config.field === "rank" && value != null) {
-            displayValue = `#${value}`;
+            displayValue = `#${formatNumber(value)}`;
         } else if (config.field === "rank") {
             displayValue = "N/A";
         } else {
